@@ -1,11 +1,14 @@
 import { Button } from "@/src/components/Button";
 import { Input } from "@/src/components/Input";
+import { router } from "expo-router";
+import { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
-  Pressable,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,8 +18,44 @@ import {
   FontSize,
   Spacing,
 } from "../../../../constants/theme";
+import { ApiError, useAuth } from "../../../contexts/AuthContext";
 
 export default function LoginScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // --- Auth ---
+  const { signIn } = useAuth();
+
+  async function handleSignIn() {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert("Champs requis", "Remplis ton e-mail et ton mot de passe.");
+      return;
+    }
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      await signIn(email.trim(), password);
+      router.replace("/(app)");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        Alert.alert("Erreur", error.message);
+      } else {
+        Alert.alert(
+          "Erreur réseau",
+          "Impossible de joindre le serveur. Vérifie ta connexion.",
+        );
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -39,6 +78,8 @@ export default function LoginScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
+            value={email}
+            onChangeText={setEmail}
           />
 
           <Input
@@ -46,6 +87,8 @@ export default function LoginScreen() {
             placeholder="••••••••"
             secureTextEntry
             autoComplete="password"
+            value={password}
+            onChangeText={setPassword}
           />
 
           {/* Mot de passe oublié */}
@@ -54,7 +97,12 @@ export default function LoginScreen() {
           </Pressable>
 
           {/* Bouton de validation */}
-          <Button title="Se connecter" style={styles.loginButton} />
+          <Button
+            title={isSubmitting ? "Connexion..." : "Se connecter"}
+            style={styles.loginButton}
+            onPress={handleSignIn}
+            disabled={isSubmitting}
+          />
         </View>
 
         {/* Pied de page */}
