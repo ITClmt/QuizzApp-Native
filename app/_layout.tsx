@@ -1,3 +1,4 @@
+import { Providers } from "@/src/components/Providers";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -28,10 +29,12 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <Providers>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </Providers>
   );
 }
