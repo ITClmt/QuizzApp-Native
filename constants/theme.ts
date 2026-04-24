@@ -11,21 +11,21 @@
 // ─── Color Palette ──────────────────────────────────────────
 export const Colors = {
   // Core brand
-  primary: "#4647d3",
+  primary: "#6366F1",
   primaryContainer: "#9396ff",
   primaryDim: "#3939c7",
   onPrimary: "#f4f1ff",
   onPrimaryContainer: "#0a0081",
 
   // Secondary
-  secondary: "#8126cf",
+  secondary: "#A855F7",
   secondaryContainer: "#e5c6ff",
   secondaryDim: "#740ec2",
   onSecondary: "#fbefff",
   onSecondaryContainer: "#6900b4",
 
   // Tertiary
-  tertiary: "#006286",
+  tertiary: "#38BDF8",
   tertiaryContainer: "#37bcf7",
   tertiaryDim: "#005675",
   onTertiary: "#e7f5ff",
