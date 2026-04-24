@@ -1,8 +1,8 @@
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
+  Pressable,
+  PressableProps,
 } from "react-native";
 import {
   Colors,
@@ -12,7 +12,7 @@ import {
   Spacing,
 } from "../../constants/theme";
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends PressableProps {
   title: string;
   variant?: "primary" | "secondary";
 }
@@ -26,13 +26,13 @@ export function Button({
   const isPrimary = variant === "primary";
 
   return (
-    <TouchableOpacity
-      style={[
+    <Pressable
+      style={({ pressed }) => [
         styles.button,
         isPrimary ? styles.primaryBg : styles.secondaryBg,
-        style,
+        pressed && { opacity: 0.8 },
+        typeof style === "function" ? style({ pressed }) : style,
       ]}
-      activeOpacity={0.8}
       {...rest}
     >
       <Text
@@ -43,7 +43,7 @@ export function Button({
       >
         {title}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

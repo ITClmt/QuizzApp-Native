@@ -5,7 +5,7 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -49,9 +49,9 @@ export default function LoginScreen() {
           />
 
           {/* Mot de passe oublié */}
-          <TouchableOpacity style={styles.forgotPassword}>
+          <Pressable style={styles.forgotPassword}>
             <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
-          </TouchableOpacity>
+          </Pressable>
 
           {/* Bouton de validation */}
           <Button title="Se connecter" style={styles.loginButton} />
@@ -60,9 +60,9 @@ export default function LoginScreen() {
         {/* Pied de page */}
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>Pas encore de compte ? </Text>
-          <TouchableOpacity>
+          <Pressable>
             <Text style={styles.footerLink}>S'inscrire</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
