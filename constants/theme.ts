@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 /**
  * Lumina Design System — "The Lucid Play Ethos"
  *
@@ -67,17 +69,24 @@ export const Colors = {
 } as const;
 
 // ─── Typography ─────────────────────────────────────────────
-// Plus Jakarta Sans = headlines, Manrope = body & labels
+// Inter font with fallback to sans-serif on the Web
+const getFont = (baseFont: string) => {
+  return Platform.select({
+    web: `${baseFont}, sans-serif`,
+    default: baseFont,
+  }) as string;
+};
+
 export const FontFamily = {
-  headline: "PlusJakartaSans-Bold",
-  headlineExtrabold: "PlusJakartaSans-ExtraBold",
-  headlineSemibold: "PlusJakartaSans-SemiBold",
-  headlineMedium: "PlusJakartaSans-Medium",
-  body: "Manrope-Regular",
-  bodyMedium: "Manrope-Medium",
-  bodySemibold: "Manrope-SemiBold",
-  bodyBold: "Manrope-Bold",
-  label: "Manrope-Bold",
+  headline: getFont("Inter_700Bold"),
+  headlineExtrabold: getFont("Inter_800ExtraBold"),
+  headlineSemibold: getFont("Inter_600SemiBold"),
+  headlineMedium: getFont("Inter_500Medium"),
+  body: getFont("Inter_400Regular"),
+  bodyMedium: getFont("Inter_500Medium"),
+  bodySemibold: getFont("Inter_600SemiBold"),
+  bodyBold: getFont("Inter_700Bold"),
+  label: getFont("Inter_700Bold"),
 } as const;
 
 // ─── Font Sizes (following M3 type scale) ───────────────────
