@@ -3,7 +3,6 @@ import { Input } from "@/src/components/Input";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -18,44 +17,19 @@ import {
   FontSize,
   Spacing,
 } from "../../../../constants/theme";
-import { useAuth } from "../../../contexts/AuthContext";
-import { ApiError } from "../../../lib/api";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
+  // --- États (State) ---
+  // On prépare les états pour le formulaire. On utilisera `useState` pour contrôler nos inputs.
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // --- Auth ---
-  const { signIn } = useAuth();
-
-  async function handleSignIn() {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert("Champs requis", "Remplis ton e-mail et ton mot de passe.");
-      return;
-    }
-
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
-
-    try {
-      await signIn(email.trim(), password);
-      router.replace("/(app)");
-    } catch (error) {
-      if (error instanceof ApiError) {
-        Alert.alert("Erreur", error.message);
-      } else {
-        Alert.alert(
-          "Erreur réseau",
-          "Impossible de joindre le serveur. Vérifie ta connexion.",
-        );
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  const handleRegister = () => {
+    // La logique API viendra ici plus tard
+    console.log("Register pressed", { username, email, password, confirmPassword });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -65,14 +39,22 @@ export default function LoginScreen() {
       >
         {/* En-tête */}
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Content de te revoir</Text>
+          <Text style={styles.title}>Créer un compte</Text>
           <Text style={styles.subtitle}>
-            Connecte-toi pour reprendre ton quizz
+            Rejoins-nous pour commencer l'aventure
           </Text>
         </View>
 
         {/* Formulaire */}
         <View style={styles.formContainer}>
+          <Input
+            label="Nom d'utilisateur"
+            placeholder="Ton pseudo"
+            autoCapitalize="words"
+            value={username}
+            onChangeText={setUsername}
+          />
+
           <Input
             label="Adresse e-mail"
             placeholder="hello@exemple.com"
@@ -87,25 +69,33 @@ export default function LoginScreen() {
             label="Mot de passe"
             placeholder="••••••••"
             secureTextEntry
-            autoComplete="password"
+            autoComplete="new-password"
             value={password}
             onChangeText={setPassword}
           />
 
+          <Input
+            label="Confirmer le mot de passe"
+            placeholder="••••••••"
+            secureTextEntry
+            autoComplete="new-password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+
           {/* Bouton de validation */}
           <Button
-            title={isSubmitting ? "Connexion..." : "Se connecter"}
-            style={styles.loginButton}
-            onPress={handleSignIn}
-            disabled={isSubmitting}
+            title="S'inscrire"
+            style={styles.registerButton}
+            onPress={handleRegister}
           />
         </View>
 
         {/* Pied de page */}
         <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>Pas encore de compte ? </Text>
-          <Pressable onPress={() => router.replace("/(auth)/register")}>
-            <Text style={styles.footerLink}>S'inscrire</Text>
+          <Text style={styles.footerText}>Déjà un compte ? </Text>
+          <Pressable onPress={() => router.replace("/(auth)/login")}>
+            <Text style={styles.footerLink}>Se connecter</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -140,15 +130,7 @@ const styles = StyleSheet.create({
   formContainer: {
     gap: Spacing.xl,
   },
-  forgotPassword: {
-    alignSelf: "flex-end",
-  },
-  forgotPasswordText: {
-    fontFamily: FontFamily.label,
-    fontSize: FontSize.labelMd,
-    color: Colors.primary,
-  },
-  loginButton: {
+  registerButton: {
     marginTop: Spacing.md,
   },
   footerContainer: {

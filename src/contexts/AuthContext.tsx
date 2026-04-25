@@ -1,12 +1,13 @@
 import * as SecureStore from "expo-secure-store";
 import { createContext, useContext, useEffect, useState } from "react";
+import { Platform } from "react-native";
+import { ApiError } from "../lib/api";
 import {
-  ApiError,
   loginRequest,
   logoutRequest,
   refreshTokensRequest,
   registerRequest,
-} from "../services/auth/api";
+} from "../services/auth/auth.api";
 
 // --- Types ---
 
@@ -16,6 +17,45 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, username: string) => Promise<void>;
   signOut: () => Promise<void>;
+};
+
+// --- Secure Storage Helper (Cross-Platform) ---
+// SecureStore plante sur le Web car les navigateurs n'ont pas de Keychain natif.
+// Ce wrapper gère la fallback silencieuse vers le localStorage pour le dev sur navigateur.
+
+const Storage = {
+  getItemAsync: async (key: string) => {
+    if (Platform.OS === "web") {
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        return null; // En mode navigation privée, le localStorage peut crasher
+      }
+    }
+    return await SecureStore.getItemAsync(key);
+  },
+  setItemAsync: async (key: string, value: string) => {
+    if (Platform.OS === "web") {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn("localStorage n'est pas disponible sur ce navigateur.");
+      }
+      return;
+    }
+    await SecureStore.setItemAsync(key, value);
+  },
+  deleteItemAsync: async (key: string) => {
+    if (Platform.OS === "web") {
+      try {
+        localStorage.removeItem(key);
+      } catch (e) {
+        console.warn("localStorage n'est pas disponible sur ce navigateur.");
+      }
+      return;
+    }
+    await SecureStore.deleteItemAsync(key);
+  },
 };
 
 // --- Helpers ---
@@ -49,14 +89,14 @@ function isTokenExpired(token: string): boolean {
 }
 
 /**
- * Stocke les tokens dans le SecureStore ET retourne le user décodé.
+ * Stocke les tokens dans le Storage abstrait ET retourne le user décodé.
  */
 async function saveTokensAndDecodeUser(
   accessToken: string,
   refreshToken: string,
 ): Promise<User> {
-  await SecureStore.setItemAsync("access_token", accessToken);
-  await SecureStore.setItemAsync("refresh_token", refreshToken);
+  await Storage.setItemAsync("access_token", accessToken);
+  await Storage.setItemAsync("refresh_token", refreshToken);
 
   return decodeJwtPayload(accessToken);
 }
@@ -74,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function restoreSession() {
       try {
-        const token = await SecureStore.getItemAsync("access_token");
+        const token = await Storage.getItemAsync("access_token");
 
         if (!token) return;
 
@@ -84,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Token expiré → on tente un refresh silencieux
-        const refreshToken = await SecureStore.getItemAsync("refresh_token");
+        const refreshToken = await Storage.getItemAsync("refresh_token");
         if (!refreshToken) throw new Error("No refresh token");
 
         const newTokens = await refreshTokensRequest(refreshToken);
@@ -95,8 +135,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(decoded);
       } catch {
         // Tout a échoué → nettoyage, l'user devra se reconnecter
-        await SecureStore.deleteItemAsync("access_token");
-        await SecureStore.deleteItemAsync("refresh_token");
+        await Storage.deleteItemAsync("access_token");
+        await Storage.deleteItemAsync("refresh_token");
       } finally {
         setIsLoading(false);
       }
@@ -133,8 +173,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // on continue quand même le nettoyage local
     }
 
-    await SecureStore.deleteItemAsync("access_token");
-    await SecureStore.deleteItemAsync("refresh_token");
+    await Storage.deleteItemAsync("access_token");
+    await Storage.deleteItemAsync("refresh_token");
     setUser(null);
   }
 
@@ -155,3 +195,4 @@ export function useAuth() {
 
 // Re-export pour que les écrans puissent catch les erreurs API proprement
 export { ApiError };
+
