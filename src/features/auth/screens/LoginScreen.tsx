@@ -66,9 +66,6 @@ export default function LoginScreen() {
         {/* En-tête */}
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Content de te revoir</Text>
-          <Text style={styles.subtitle}>
-            Connecte-toi pour reprendre ton quizz
-          </Text>
         </View>
 
         {/* Formulaire */}
@@ -131,11 +128,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.headlineLg,
     color: Colors.onSurface,
     marginBottom: Spacing.xs,
-  },
-  subtitle: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.bodyLg,
-    color: Colors.onSurfaceVariant,
   },
   formContainer: {
     gap: Spacing.xl,

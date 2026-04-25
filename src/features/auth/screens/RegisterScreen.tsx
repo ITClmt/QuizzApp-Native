@@ -1,8 +1,12 @@
 import { Button } from "@/src/components/Button";
 import { Input } from "@/src/components/Input";
+import { useAuth } from "@/src/contexts/AuthContext";
+import { ApiError } from "@/src/lib/api";
+import * as Localization from "expo-localization";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -26,9 +30,50 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = () => {
-    // La logique API viendra ici plus tard
-    console.log("Register pressed", { username, email, password, confirmPassword });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { signUp } = useAuth();
+
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert("Erreur", "Les mots de passe ne correspondent pas");
+      return;
+    }
+    if (!email.trim() || !password.trim() || !username.trim()) {
+      Alert.alert(
+        "Champs requis",
+        "Remplis ton e-mail, ton mot de passe et ton nom d'utilisateur.",
+      );
+      return;
+    }
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      // Détection de la langue du système
+      const locales = Localization.getLocales();
+      let lang = "en";
+      
+      // getLocales() renvoie une liste, on prend la première langue préférée
+      if (locales && locales.length > 0 && locales[0].languageCode === "fr") {
+        lang = "fr";
+      }
+
+      await signUp(email.trim(), password, username.trim(), lang);
+      router.replace("/(app)");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        Alert.alert("Erreur", error.message);
+      } else {
+        Alert.alert(
+          "Erreur réseau",
+          "Impossible de joindre le serveur. Vérifie ta connexion.",
+        );
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -40,9 +85,6 @@ export default function RegisterScreen() {
         {/* En-tête */}
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Créer un compte</Text>
-          <Text style={styles.subtitle}>
-            Rejoins-nous pour commencer l'aventure
-          </Text>
         </View>
 
         {/* Formulaire */}
@@ -121,11 +163,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.headlineLg,
     color: Colors.onSurface,
     marginBottom: Spacing.xs,
-  },
-  subtitle: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.bodyLg,
-    color: Colors.onSurfaceVariant,
   },
   formContainer: {
     gap: Spacing.xl,

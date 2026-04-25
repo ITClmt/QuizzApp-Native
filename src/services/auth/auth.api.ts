@@ -14,10 +14,11 @@ export function registerRequest(
   email: string,
   password: string,
   username: string,
+  lang: string = "en",
 ) {
   return apiFetch<AuthTokens>("/auth/register", {
     method: "POST",
-    body: JSON.stringify({ email, password, username }),
+    body: JSON.stringify({ email, password, username, lang }),
   });
 }
 
