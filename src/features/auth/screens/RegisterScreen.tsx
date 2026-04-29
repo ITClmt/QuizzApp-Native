@@ -50,15 +50,14 @@ export default function RegisterScreen() {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
+
     try {
-      // Détection de la langue du système
       const locales = Localization.getLocales();
-      let lang = "en";
-      
-      // getLocales() renvoie une liste, on prend la première langue préférée
-      if (locales && locales.length > 0 && locales[0].languageCode === "fr") {
-        lang = "fr";
-      }
+      const isFrench = locales?.some(
+        (locale) =>
+          locale.languageCode === "fr" || locale.languageTag?.startsWith("fr"),
+      );
+      const lang = isFrench ? "fr" : "en";
 
       await signUp(email.trim(), password, username.trim(), lang);
       router.replace("/(app)");
