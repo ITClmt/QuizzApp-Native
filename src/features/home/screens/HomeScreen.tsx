@@ -18,15 +18,15 @@ export function HomeScreen() {
         <View style={styles.header}>
           <Text style={styles.title}>Lumina Quiz</Text>
           <Text style={styles.subtitle}>
-            Testez vos connaissances et progressez chaque jour grâce à ce défi.
+            Test your knowledge and improve every day with this challenge.
           </Text>
         </View>
 
         {/* Action Section */}
         <View style={styles.actionCard}>
-          <Text style={styles.cardTitle}>Prêt pour le défi ?</Text>
+          <Text style={styles.cardTitle}>Ready for the challenge?</Text>
           <Button
-            title="Démarrer une session"
+            title="Start a session"
             onPress={() => console.log("Start Quiz")}
           />
         </View>

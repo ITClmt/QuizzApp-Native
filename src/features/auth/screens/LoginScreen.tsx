@@ -32,7 +32,7 @@ export default function LoginScreen() {
 
   async function handleSignIn() {
     if (!email.trim() || !password.trim()) {
-      Alert.alert("Champs requis", "Remplis ton e-mail et ton mot de passe.");
+      Alert.alert("Required fields", "Please enter your email and password.");
       return;
     }
 
@@ -45,12 +45,9 @@ export default function LoginScreen() {
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
-        Alert.alert("Erreur", error.message);
+        Alert.alert("Error", error.message);
       } else {
-        Alert.alert(
-          "Erreur réseau",
-          "Impossible de joindre le serveur. Vérifie ta connexion.",
-        );
+        Alert.alert("Network Error", "Unable to reach the server");
       }
     } finally {
       setIsSubmitting(false);
@@ -65,14 +62,14 @@ export default function LoginScreen() {
       >
         {/* En-tête */}
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Content de te revoir</Text>
+          <Text style={styles.title}>Welcome back</Text>
         </View>
 
         {/* Formulaire */}
         <View style={styles.formContainer}>
           <Input
-            label="Adresse e-mail"
-            placeholder="hello@exemple.com"
+            label="Email Address"
+            placeholder="hello@example.com"
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
@@ -81,7 +78,7 @@ export default function LoginScreen() {
           />
 
           <Input
-            label="Mot de passe"
+            label="Password"
             placeholder="••••••••"
             secureTextEntry
             autoComplete="password"
@@ -91,7 +88,7 @@ export default function LoginScreen() {
 
           {/* Bouton de validation */}
           <Button
-            title={isSubmitting ? "Connexion..." : "Se connecter"}
+            title={isSubmitting ? "Signing in..." : "Sign in"}
             style={styles.loginButton}
             onPress={handleSignIn}
             disabled={isSubmitting}
@@ -100,9 +97,9 @@ export default function LoginScreen() {
 
         {/* Pied de page */}
         <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>Pas encore de compte ? </Text>
+          <Text style={styles.footerText}>Don't have an account? </Text>
           <Pressable onPress={() => router.replace("/(auth)/register")}>
-            <Text style={styles.footerLink}>S'inscrire</Text>
+            <Text style={styles.footerLink}>Sign up</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>

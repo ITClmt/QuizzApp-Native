@@ -23,7 +23,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Accueil",
+          title: "Home",
           tabBarIcon: ({ color }) => (
             <Ionicons name="game-controller" color={color} size={24} />
           ),

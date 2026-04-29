@@ -36,13 +36,13 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
-      Alert.alert("Erreur", "Les mots de passe ne correspondent pas");
+      Alert.alert("Error", "Passwords do not match");
       return;
     }
     if (!email.trim() || !password.trim() || !username.trim()) {
       Alert.alert(
-        "Champs requis",
-        "Remplis ton e-mail, ton mot de passe et ton nom d'utilisateur.",
+        "Required fields",
+        "Please enter your email, password, and username.",
       );
       return;
     }
@@ -64,11 +64,11 @@ export default function RegisterScreen() {
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
-        Alert.alert("Erreur", error.message);
+        Alert.alert("Error", error.message);
       } else {
         Alert.alert(
-          "Erreur réseau",
-          "Impossible de joindre le serveur. Vérifie ta connexion.",
+          "Network Error",
+          "Unable to reach the server. Check your connection.",
         );
       }
     } finally {
@@ -84,22 +84,22 @@ export default function RegisterScreen() {
       >
         {/* En-tête */}
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Créer un compte</Text>
+          <Text style={styles.title}>Create an account</Text>
         </View>
 
         {/* Formulaire */}
         <View style={styles.formContainer}>
           <Input
-            label="Nom d'utilisateur"
-            placeholder="Ton pseudo"
+            label="Username"
+            placeholder="Your username"
             autoCapitalize="words"
             value={username}
             onChangeText={setUsername}
           />
 
           <Input
-            label="Adresse e-mail"
-            placeholder="hello@exemple.com"
+            label="Email Address"
+            placeholder="hello@example.com"
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
@@ -108,7 +108,7 @@ export default function RegisterScreen() {
           />
 
           <Input
-            label="Mot de passe"
+            label="Password"
             placeholder="••••••••"
             secureTextEntry
             autoComplete="new-password"
@@ -117,7 +117,7 @@ export default function RegisterScreen() {
           />
 
           <Input
-            label="Confirmer le mot de passe"
+            label="Confirm password"
             placeholder="••••••••"
             secureTextEntry
             autoComplete="new-password"
@@ -127,7 +127,7 @@ export default function RegisterScreen() {
 
           {/* Bouton de validation */}
           <Button
-            title="S'inscrire"
+            title={isSubmitting ? "Signing up..." : "Sign up"}
             style={styles.registerButton}
             onPress={handleRegister}
           />
@@ -135,9 +135,9 @@ export default function RegisterScreen() {
 
         {/* Pied de page */}
         <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>Déjà un compte ? </Text>
+          <Text style={styles.footerText}>Already have an account? </Text>
           <Pressable onPress={() => router.replace("/(auth)/login")}>
-            <Text style={styles.footerLink}>Se connecter</Text>
+            <Text style={styles.footerLink}>Sign in</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
