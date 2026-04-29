@@ -15,7 +15,12 @@ type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, username: string, lang?: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    username: string,
+    lang?: string,
+  ) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -39,7 +44,7 @@ const Storage = {
       try {
         localStorage.setItem(key, value);
       } catch (e) {
-        console.warn("localStorage n'est pas disponible sur ce navigateur.");
+        console.warn("localStorage is not available");
       }
       return;
     }
@@ -50,7 +55,7 @@ const Storage = {
       try {
         localStorage.removeItem(key);
       } catch (e) {
-        console.warn("localStorage n'est pas disponible sur ce navigateur.");
+        console.warn("localStorage is not available");
       }
       return;
     }
@@ -155,7 +160,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(decoded);
   }
 
-  async function signUp(email: string, password: string, username: string, lang: string = "en") {
+  async function signUp(
+    email: string,
+    password: string,
+    username: string,
+    lang: string = "en",
+  ) {
     const tokens = await registerRequest(email, password, username, lang);
     const decoded = await saveTokensAndDecodeUser(
       tokens.access_token,
@@ -195,4 +205,3 @@ export function useAuth() {
 
 // Re-export pour que les écrans puissent catch les erreurs API proprement
 export { ApiError };
-

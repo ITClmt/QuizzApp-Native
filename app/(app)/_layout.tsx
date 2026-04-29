@@ -1,7 +1,7 @@
 import { useAuth } from "@/src/contexts/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 export default function AppLayout() {
   const { user, isLoading } = useAuth();
@@ -19,7 +19,13 @@ export default function AppLayout() {
   }
 
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "#6366f1" }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#6366f1",
+        tabBarStyle: styles.tabBar,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -41,3 +47,9 @@ export default function AppLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    borderRadius: 50,
+  },
+});

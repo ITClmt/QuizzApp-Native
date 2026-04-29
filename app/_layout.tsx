@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { Providers } from "@/src/components/Providers";
 import {
   Inter_400Regular,
@@ -37,6 +38,9 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          contentStyle: {
+            backgroundColor: Colors.background,
+          },
         }}
       />
     </Providers>
