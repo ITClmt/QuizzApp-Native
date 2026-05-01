@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
-import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function StartQuizBtn() {
+  const router = useRouter();
   return (
-    <Pressable style={({ pressed }) => [styles.container, pressed && styles.pressed]}>
+    <Pressable
+      onPress={() => router.push("/(quiz)/preQuiz")}
+      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+    >
       <LinearGradient
         colors={["#4647d3", "#9396ff"]}
         start={{ x: 0, y: 0 }}
@@ -13,10 +18,19 @@ export default function StartQuizBtn() {
         style={styles.gradient}
       >
         <View style={styles.backgroundIconContainer}>
-          <MaterialIcons name="play-circle-filled" size={140} color={Colors.onPrimary} />
+          <MaterialIcons
+            name="play-circle-filled"
+            size={140}
+            color={Colors.onPrimary}
+          />
         </View>
 
-        <MaterialIcons name="person" size={36} color={Colors.onPrimary} style={styles.icon} />
+        <MaterialIcons
+          name="person"
+          size={36}
+          color={Colors.onPrimary}
+          style={styles.icon}
+        />
         <Text style={styles.title}>Solo Play</Text>
         <Text style={styles.subtitle}>Test your limits alone</Text>
       </LinearGradient>
