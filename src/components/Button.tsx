@@ -9,7 +9,7 @@ import {
 
 interface ButtonProps extends PressableProps {
   title: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "outlined";
 }
 
 export function Button({
@@ -18,13 +18,35 @@ export function Button({
   style,
   ...rest
 }: ButtonProps) {
-  const isPrimary = variant === "primary";
+  const getBgStyle = () => {
+    switch (variant) {
+      case "primary":
+        return styles.primaryBg;
+      case "outlined":
+        return styles.outlinedBg;
+      case "secondary":
+      default:
+        return styles.secondaryBg;
+    }
+  };
+
+  const getTextStyle = () => {
+    switch (variant) {
+      case "primary":
+        return styles.primaryText;
+      case "outlined":
+        return styles.outlinedText;
+      case "secondary":
+      default:
+        return styles.secondaryText;
+    }
+  };
 
   return (
     <Pressable
       style={({ pressed }) => [
         styles.button,
-        isPrimary ? styles.primaryBg : styles.secondaryBg,
+        getBgStyle(),
         pressed && { opacity: 0.8 },
         typeof style === "function"
           ? style({
@@ -35,14 +57,7 @@ export function Button({
       ]}
       {...rest}
     >
-      <Text
-        style={[
-          styles.text,
-          isPrimary ? styles.primaryText : styles.secondaryText,
-        ]}
-      >
-        {title}
-      </Text>
+      <Text style={[styles.text, getTextStyle()]}>{title}</Text>
     </Pressable>
   );
 }
@@ -54,12 +69,18 @@ const styles = StyleSheet.create({
     borderRadius: Radius.full,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "transparent",
   },
   primaryBg: {
     backgroundColor: Colors.primary,
   },
   secondaryBg: {
     backgroundColor: Colors.surfaceContainerHigh,
+  },
+  outlinedBg: {
+    backgroundColor: "transparent",
+    borderColor: Colors.primary,
   },
   text: {
     fontFamily: FontFamily.label,
@@ -70,5 +91,8 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: Colors.onSurface,
+  },
+  outlinedText: {
+    color: Colors.primary,
   },
 });
