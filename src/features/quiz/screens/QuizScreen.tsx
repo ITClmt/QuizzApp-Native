@@ -1,17 +1,24 @@
-import { startQuizSession } from "@/src/services/quiz/quiz.api";
 import { Colors, Spacing } from "@/constants/theme";
-import { MaterialIcons } from "@expo/vector-icons";
+import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
+import { startQuizSession } from "@/src/services/quiz/quiz.api";
 import { useMutation } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function QuizScreen() {
   const { difficulty } = useLocalSearchParams<{ difficulty: string }>();
   const router = useRouter();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   const {
@@ -22,13 +29,12 @@ export default function QuizScreen() {
     data,
   } = useMutation<QuizSession>({
     mutationFn: () => startQuizSession({ difficulty }),
-
     onSuccess: (session) => {
       setQuestions(session.questions);
     },
 
     onError: (err) => {
-      console.error("Failed to start session:", err.message);
+      Alert.alert("Error", err.message);
     },
   });
 
@@ -77,23 +83,22 @@ export default function QuizScreen() {
   // --- UI principale (une fois la session chargée) ---
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header custom avec bouton retour */}
+      {/* Header custom avec bouton annulation */}
       <View style={styles.header}>
-        <Pressable
-          onPress={() => router.replace("/(app)")}
-          style={styles.backButton}
-          hitSlop={8} // Agrandit la zone de clic sans changer l'apparence
-        >
-          <MaterialIcons name="close" size={24} color={Colors.onSurface} />
-        </Pressable>
-        <Text style={styles.progressText}>
-          {currentQuestionIndex + 1} / {questions.length}
-        </Text>
+        <CancelSessionButton sessionId={data!.sessionId} />
       </View>
 
-      <Text>Current question : {currentQuestion.questionEn}</Text>
-      <Text>Answers: {currentQuestion.answers.join(", ")}</Text>
-      <Text>Correct index: {currentQuestion.correctIndex}</Text>
+      <View style={styles.content}>
+        {/* Question */}
+        <Text style={styles.questionText}>{currentQuestion.questionEn}</Text>
+
+        {/* Réponse */}
+        {currentQuestion.answers.map((answer, index) => (
+          <Pressable key={index} style={styles.answerButton} onPress={() => {}}>
+            <Text style={styles.answerText}>{answer}</Text>
+          </Pressable>
+        ))}
+      </View>
     </SafeAreaView>
   );
 }
@@ -110,12 +115,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: Spacing["2xl"],
   },
-  backButton: {
-    padding: Spacing.sm, // Surface cliquable généreuse
-    borderRadius: 999,
-    backgroundColor: Colors.surfaceContainerHigh,
-  },
   progressText: {
     color: Colors.onSurfaceVariant,
+  },
+  content: {
+    flex: 1,
+  },
+  questionText: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: Colors.onSurface,
+    marginBottom: Spacing["2xl"],
+  },
+  answerButton: {
+    padding: Spacing.lg,
+    borderRadius: Spacing.md,
+    backgroundColor: Colors.surfaceContainerHigh,
+    marginBottom: Spacing.md,
+  },
+  answerText: {
+    fontSize: 18,
+    color: Colors.onSurface,
   },
 });

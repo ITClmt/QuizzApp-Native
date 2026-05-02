@@ -28,3 +28,19 @@ export async function startQuizSession(params: StartQuizParams = {}) {
     },
   });
 }
+
+export async function cancelQuizSession(sessionId: string) {
+  const accessToken = await SecureStore.getItemAsync("access_token");
+
+  if (!accessToken) {
+    throw new Error("You must be logged in to cancel a quiz");
+  }
+
+  return apiFetch<QuizSession>(`/quiz/cancel`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ sessionId }),
+  });
+}
