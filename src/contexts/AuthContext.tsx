@@ -1,7 +1,7 @@
-import * as SecureStore from "expo-secure-store";
+import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
-import { Platform } from "react-native";
 import { ApiError } from "../lib/api";
+import { Storage } from "../lib/storage";
 import {
   loginRequest,
   logoutRequest,
@@ -24,85 +24,28 @@ type AuthContextType = {
   signOut: () => Promise<void>;
 };
 
-// --- Secure Storage Helper (Cross-Platform) ---
-// SecureStore plante sur le Web car les navigateurs n'ont pas de Keychain natif.
-// Ce wrapper gère la fallback silencieuse vers le localStorage pour le dev sur navigateur.
-
-const Storage = {
-  getItemAsync: async (key: string) => {
-    if (Platform.OS === "web") {
-      try {
-        return localStorage.getItem(key);
-      } catch (e) {
-        return null; // En mode navigation privée, le localStorage peut crasher
-      }
-    }
-    return await SecureStore.getItemAsync(key);
-  },
-  setItemAsync: async (key: string, value: string) => {
-    if (Platform.OS === "web") {
-      try {
-        localStorage.setItem(key, value);
-      } catch (e) {
-        console.warn("localStorage is not available");
-      }
-      return;
-    }
-    await SecureStore.setItemAsync(key, value);
-  },
-  deleteItemAsync: async (key: string) => {
-    if (Platform.OS === "web") {
-      try {
-        localStorage.removeItem(key);
-      } catch (e) {
-        console.warn("localStorage is not available");
-      }
-      return;
-    }
-    await SecureStore.deleteItemAsync(key);
-  },
-};
-
 // --- Helpers ---
 
 function decodeJwtPayload(token: string): User {
-  const base64Url = token.split(".")[1];
-
-  // base64url → base64 standard (remplace les caractères spéciaux)
-  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-
-  const jsonPayload = atob(base64);
-
-  const { iat, exp, ...user } = JSON.parse(jsonPayload);
-
-  return user as User;
+  const { iat, exp, ...user } = jwtDecode<User & { iat: number; exp: number }>(token);
+  return user;
 }
 
-/**
- * Vérifie si un JWT est expiré en comparant le champ `exp` à la date actuelle.
- */
 function isTokenExpired(token: string): boolean {
   try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const { exp } = JSON.parse(atob(base64));
-
+    const { exp } = jwtDecode<{ exp: number }>(token);
     return Date.now() >= exp * 1000;
   } catch {
     return true;
   }
 }
 
-/**
- * Stocke les tokens dans le Storage abstrait ET retourne le user décodé.
- */
 async function saveTokensAndDecodeUser(
   accessToken: string,
   refreshToken: string,
 ): Promise<User> {
   await Storage.setItemAsync("access_token", accessToken);
   await Storage.setItemAsync("refresh_token", refreshToken);
-
   return decodeJwtPayload(accessToken);
 }
 
@@ -114,8 +57,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Au lancement de l'app, on vérifie si un token existe déjà en mémoire.
-  // Si oui, on restaure la session sans demander le mot de passe.
   useEffect(() => {
     async function restoreSession() {
       try {
@@ -128,7 +69,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        // Token expiré → on tente un refresh silencieux
         const refreshToken = await Storage.getItemAsync("refresh_token");
         if (!refreshToken) throw new Error("No refresh token");
 
@@ -139,7 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
         setUser(decoded);
       } catch {
-        // Tout a échoué → nettoyage, l'user devra se reconnecter
         await Storage.deleteItemAsync("access_token");
         await Storage.deleteItemAsync("refresh_token");
       } finally {
@@ -151,7 +90,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function signIn(email: string, password: string) {
-    // loginRequest throw une ApiError si le backend répond 401
     const tokens = await loginRequest(email, password);
     const decoded = await saveTokensAndDecodeUser(
       tokens.access_token,
@@ -176,11 +114,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function signOut() {
     try {
-      // On appelle le backend pour révoquer le refresh token en BDD
       await logoutRequest();
     } catch {
-      // Si le logout backend échoue (token déjà expiré, etc.),
-      // on continue quand même le nettoyage local
+      // Backend logout failure (token already expired, etc.) is non-fatal
     }
 
     await Storage.deleteItemAsync("access_token");
@@ -203,5 +139,4 @@ export function useAuth() {
   return context;
 }
 
-// Re-export pour que les écrans puissent catch les erreurs API proprement
 export { ApiError };

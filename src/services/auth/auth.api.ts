@@ -1,7 +1,5 @@
 import { apiFetch } from "@/src/lib/api";
-import * as SecureStore from "expo-secure-store";
-
-// --- Endpoints ---
+import { Storage } from "@/src/lib/storage";
 
 export function loginRequest(email: string, password: string) {
   return apiFetch<AuthTokens>("/auth/login", {
@@ -30,7 +28,7 @@ export function refreshTokensRequest(refreshToken: string) {
 }
 
 export async function logoutRequest() {
-  const refreshToken = await SecureStore.getItemAsync("refresh_token");
+  const refreshToken = await Storage.getItemAsync("refresh_token");
   if (!refreshToken) return;
 
   return apiFetch<void>("/auth/logout", {
