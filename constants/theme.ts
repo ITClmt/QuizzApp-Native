@@ -40,6 +40,13 @@ export const Colors = {
   onError: "#ffefef",
   onErrorContainer: "#510017",
 
+  // Success
+  success: "#1a7a47",
+  successContainer: "#c2f0d6",
+  successDim: "#145e37",
+  onSuccess: "#f0fff7",
+  onSuccessContainer: "#073d22",
+
   // Surface hierarchy (used instead of borders per the "No-Line" rule)
   surface: "#faf4ff",
   surfaceBright: "#faf4ff",
