@@ -25,3 +25,15 @@ export async function cancelQuizSession(sessionId: string) {
     body: JSON.stringify({ sessionId }),
   });
 }
+
+export interface FinishQuizParams {
+  sessionId: string;
+  answers: { questionId: string; answerIndex: number }[];
+}
+
+export async function finishQuizSession(params: FinishQuizParams) {
+  return apiFetchAuthenticated<QuizResult>(`/quiz/finish`, {
+    method: "POST",
+    body: JSON.stringify(params),
+  });
+}

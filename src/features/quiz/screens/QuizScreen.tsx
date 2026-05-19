@@ -1,8 +1,11 @@
 import { Colors, Radius, Spacing } from "@/constants/theme";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
-import { startQuizSession } from "@/src/services/quiz/quiz.api";
+import {
+  finishQuizSession,
+  startQuizSession,
+} from "@/src/services/quiz/quiz.api";
 import { useMutation } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -18,6 +21,7 @@ const ANSWER_LABELS = ["A", "B", "C", "D"];
 
 export default function QuizScreen() {
   const { difficulty } = useLocalSearchParams<{ difficulty: string }>();
+  const router = useRouter();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -29,8 +33,12 @@ export default function QuizScreen() {
   };
 
   const handleNextQuestion = () => {
-    setShowAnswer(false);
-    setCurrentQuestionIndex((prev) => prev + 1);
+    if (currentQuestionIndex === questions.length - 1) {
+      finishSession();
+    } else {
+      setShowAnswer(false);
+      setCurrentQuestionIndex((prev) => prev + 1);
+    }
   };
 
   const {
@@ -48,6 +56,31 @@ export default function QuizScreen() {
       Alert.alert("Error", err.message);
     },
   });
+
+  const { mutate: finishSession, isPending: isFinishing } =
+    useMutation<QuizResult>({
+      mutationFn: () =>
+        finishQuizSession({
+          sessionId: data!.sessionId,
+          answers: questions.map((q, i) => ({
+            questionId: q.id,
+            answerIndex: userAnswers[i],
+          })),
+        }),
+      onSuccess: (result) => {
+        router.replace({
+          pathname: "/(quiz)/results",
+          params: {
+            result: JSON.stringify(result),
+            questions: JSON.stringify(questions),
+            userAnswers: JSON.stringify(userAnswers),
+          },
+        });
+      },
+      onError: (err) => {
+        Alert.alert("Error", err.message);
+      },
+    });
 
   useEffect(() => {
     startSession();
@@ -81,6 +114,7 @@ export default function QuizScreen() {
   const currentQuestion = questions[currentQuestionIndex];
   const selectedAnswerIndex = userAnswers[currentQuestionIndex];
   const progress = currentQuestionIndex / questions.length;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   const getButtonStyle = (index: number) => {
     if (!showAnswer) return null;
@@ -159,8 +193,21 @@ export default function QuizScreen() {
         ))}
 
         {showAnswer && (
-          <Pressable style={styles.nextButton} onPress={handleNextQuestion}>
-            <Text style={styles.nextButtonText}>Next Question →</Text>
+          <Pressable
+            style={[
+              styles.nextButton,
+              isFinishing && styles.nextButtonDisabled,
+            ]}
+            onPress={handleNextQuestion}
+            disabled={isFinishing}
+          >
+            {isFinishing ? (
+              <ActivityIndicator color={Colors.onPrimary} />
+            ) : (
+              <Text style={styles.nextButtonText}>
+                {isLastQuestion ? "Voir mes résultats" : "Next Question →"}
+              </Text>
+            )}
           </Pressable>
         )}
       </View>
@@ -303,5 +350,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: Colors.onPrimary,
+  },
+  nextButtonDisabled: {
+    opacity: 0.7,
   },
 });

@@ -29,3 +29,15 @@ interface QuizSession {
   expiresAt: string;
   questions: QuizQuestion[];
 }
+
+interface QuizAnswerResult {
+  questionId: string;
+  isCorrect: boolean;
+  correctAnswer: string;
+}
+
+interface QuizResult {
+  totalScore: number;
+  details: { difficulty: string; value: number }[];
+  answers: QuizAnswerResult[];
+}

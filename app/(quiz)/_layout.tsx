@@ -18,6 +18,14 @@ export default function QuizLayout() {
           gestureEnabled: false,
         }}
       />
+      <Stack.Screen
+        name="results"
+        options={{
+          headerShown: false,
+          title: "",
+          gestureEnabled: false,
+        }}
+      />
     </Stack>
   );
 }
