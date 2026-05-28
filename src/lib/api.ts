@@ -1,6 +1,7 @@
 import { Storage } from "./storage";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
+if (!API_URL) throw new Error("EXPO_PUBLIC_API_URL is not configured in .env");
 
 export class ApiError extends Error {
   constructor(

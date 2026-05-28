@@ -1,6 +1,7 @@
 import { Colors, Radius, Spacing } from "@/constants/theme";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, Pressable, View } from "react-native";
+import type { QuizQuestion, QuizResult } from "@/src/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -41,9 +42,13 @@ export default function ResultsScreen() {
     userAnswers: string;
   }>();
 
-  const result: QuizResult = JSON.parse(resultParam);
-  const questions: QuizQuestion[] = JSON.parse(questionsParam);
-  const userAnswers: number[] = JSON.parse(userAnswersParam);
+  if (!resultParam || !questionsParam || !userAnswersParam) {
+    return <Redirect href="/(app)" />;
+  }
+
+  const result = JSON.parse(resultParam) as QuizResult;
+  const questions = JSON.parse(questionsParam) as QuizQuestion[];
+  const userAnswers = JSON.parse(userAnswersParam) as number[];
 
   const questionMap = new Map(questions.map((q) => [q.id, q]));
   const percentage = Math.round((result.totalScore / questions.length) * 100);

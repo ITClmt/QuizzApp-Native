@@ -4,6 +4,7 @@ import {
   finishQuizSession,
   startQuizSession,
 } from "@/src/services/quiz/quiz.api";
+import type { QuizQuestion, QuizResult, QuizSession } from "@/src/types";
 import { useMutation } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
