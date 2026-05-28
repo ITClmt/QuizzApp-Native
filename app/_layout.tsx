@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/theme";
+import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { Providers } from "@/src/components/Providers";
 import {
   Inter_400Regular,
@@ -34,15 +35,17 @@ export default function RootLayout() {
   }
 
   return (
-    <Providers>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: {
-            backgroundColor: Colors.background,
-          },
-        }}
-      />
-    </Providers>
+    <ErrorBoundary>
+      <Providers>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: Colors.background,
+            },
+          }}
+        />
+      </Providers>
+    </ErrorBoundary>
   );
 }
