@@ -1,5 +1,6 @@
 import { apiFetch } from "@/src/lib/api";
 import { Storage } from "@/src/lib/storage";
+import type { AuthTokens } from "@/src/types";
 
 export function loginRequest(email: string, password: string) {
   return apiFetch<AuthTokens>("/auth/login", {

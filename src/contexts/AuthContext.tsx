@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
 import { ApiError } from "../lib/api";
+import { queryClient } from "../lib/queryClient";
 import { Storage } from "../lib/storage";
 import {
   loginRequest,
@@ -8,6 +9,7 @@ import {
   refreshTokensRequest,
   registerRequest,
 } from "../services/auth/auth.api";
+import type { User } from "@/src/types";
 
 // --- Types ---
 
@@ -121,6 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     await Storage.deleteItemAsync("access_token");
     await Storage.deleteItemAsync("refresh_token");
+    queryClient.clear();
     setUser(null);
   }
 

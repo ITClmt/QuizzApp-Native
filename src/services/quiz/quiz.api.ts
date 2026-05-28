@@ -1,4 +1,5 @@
 import { apiFetchAuthenticated } from "@/src/lib/api";
+import type { QuizResult, QuizSession } from "@/src/types";
 
 export interface StartQuizParams {
   difficulty?: string;
