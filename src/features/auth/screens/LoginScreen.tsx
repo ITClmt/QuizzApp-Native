@@ -1,7 +1,10 @@
 import { Button } from "@/src/components/Button";
 import { Input } from "@/src/components/Input";
+import { useAuth } from "@/src/contexts/AuthContext";
+import { ApiError } from "@/src/lib/api";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -18,30 +21,23 @@ import {
   FontSize,
   Spacing,
 } from "../../../../constants/theme";
-import { useAuth } from "../../../contexts/AuthContext";
-import { ApiError } from "../../../lib/api";
+import { loginSchema, type LoginFormValues } from "../schemas";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // --- Auth ---
   const { signIn } = useAuth();
 
-  async function handleSignIn() {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert("Required fields", "Please enter your email and password.");
-      return;
-    }
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
 
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
-
+  async function onSubmit(data: LoginFormValues) {
     try {
-      await signIn(email.trim(), password);
+      await signIn(data.email, data.password);
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
@@ -49,8 +45,6 @@ export default function LoginScreen() {
       } else {
         Alert.alert("Network Error", "Unable to reach the server");
       }
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
@@ -60,44 +54,56 @@ export default function LoginScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
-        {/* En-tête */}
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Welcome back</Text>
         </View>
 
-        {/* Formulaire */}
         <View style={styles.formContainer}>
-          <Input
-            label="Email Address"
-            placeholder="hello@example.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-            value={email}
-            onChangeText={setEmail}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Email Address"
+                placeholder="hello@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.email?.message}
+              />
+            )}
           />
 
-          <Input
-            label="Password"
-            placeholder="••••••••"
-            secureTextEntry
-            autoComplete="password"
-            value={password}
-            onChangeText={setPassword}
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Password"
+                placeholder="••••••••"
+                secureTextEntry
+                autoComplete="password"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.password?.message}
+              />
+            )}
           />
 
-          {/* Bouton de validation */}
           <Button
             title={isSubmitting ? "Signing in..." : "Sign in"}
             style={styles.loginButton}
-            onPress={handleSignIn}
+            onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
           />
         </View>
 
-        {/* Pied de page */}
         <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+          <Text style={styles.footerText}>{"Don't have an account? "}</Text>
           <Pressable onPress={() => router.replace("/(auth)/register")}>
             <Text style={styles.footerLink}>Sign up</Text>
           </Pressable>
@@ -128,14 +134,6 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     gap: Spacing.xl,
-  },
-  forgotPassword: {
-    alignSelf: "flex-end",
-  },
-  forgotPasswordText: {
-    fontFamily: FontFamily.label,
-    fontSize: FontSize.labelMd,
-    color: Colors.primary,
   },
   loginButton: {
     marginTop: Spacing.md,

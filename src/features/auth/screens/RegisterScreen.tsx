@@ -2,9 +2,10 @@ import { Button } from "@/src/components/Button";
 import { Input } from "@/src/components/Input";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { ApiError } from "@/src/lib/api";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as Localization from "expo-localization";
 import { router } from "expo-router";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -21,36 +22,21 @@ import {
   FontSize,
   Spacing,
 } from "../../../../constants/theme";
+import { registerSchema, type RegisterFormValues } from "../schemas";
 
 export default function RegisterScreen() {
-  // --- États (State) ---
-  // On prépare les états pour le formulaire. On utilisera `useState` pour contrôler nos inputs.
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const { signUp } = useAuth();
 
-  const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
-      return;
-    }
-    if (!email.trim() || !password.trim() || !username.trim()) {
-      Alert.alert(
-        "Required fields",
-        "Please enter your email, password, and username.",
-      );
-      return;
-    }
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { username: "", email: "", password: "", confirmPassword: "" },
+  });
 
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
-
+  async function onSubmit(data: RegisterFormValues) {
     try {
       const locales = Localization.getLocales();
       const isFrench = locales?.some(
@@ -59,21 +45,16 @@ export default function RegisterScreen() {
       );
       const lang = isFrench ? "fr" : "en";
 
-      await signUp(email.trim(), password, username.trim(), lang);
+      await signUp(data.email, data.password, data.username, lang);
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
         Alert.alert("Error", error.message);
       } else {
-        Alert.alert(
-          "Network Error",
-          "Unable to reach the server. Check your connection.",
-        );
+        Alert.alert("Network Error", "Unable to reach the server. Check your connection.");
       }
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -81,58 +62,86 @@ export default function RegisterScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
-        {/* En-tête */}
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Create an account</Text>
         </View>
 
-        {/* Formulaire */}
         <View style={styles.formContainer}>
-          <Input
-            label="Username"
-            placeholder="Your username"
-            autoCapitalize="words"
-            value={username}
-            onChangeText={setUsername}
+          <Controller
+            control={control}
+            name="username"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Username"
+                placeholder="Your username"
+                autoCapitalize="words"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.username?.message}
+              />
+            )}
           />
 
-          <Input
-            label="Email Address"
-            placeholder="hello@example.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-            value={email}
-            onChangeText={setEmail}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Email Address"
+                placeholder="hello@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.email?.message}
+              />
+            )}
           />
 
-          <Input
-            label="Password"
-            placeholder="••••••••"
-            secureTextEntry
-            autoComplete="new-password"
-            value={password}
-            onChangeText={setPassword}
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Password"
+                placeholder="••••••••"
+                secureTextEntry
+                autoComplete="new-password"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.password?.message}
+              />
+            )}
           />
 
-          <Input
-            label="Confirm password"
-            placeholder="••••••••"
-            secureTextEntry
-            autoComplete="new-password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label="Confirm password"
+                placeholder="••••••••"
+                secureTextEntry
+                autoComplete="new-password"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.confirmPassword?.message}
+              />
+            )}
           />
 
-          {/* Bouton de validation */}
           <Button
             title={isSubmitting ? "Signing up..." : "Sign up"}
             style={styles.registerButton}
-            onPress={handleRegister}
+            onPress={handleSubmit(onSubmit)}
           />
         </View>
 
-        {/* Pied de page */}
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>Already have an account? </Text>
           <Pressable onPress={() => router.replace("/(auth)/login")}>

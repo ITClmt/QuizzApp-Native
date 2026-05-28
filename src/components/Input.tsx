@@ -9,17 +9,19 @@ import {
 
 interface InputProps extends TextInputProps {
   label: string;
+  error?: string;
 }
 
-export function Input({ label, style, ...rest }: InputProps) {
+export function Input({ label, style, error, ...rest }: InputProps) {
   return (
     <View style={styles.inputGroup}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
-        style={[styles.input, style]}
+        style={[styles.input, error ? styles.inputError : null, style]}
         placeholderTextColor={Colors.onSurfaceVariant}
         {...rest}
       />
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 }
@@ -42,5 +44,16 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bodyMedium,
     fontSize: FontSize.bodyLg,
     color: Colors.onSurface,
+    borderWidth: 1,
+    borderColor: "transparent",
+  },
+  inputError: {
+    borderColor: Colors.error,
+  },
+  errorText: {
+    fontFamily: FontFamily.label,
+    fontSize: FontSize.labelSm,
+    color: Colors.error,
+    marginLeft: Spacing.xs,
   },
 });
