@@ -30,9 +30,10 @@ export default function QuizScreen() {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
   const handleAnswer = (answerIndex: number) => {
-    const isCorrect = answerIndex === questions[currentQuestionIndex].correctIndex;
+    const isCorrect =
+      answerIndex === questions[currentQuestionIndex].correctIndex;
     if (isCorrect) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } else {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     }
