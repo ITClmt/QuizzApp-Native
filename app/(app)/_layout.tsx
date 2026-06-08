@@ -1,3 +1,4 @@
+import { Navbar } from "@/src/components/Navbar";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
@@ -21,7 +22,7 @@ export default function AppLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        header: () => <Navbar />,
         tabBarActiveTintColor: "#6366f1",
         tabBarStyle: styles.tabBar,
       }}

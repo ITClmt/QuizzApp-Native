@@ -7,7 +7,7 @@ import StartQuizBtn from "../components/StartQuizBtn";
 export function HomeScreen() {
   const { user } = useAuth();
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.title}>Welcome, {user?.username}!</Text>
       </View>

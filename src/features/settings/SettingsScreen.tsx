@@ -21,7 +21,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
       <View style={[styles.profileCard, { alignItems: "center" }]}>
         <Image
           source={getAvatarImage(user?.avatarSlug)}
