@@ -7,6 +7,7 @@ import {
 import type { QuizQuestion, QuizResult, QuizSession } from "@/src/types";
 import { useMutation } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -29,6 +30,12 @@ export default function QuizScreen() {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
   const handleAnswer = (answerIndex: number) => {
+    const isCorrect = answerIndex === questions[currentQuestionIndex].correctIndex;
+    if (isCorrect) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    } else {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    }
     setShowAnswer(true);
     setUserAnswers((prev) => [...prev, answerIndex]);
   };
