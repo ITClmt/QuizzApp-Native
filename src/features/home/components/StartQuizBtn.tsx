@@ -1,4 +1,5 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { useNetworkStatus } from "@/src/hooks/useNetworkStatus";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -6,10 +7,16 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function StartQuizBtn() {
   const router = useRouter();
+  const { isOnline } = useNetworkStatus();
+
   return (
     <Pressable
-      onPress={() => router.push("/(quiz)/preQuiz")}
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      onPress={() => isOnline && router.push("/(quiz)/preQuiz")}
+      style={({ pressed }) => [
+        styles.container,
+        pressed && isOnline && styles.pressed,
+        !isOnline && styles.disabled,
+      ]}
     >
       <LinearGradient
         colors={["#4647d3", "#9396ff"]}
@@ -52,6 +59,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     transform: [{ scale: 0.95 }],
+  },
+  disabled: {
+    opacity: 0.5,
   },
   gradient: {
     flex: 1,

@@ -1,4 +1,11 @@
-import { QueryClient } from "@tanstack/react-query";
+import NetInfo from "@react-native-community/netinfo";
+import { onlineManager, QueryClient } from "@tanstack/react-query";
+
+onlineManager.setEventListener((setOnline) => {
+  return NetInfo.addEventListener((state) => {
+    setOnline(!!state.isConnected && state.isInternetReachable !== false);
+  });
+});
 
 // On crée l'instance UNE seule fois, en dehors de tout composant.
 // Ça évite de recréer le cache à chaque re-render.
