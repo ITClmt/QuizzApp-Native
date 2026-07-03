@@ -1,4 +1,3 @@
-import { getAvatarImage } from "@/constants/avatars";
 import {
   Colors,
   FontFamily,
@@ -8,7 +7,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { router } from "expo-router";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -22,13 +21,6 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
-      <View style={[styles.profileCard, { alignItems: "center" }]}>
-        <Image
-          source={getAvatarImage(user?.avatarSlug)}
-          style={styles.avatarContainer}
-        />
-      </View>
-
       <View style={styles.card}>
         <View style={styles.infoRow}>
           <Text style={styles.label}>Username</Text>
@@ -93,16 +85,5 @@ const styles = StyleSheet.create({
     color: Colors.onErrorContainer,
     fontFamily: FontFamily.headlineSemibold,
     fontSize: FontSize.titleMd,
-  },
-
-  profileCard: {
-    marginBottom: Spacing["4xl"],
-  },
-  avatarContainer: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

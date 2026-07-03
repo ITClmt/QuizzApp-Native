@@ -2,7 +2,8 @@ import { getAvatarImage } from "@/constants/avatars";
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function Navbar() {
@@ -20,12 +21,16 @@ export function Navbar() {
         <Text style={styles.appNamePrimary}>Quizz</Text>
         <Text style={styles.appNameSecondary}>App</Text>
       </View>
-      <View style={styles.avatarRing}>
+      <Pressable
+        style={styles.avatarRing}
+        onPress={() => router.push("/(app)/profile")}
+      >
         <Image
           source={getAvatarImage(user?.avatarSlug)}
           style={styles.avatar}
+          alt={user?.username}
         />
-      </View>
+      </Pressable>
     </LinearGradient>
   );
 }
