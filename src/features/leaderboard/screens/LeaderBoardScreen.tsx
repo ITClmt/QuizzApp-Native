@@ -25,9 +25,16 @@ export default function LeaderBoardScreen() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const { user } = useAuth();
 
-  const { data, isLoading, isError } = useQuery<LeaderboardEntry[]>({
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch: refetchLeaderboard,
+    isRefetching: isRefetchingLeaderboard,
+  } = useQuery<LeaderboardEntry[]>({
     queryKey: ["leaderboard", difficulty],
     queryFn: () => getLeaderboard(difficulty),
+    refetchOnWindowFocus: false,
   });
 
   const top3 = data?.slice(0, 3) ?? [];
@@ -35,10 +42,22 @@ export default function LeaderBoardScreen() {
 
   const isInTop10 = data?.some((e) => e.userData.id === user?.sub) ?? false;
 
-  const { data: myRank } = useQuery({
+  const {
+    data: myRank,
+    refetch: refetchMyRank,
+    isRefetching: isRefetchingMyRank,
+  } = useQuery({
     queryKey: ["my-rank", difficulty],
     queryFn: () => getMyRank(difficulty),
+    refetchOnWindowFocus: false,
   });
+
+  const handleRefresh = () => {
+    refetchLeaderboard();
+    refetchMyRank();
+  };
+
+  const isRefreshing = isRefetchingLeaderboard || isRefetchingMyRank;
 
   const renderHeader = () => (
     <>
@@ -76,6 +95,8 @@ export default function LeaderBoardScreen() {
         data={rest}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
         ListHeaderComponent={renderHeader}
         renderItem={({ item, index }) => (
           <LeaderboardRow
