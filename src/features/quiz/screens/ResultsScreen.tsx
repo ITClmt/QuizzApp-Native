@@ -38,11 +38,13 @@ export default function ResultsScreen() {
       >
         <ScoreSummary score={result.totalScore} total={result.answers.length} />
         <DifficultyBreakdown details={result.details} />
-        <AnswerBreakdown
-          answers={result.answers}
-          questionMap={questionMap}
-          userAnswers={userAnswers}
-        />
+        {result.answers.length > 0 && (
+          <AnswerBreakdown
+            answers={result.answers}
+            questionMap={questionMap}
+            userAnswers={userAnswers}
+          />
+        )}
       </ScrollView>
 
       <ResultsActions
