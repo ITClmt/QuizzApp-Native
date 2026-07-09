@@ -24,6 +24,7 @@ export interface QuizQuestion {
 
 export interface QuizSession {
   sessionId: string;
+  createdAt: string;
   expiresAt: string;
   questions: QuizQuestion[];
 }

@@ -8,7 +8,7 @@ import type { QuizQuestion, QuizResult, QuizSession } from "@/src/types";
 import { useMutation } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -20,6 +20,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ANSWER_LABELS = ["A", "B", "C", "D"];
+const QUIZ_DURATION_SECONDS = 2 * 60;
+const LOW_TIME_THRESHOLD_SECONDS = 30;
+
+function formatTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
 
 export default function QuizScreen() {
   const { difficulty } = useLocalSearchParams<{ difficulty: string }>();
@@ -28,6 +36,8 @@ export default function QuizScreen() {
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  const [timeLeft, setTimeLeft] = useState<number>(QUIZ_DURATION_SECONDS);
+  const hasEndedRef = useRef(false);
 
   const handleAnswer = (answerIndex: number) => {
     const isCorrect =
@@ -41,9 +51,15 @@ export default function QuizScreen() {
     setUserAnswers((prev) => [...prev, answerIndex]);
   };
 
+  const endQuiz = () => {
+    if (hasEndedRef.current) return;
+    hasEndedRef.current = true;
+    finishSession();
+  };
+
   const handleNextQuestion = () => {
     if (currentQuestionIndex === questions.length - 1) {
-      finishSession();
+      endQuiz();
     } else {
       setShowAnswer(false);
       setCurrentQuestionIndex((prev) => prev + 1);
@@ -71,9 +87,9 @@ export default function QuizScreen() {
       mutationFn: () =>
         finishQuizSession({
           sessionId: data!.sessionId,
-          answers: questions.map((q, i) => ({
-            questionId: q.id,
-            answerIndex: userAnswers[i],
+          answers: userAnswers.map((answerIndex, i) => ({
+            questionId: questions[i].id,
+            answerIndex,
           })),
         }),
       onSuccess: (result) => {
@@ -93,7 +109,27 @@ export default function QuizScreen() {
 
   useEffect(() => {
     startSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!data?.createdAt || hasEndedRef.current) return;
+
+    const deadline =
+      new Date(data.createdAt).getTime() + QUIZ_DURATION_SECONDS * 1000;
+
+    const interval = setInterval(() => {
+      const remaining = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      if (remaining <= 0) {
+        clearInterval(interval);
+        endQuiz();
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.createdAt]);
 
   if (isPending) {
     return (
@@ -165,6 +201,14 @@ export default function QuizScreen() {
       {/* Header */}
       <View style={styles.header}>
         <CancelSessionButton sessionId={data!.sessionId} />
+        <Text
+          style={[
+            styles.timer,
+            timeLeft <= LOW_TIME_THRESHOLD_SECONDS && styles.timerLow,
+          ]}
+        >
+          {formatTime(timeLeft)}
+        </Text>
         <Text style={styles.questionCounter}>
           {currentQuestionIndex + 1} / {questions.length}
         </Text>
@@ -257,6 +301,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: Colors.onSurfaceVariant,
+  },
+  timer: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.onSurface,
+    fontVariant: ["tabular-nums"],
+  },
+  timerLow: {
+    color: Colors.error,
   },
   progressTrack: {
     height: 6,

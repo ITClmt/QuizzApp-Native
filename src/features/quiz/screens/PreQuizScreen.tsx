@@ -50,6 +50,12 @@ export default function PreQuizScreen() {
             style={styles.difficultyBtn}
           />
         </View>
+
+        <View style={styles.timerContainer}>
+          <Text style={styles.timerText}>
+            You have 2 minutes to answer 50 questions.
+          </Text>
+        </View>
       </View>
 
       <View style={styles.footer}>
@@ -59,7 +65,9 @@ export default function PreQuizScreen() {
           onPress={() => {
             router.replace({
               pathname: "/(quiz)/quiz",
-              params: selectedDifficulty ? { difficulty: selectedDifficulty } : {},
+              params: selectedDifficulty
+                ? { difficulty: selectedDifficulty }
+                : {},
             });
           }}
         />
@@ -83,6 +91,15 @@ const styles = StyleSheet.create({
     fontSize: FontSize.headlineMd,
     color: Colors.onBackground,
     marginBottom: Spacing["2xl"],
+    textAlign: "center",
+  },
+  timerContainer: {
+    marginTop: Spacing["2xl"],
+  },
+  timerText: {
+    fontFamily: FontFamily.label,
+    fontSize: FontSize.bodyLg,
+    color: Colors.onBackground,
     textAlign: "center",
   },
   difficultiesContainer: {
