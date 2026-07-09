@@ -36,7 +36,7 @@ export default function ResultsScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <ScoreSummary score={result.totalScore} total={questions.length} />
+        <ScoreSummary score={result.totalScore} total={result.answers.length} />
         <DifficultyBreakdown details={result.details} />
         <AnswerBreakdown
           answers={result.answers}

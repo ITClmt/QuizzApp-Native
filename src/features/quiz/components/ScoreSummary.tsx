@@ -21,6 +21,18 @@ function getScoreColor(percentage: number): string {
 }
 
 export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
+  if (total === 0) {
+    return (
+      <View style={styles.scoreCard}>
+        <Text style={styles.finishedLabel}>Quiz completed</Text>
+        <Text style={[styles.scoreLabel, { color: Colors.onSurfaceVariant }]}>
+          Time&apos;s up!
+        </Text>
+        <Text style={styles.percentageText}>No question answered in time.</Text>
+      </View>
+    );
+  }
+
   const percentage = Math.round((score / total) * 100);
   const scoreColor = getScoreColor(percentage);
 
@@ -28,9 +40,7 @@ export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
     <View style={styles.scoreCard}>
       <Text style={styles.finishedLabel}>Quiz completed</Text>
       <View style={[styles.scoreBadge, { borderColor: scoreColor }]}>
-        <Text style={[styles.scoreNumber, { color: scoreColor }]}>
-          {score}
-        </Text>
+        <Text style={[styles.scoreNumber, { color: scoreColor }]}>{score}</Text>
         <Text style={[styles.scoreTotal, { color: scoreColor }]}>
           / {total}
         </Text>
