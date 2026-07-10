@@ -6,6 +6,11 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { Button } from "@/src/components/Button";
+import {
+  type QuizCategory,
+  getQuizCategories,
+} from "@/src/services/quiz/quiz.api";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -15,6 +20,15 @@ export default function PreQuizScreen() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
     null,
   );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    null,
+  );
+
+  const { data: categories } = useQuery<QuizCategory[]>({
+    queryKey: ["quiz-categories"],
+    queryFn: getQuizCategories,
+    refetchOnWindowFocus: false,
+  });
 
   const handleDifficulty = (difficulty: string) => {
     if (selectedDifficulty === difficulty) {
@@ -23,6 +37,15 @@ export default function PreQuizScreen() {
     }
 
     setSelectedDifficulty(difficulty);
+  };
+
+  const handleCategory = (categoryId: string) => {
+    if (selectedCategory === categoryId) {
+      setSelectedCategory(null);
+      return;
+    }
+
+    setSelectedCategory(categoryId);
   };
 
   return (
@@ -51,6 +74,26 @@ export default function PreQuizScreen() {
           />
         </View>
 
+        <Text style={[styles.title, styles.categoryTitle]}>
+          Select Category
+        </Text>
+
+        <View style={styles.categoriesContainer}>
+          {categories
+            ?.filter((category) => category.unlocked)
+            .map((category) => (
+              <Button
+                key={category.id}
+                variant={
+                  selectedCategory === category.id ? "outlined" : "secondary"
+                }
+                title={category.name}
+                onPress={() => handleCategory(category.id)}
+                style={styles.categoryBtn}
+              />
+            ))}
+        </View>
+
         <View style={styles.timerContainer}>
           <Text style={styles.timerText}>
             You have 2 minutes to answer 50 questions.
@@ -63,11 +106,13 @@ export default function PreQuizScreen() {
           variant="primary"
           title="Start Quiz"
           onPress={() => {
+            const params: Record<string, string> = {};
+            if (selectedDifficulty) params.difficulty = selectedDifficulty;
+            if (selectedCategory) params.category = selectedCategory;
+
             router.replace({
               pathname: "/(quiz)/quiz",
-              params: selectedDifficulty
-                ? { difficulty: selectedDifficulty }
-                : {},
+              params,
             });
           }}
         />
@@ -110,6 +155,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Spacing.xs,
     borderRadius: Radius.md, // Écrase le Radius.full par défaut du composant Button pour un effet moins "pilule"
+  },
+  categoryTitle: {
+    marginTop: Spacing.xl,
+  },
+  categoriesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: Spacing.sm,
+    marginBottom: Spacing.sm,
+  },
+  categoryBtn: {
+    paddingHorizontal: Spacing.base,
+    borderRadius: Radius.md,
   },
   footer: {
     paddingBottom: Spacing.xl,

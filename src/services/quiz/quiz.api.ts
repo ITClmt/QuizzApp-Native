@@ -6,6 +6,17 @@ export interface StartQuizParams {
   category?: string;
 }
 
+export interface QuizCategory {
+  id: string;
+  name: string;
+  unlockLevel: number;
+  unlocked: boolean;
+}
+
+export async function getQuizCategories() {
+  return apiFetchAuthenticated<QuizCategory[]>(`/quiz/categories`);
+}
+
 export async function startQuizSession(params: StartQuizParams = {}) {
   const queryParams = new URLSearchParams();
   if (params.difficulty) queryParams.append("difficulty", params.difficulty);

@@ -30,7 +30,10 @@ function formatTime(totalSeconds: number) {
 }
 
 export default function QuizScreen() {
-  const { difficulty } = useLocalSearchParams<{ difficulty: string }>();
+  const { difficulty, category } = useLocalSearchParams<{
+    difficulty: string;
+    category?: string;
+  }>();
   const router = useRouter();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
@@ -73,7 +76,7 @@ export default function QuizScreen() {
     error,
     data,
   } = useMutation<QuizSession>({
-    mutationFn: () => startQuizSession({ difficulty }),
+    mutationFn: () => startQuizSession({ difficulty, category }),
     onSuccess: (session) => {
       setQuestions(session.questions);
     },
