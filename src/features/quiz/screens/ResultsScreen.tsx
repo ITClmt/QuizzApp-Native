@@ -3,6 +3,7 @@ import AnswerBreakdown from "@/src/features/quiz/components/AnswerBreakdown";
 import DifficultyBreakdown from "@/src/features/quiz/components/DifficultyBreakdown";
 import ResultsActions from "@/src/features/quiz/components/ResultsActions";
 import ScoreSummary from "@/src/features/quiz/components/ScoreSummary";
+import XpSummary from "@/src/features/quiz/components/XpSummary";
 import type { QuizQuestion, QuizResult } from "@/src/types";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, StyleSheet } from "react-native";
@@ -37,6 +38,11 @@ export default function ResultsScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         <ScoreSummary score={result.totalScore} total={result.answers.length} />
+        <XpSummary
+          xpEarned={result.xpEarned}
+          level={result.level}
+          leveledUp={result.leveledUp}
+        />
         <DifficultyBreakdown details={result.details} />
         {result.answers.length > 0 && (
           <AnswerBreakdown

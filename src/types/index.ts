@@ -39,6 +39,9 @@ export interface QuizResult {
   totalScore: number;
   details: { difficulty: string; value: number }[];
   answers: QuizAnswerResult[];
+  xpEarned: number;
+  level: number;
+  leveledUp: boolean;
 }
 
 export interface UserProfile {
