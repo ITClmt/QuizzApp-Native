@@ -7,9 +7,14 @@ import { Image, StyleSheet, Text, View } from "react-native";
 interface MyRankBannerProps {
   myRank: MyRank;
   user: User;
+  unit?: string;
 }
 
-export function MyRankBanner({ myRank, user }: MyRankBannerProps) {
+export function MyRankBanner({
+  myRank,
+  user,
+  unit = "pts",
+}: MyRankBannerProps) {
   return (
     <View style={styles.wrapper}>
       <View style={styles.separator}>
@@ -28,7 +33,9 @@ export function MyRankBanner({ myRank, user }: MyRankBannerProps) {
           <Text style={styles.name}>You ({user.username})</Text>
           <Text style={styles.subtitle}>Outside top 10</Text>
         </View>
-        <Text style={styles.score}>{myRank.value} pts</Text>
+        <Text style={styles.score}>
+          {myRank.value} {unit}
+        </Text>
       </View>
     </View>
   );

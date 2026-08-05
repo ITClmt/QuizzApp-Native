@@ -34,3 +34,31 @@ export async function getMyRank(
     `/score/my-rank?difficulty=${difficulty}`,
   );
 }
+
+export type LeaderboardFilter = Difficulty | "global";
+
+export interface GlobalLeaderboardEntry {
+  id: string;
+  username: string;
+  avatarSlug: string;
+  xp: number;
+  level: number;
+}
+
+export async function getGlobalLeaderboard(): Promise<
+  GlobalLeaderboardEntry[]
+> {
+  return apiFetchAuthenticated<GlobalLeaderboardEntry[]>(
+    `/score/leaderboard/global`,
+  );
+}
+
+export interface GlobalMyRank {
+  rank: number;
+  xp: number;
+  level: number;
+}
+
+export async function getMyGlobalRank(): Promise<GlobalMyRank | null> {
+  return apiFetchAuthenticated<GlobalMyRank | null>(`/score/my-rank/global`);
+}

@@ -20,9 +20,15 @@ export interface PodiumColumnProps {
   entry: LeaderboardEntry | undefined;
   rank: 0 | 1 | 2;
   isSelf: boolean;
+  unit?: string;
 }
 
-export function PodiumColumn({ entry, rank, isSelf }: PodiumColumnProps) {
+export function PodiumColumn({
+  entry,
+  rank,
+  isSelf,
+  unit = "pts",
+}: PodiumColumnProps) {
   const medal = MEDAL[rank];
   const isFirst = rank === 0;
 
@@ -79,7 +85,7 @@ export function PodiumColumn({ entry, rank, isSelf }: PodiumColumnProps) {
           {entry.userData.username}
         </Text>
         <Text style={[styles.score, isFirst && styles.scoreFirst]}>
-          {entry.value} pts
+          {entry.value} {unit}
         </Text>
       </View>
     </View>

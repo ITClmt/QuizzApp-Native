@@ -5,24 +5,26 @@ import {
   Radius,
   Spacing,
 } from "@/constants/theme";
-import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
+import type { LeaderboardFilter } from "@/src/services/leaderboard/leaderboard.api";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const DIFFICULTIES: { label: string; difficulty: Difficulty }[] = [
+const DIFFICULTIES: { label: string; difficulty: LeaderboardFilter }[] = [
   { label: "Easy", difficulty: "easy" },
   { label: "Medium", difficulty: "medium" },
   { label: "Hard", difficulty: "hard" },
+  { label: "Global", difficulty: "global" },
 ];
 
-const DIFFICULTY_COLORS: Record<Difficulty, string> = {
+const DIFFICULTY_COLORS: Record<LeaderboardFilter, string> = {
   easy: Colors.success,
   medium: Colors.secondary,
   hard: Colors.error,
+  global: Colors.primary,
 };
 
 interface DifficultyFilterProps {
-  difficulty: Difficulty;
-  setDifficulty: (d: Difficulty) => void;
+  difficulty: LeaderboardFilter;
+  setDifficulty: (d: LeaderboardFilter) => void;
 }
 
 export function DifficultyFilter({

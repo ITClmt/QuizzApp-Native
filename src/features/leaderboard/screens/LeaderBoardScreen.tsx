@@ -1,13 +1,17 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
 import { useAuth } from "@/src/contexts/AuthContext";
 import {
-  type Difficulty,
   type LeaderboardEntry,
+  type LeaderboardFilter,
+  type MyRank,
+  getGlobalLeaderboard,
   getLeaderboard,
+  getMyGlobalRank,
   getMyRank,
 } from "@/src/services/leaderboard/leaderboard.api";
+import { useFocusEffect } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -22,7 +26,8 @@ import { MyRankBanner } from "../components/MyRankBanner";
 import { PodiumSection } from "../components/PodiumSection";
 
 export default function LeaderBoardScreen() {
-  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [difficulty, setDifficulty] = useState<LeaderboardFilter>("easy");
+  const isGlobal = difficulty === "global";
   const { user } = useAuth();
 
   const {
@@ -33,7 +38,19 @@ export default function LeaderBoardScreen() {
     isRefetching: isRefetchingLeaderboard,
   } = useQuery<LeaderboardEntry[]>({
     queryKey: ["leaderboard", difficulty],
-    queryFn: () => getLeaderboard(difficulty),
+    queryFn: async () => {
+      if (isGlobal) {
+        const entries = await getGlobalLeaderboard();
+        return entries.map((e) => ({
+          id: e.id,
+          value: e.xp,
+          difficulty: "easy" as const,
+          userData: { id: e.id, username: e.username, avatarSlug: e.avatarSlug },
+          createdAt: "",
+        }));
+      }
+      return getLeaderboard(difficulty);
+    },
     refetchOnWindowFocus: false,
   });
 
@@ -46,9 +63,15 @@ export default function LeaderBoardScreen() {
     data: myRank,
     refetch: refetchMyRank,
     isRefetching: isRefetchingMyRank,
-  } = useQuery({
+  } = useQuery<MyRank | null>({
     queryKey: ["my-rank", difficulty],
-    queryFn: () => getMyRank(difficulty),
+    queryFn: async () => {
+      if (isGlobal) {
+        const rank = await getMyGlobalRank();
+        return rank && { rank: rank.rank, value: rank.xp };
+      }
+      return getMyRank(difficulty);
+    },
     refetchOnWindowFocus: false,
   });
 
@@ -57,7 +80,18 @@ export default function LeaderBoardScreen() {
     refetchMyRank();
   };
 
+  // Écrans d'onglets restant montés (voir ProfileScreen) : on force le
+  // rafraîchissement à chaque retour sur cet onglet plutôt que de servir
+  // un classement potentiellement obsolète après une partie.
+  useFocusEffect(
+    useCallback(() => {
+      refetchLeaderboard();
+      refetchMyRank();
+    }, [refetchLeaderboard, refetchMyRank]),
+  );
+
   const isRefreshing = isRefetchingLeaderboard || isRefetchingMyRank;
+  const unit = isGlobal ? "xp" : "pts";
 
   const renderHeader = () => (
     <>
@@ -84,7 +118,7 @@ export default function LeaderBoardScreen() {
           </Text>
         </View>
       ) : (
-        <PodiumSection top3={top3} currentUserId={user?.sub} />
+        <PodiumSection top3={top3} currentUserId={user?.sub} unit={unit} />
       )}
     </>
   );
@@ -103,11 +137,12 @@ export default function LeaderBoardScreen() {
             entry={item}
             rank={index + 4}
             isSelf={item.userData.id === user?.sub}
+            unit={unit}
           />
         )}
         ListFooterComponent={
           !isInTop10 && myRank && user
-            ? () => <MyRankBanner myRank={myRank} user={user} />
+            ? () => <MyRankBanner myRank={myRank} user={user} unit={unit} />
             : null
         }
       />

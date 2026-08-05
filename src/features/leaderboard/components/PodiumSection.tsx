@@ -8,9 +8,14 @@ const PODIUM_ORDER = [1, 0, 2] as const;
 interface PodiumSectionProps {
   top3: LeaderboardEntry[];
   currentUserId: string | undefined;
+  unit?: string;
 }
 
-export function PodiumSection({ top3, currentUserId }: PodiumSectionProps) {
+export function PodiumSection({
+  top3,
+  currentUserId,
+  unit,
+}: PodiumSectionProps) {
   return (
     <View style={styles.container}>
       {PODIUM_ORDER.map((rank) => (
@@ -19,6 +24,7 @@ export function PodiumSection({ top3, currentUserId }: PodiumSectionProps) {
           rank={rank}
           entry={top3[rank]}
           isSelf={top3[rank]?.userData.id === currentUserId}
+          unit={unit}
         />
       ))}
     </View>

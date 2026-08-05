@@ -7,9 +7,15 @@ interface LeaderboardRowProps {
   entry: LeaderboardEntry;
   rank: number;
   isSelf: boolean;
+  unit?: string;
 }
 
-export function LeaderboardRow({ entry, rank, isSelf }: LeaderboardRowProps) {
+export function LeaderboardRow({
+  entry,
+  rank,
+  isSelf,
+  unit = "pts",
+}: LeaderboardRowProps) {
   return (
     <View style={[styles.row, isSelf && styles.rowSelf]}>
       <Text style={[styles.rank, isSelf && styles.rankSelf]}>{rank}</Text>
@@ -23,7 +29,7 @@ export function LeaderboardRow({ entry, rank, isSelf }: LeaderboardRowProps) {
         </Text>
       </View>
       <Text style={[styles.score, isSelf && styles.scoreSelf]}>
-        {entry.value} pts
+        {entry.value} {unit}
       </Text>
     </View>
   );
