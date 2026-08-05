@@ -96,7 +96,7 @@ export default function PreQuizScreen() {
 
         <View style={styles.timerContainer}>
           <Text style={styles.timerText}>
-            You have 2 minutes to answer 50 questions.
+            You have 1 minute 30 to answer 50 questions.
           </Text>
         </View>
       </View>

@@ -20,7 +20,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ANSWER_LABELS = ["A", "B", "C", "D"];
-const QUIZ_DURATION_SECONDS = 2 * 60;
+const QUIZ_DURATION_SECONDS = 1.5 * 60;
 const LOW_TIME_THRESHOLD_SECONDS = 30;
 
 function formatTime(totalSeconds: number) {
