@@ -47,6 +47,7 @@ export default function AppLayout() {
         tabBarInactiveTintColor: Colors.outline,
         tabBarStyle: styles.tabBar,
         tabBarItemStyle: styles.tabBarItem,
+        tabBarIconStyle: styles.tabBarIcon,
       }}
     >
       <Tabs.Screen
@@ -103,7 +104,12 @@ const styles = StyleSheet.create({
   },
   tabBarItem: {
     height: 64,
+    alignItems: "center",
     justifyContent: "center",
+  },
+  tabBarIcon: {
+    marginTop: "auto",
+    marginBottom: "auto",
   },
   tabIconWrapper: {
     width: 40,
