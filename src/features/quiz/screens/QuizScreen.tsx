@@ -16,7 +16,7 @@ import {
 } from "@/src/services/quiz/quiz.api";
 import type { QuizQuestion, QuizResult, QuizSession } from "@/src/types";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { useEffect, useRef, useState } from "react";
@@ -39,6 +39,7 @@ export default function QuizScreen() {
     category?: string;
   }>();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -100,6 +101,7 @@ export default function QuizScreen() {
           })),
         }),
       onSuccess: (result) => {
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
         router.replace({
           pathname: "/(quiz)/results",
           params: {
