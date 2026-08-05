@@ -40,3 +40,18 @@ export interface QuizResult {
   details: { difficulty: string; value: number }[];
   answers: QuizAnswerResult[];
 }
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  username: string;
+  role: "USER" | "ADMIN";
+  lang: "fr" | "en";
+  avatarSlug: string;
+  xp: number;
+  level: number;
+  xpForCurrentLevel: number;
+  xpForNextLevel: number;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -8,10 +8,13 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { useAuth } from "@/src/contexts/AuthContext";
+import { getProfileRequest } from "@/src/services/auth/auth.api";
 import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
 import { getUserScores } from "@/src/services/score/score.api";
+import { useFocusEffect } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
+import { useCallback } from "react";
 import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DifficultyScoreCard } from "../components/DifficultyScoreCard";
@@ -21,12 +24,40 @@ const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
 export default function ProfileScreen() {
   const { user } = useAuth();
 
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch: refetchScores,
+  } = useQuery({
     queryKey: ["user-scores", user?.sub],
     queryFn: () => getUserScores(user?.sub as string),
     enabled: !!user?.sub,
     refetchOnWindowFocus: false,
   });
+
+  const { data: profile, refetch: refetchProfile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfileRequest,
+    enabled: !!user?.sub,
+    refetchOnWindowFocus: false,
+  });
+
+  // React Navigation garde les écrans d'onglets montés : sans ce hook,
+  // revenir sur Profile après un quiz réaffiche les données mises en cache
+  // au premier montage (React Query ne rafraîchit pas au changement d'onglet).
+  useFocusEffect(
+    useCallback(() => {
+      refetchScores();
+      refetchProfile();
+    }, [refetchScores, refetchProfile]),
+  );
+
+  const xpIntoLevel = profile ? profile.xp - profile.xpForCurrentLevel : 0;
+  const xpForThisLevel = profile
+    ? profile.xpForNextLevel - profile.xpForCurrentLevel
+    : 1;
+  const levelProgress = Math.min(1, xpIntoLevel / Math.max(1, xpForThisLevel));
 
   const scoreByDifficulty = new Map(
     data?.scores.map((s) => [s.difficulty, s.value]),
@@ -58,6 +89,27 @@ export default function ProfileScreen() {
           <Text style={styles.totalScoreLabel}>Total score</Text>
           <Text style={styles.totalScoreValue}>{data?.totalScore ?? 0}</Text>
         </View>
+
+        {profile && (
+          <View style={styles.levelCard}>
+            <View style={styles.levelHeader}>
+              <Text style={styles.levelLabel}>Level {profile.level}</Text>
+              <Text style={styles.levelXpText}>
+                {xpForThisLevel > 0
+                  ? `${xpIntoLevel} / ${xpForThisLevel} XP`
+                  : "Max level reached"}
+              </Text>
+            </View>
+            <View style={styles.levelBarTrack}>
+              <View
+                style={[
+                  styles.levelBarFill,
+                  { width: `${levelProgress * 100}%` },
+                ]}
+              />
+            </View>
+          </View>
+        )}
 
         <Text style={styles.sectionTitle}>Scores by difficulty</Text>
 
@@ -126,6 +178,40 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: Spacing.xl,
     marginTop: -Spacing["3xl"],
+  },
+  levelCard: {
+    backgroundColor: Colors.surfaceContainerLowest,
+    borderRadius: Radius.xl,
+    padding: Spacing.lg,
+    marginBottom: Spacing["2xl"],
+    gap: Spacing.sm,
+    ...Shadows.card,
+  },
+  levelHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  levelLabel: {
+    fontFamily: FontFamily.headlineSemibold,
+    fontSize: FontSize.titleMd,
+    color: Colors.onSurface,
+  },
+  levelXpText: {
+    fontFamily: FontFamily.body,
+    fontSize: FontSize.labelSm,
+    color: Colors.onSurfaceVariant,
+  },
+  levelBarTrack: {
+    height: 8,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.surfaceContainerHigh,
+    overflow: "hidden",
+  },
+  levelBarFill: {
+    height: "100%",
+    borderRadius: Radius.full,
+    backgroundColor: Colors.primary,
   },
   totalScoreCard: {
     alignItems: "center",
