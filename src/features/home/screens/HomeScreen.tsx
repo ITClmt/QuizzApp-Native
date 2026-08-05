@@ -1,7 +1,8 @@
+import { LevelProgressBar } from "@/src/components/LevelProgressBar";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Colors, FontSize } from "../../../../constants/theme";
+import { Colors, FontSize, Spacing } from "../../../../constants/theme";
 import StartQuizBtn from "../components/StartQuizBtn";
 
 export function HomeScreen() {
@@ -12,6 +13,9 @@ export function HomeScreen() {
         <Text style={styles.title}>Welcome, {user?.username}!</Text>
       </View>
       <View style={styles.bottomContainer}>
+        <View style={styles.levelBarWrapper}>
+          <LevelProgressBar />
+        </View>
         <StartQuizBtn />
       </View>
     </SafeAreaView>
@@ -38,5 +42,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+  },
+  levelBarWrapper: {
+    width: "100%",
+    marginBottom: Spacing.xl,
   },
 });

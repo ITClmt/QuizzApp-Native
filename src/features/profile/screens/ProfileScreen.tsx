@@ -7,8 +7,8 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { LevelProgressBar } from "@/src/components/LevelProgressBar";
 import { useAuth } from "@/src/contexts/AuthContext";
-import { getProfileRequest } from "@/src/services/auth/auth.api";
 import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
 import { getUserScores } from "@/src/services/score/score.api";
 import { useFocusEffect } from "@react-navigation/native";
@@ -36,28 +36,14 @@ export default function ProfileScreen() {
     refetchOnWindowFocus: false,
   });
 
-  const { data: profile, refetch: refetchProfile } = useQuery({
-    queryKey: ["profile"],
-    queryFn: getProfileRequest,
-    enabled: !!user?.sub,
-    refetchOnWindowFocus: false,
-  });
-
   // React Navigation garde les écrans d'onglets montés : sans ce hook,
-  // revenir sur Profile après un quiz réaffiche les données mises en cache
+  // revenir sur Profile après un quiz réaffiche les scores mis en cache
   // au premier montage (React Query ne rafraîchit pas au changement d'onglet).
   useFocusEffect(
     useCallback(() => {
       refetchScores();
-      refetchProfile();
-    }, [refetchScores, refetchProfile]),
+    }, [refetchScores]),
   );
-
-  const xpIntoLevel = profile ? profile.xp - profile.xpForCurrentLevel : 0;
-  const xpForThisLevel = profile
-    ? profile.xpForNextLevel - profile.xpForCurrentLevel
-    : 1;
-  const levelProgress = Math.min(1, xpIntoLevel / Math.max(1, xpForThisLevel));
 
   const scoreByDifficulty = new Map(
     data?.scores.map((s) => [s.difficulty, s.value]),
@@ -90,26 +76,9 @@ export default function ProfileScreen() {
           <Text style={styles.totalScoreValue}>{data?.totalScore ?? 0}</Text>
         </View>
 
-        {profile && (
-          <View style={styles.levelCard}>
-            <View style={styles.levelHeader}>
-              <Text style={styles.levelLabel}>Level {profile.level}</Text>
-              <Text style={styles.levelXpText}>
-                {xpForThisLevel > 0
-                  ? `${xpIntoLevel} / ${xpForThisLevel} XP`
-                  : "Max level reached"}
-              </Text>
-            </View>
-            <View style={styles.levelBarTrack}>
-              <View
-                style={[
-                  styles.levelBarFill,
-                  { width: `${levelProgress * 100}%` },
-                ]}
-              />
-            </View>
-          </View>
-        )}
+        <View style={styles.levelCardWrapper}>
+          <LevelProgressBar />
+        </View>
 
         <Text style={styles.sectionTitle}>Scores by difficulty</Text>
 
@@ -179,39 +148,8 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     marginTop: -Spacing["3xl"],
   },
-  levelCard: {
-    backgroundColor: Colors.surfaceContainerLowest,
-    borderRadius: Radius.xl,
-    padding: Spacing.lg,
+  levelCardWrapper: {
     marginBottom: Spacing["2xl"],
-    gap: Spacing.sm,
-    ...Shadows.card,
-  },
-  levelHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  levelLabel: {
-    fontFamily: FontFamily.headlineSemibold,
-    fontSize: FontSize.titleMd,
-    color: Colors.onSurface,
-  },
-  levelXpText: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.labelSm,
-    color: Colors.onSurfaceVariant,
-  },
-  levelBarTrack: {
-    height: 8,
-    borderRadius: Radius.full,
-    backgroundColor: Colors.surfaceContainerHigh,
-    overflow: "hidden",
-  },
-  levelBarFill: {
-    height: "100%",
-    borderRadius: Radius.full,
-    backgroundColor: Colors.primary,
   },
   totalScoreCard: {
     alignItems: "center",
