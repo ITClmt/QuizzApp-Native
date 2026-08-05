@@ -2,11 +2,16 @@ import { Colors } from "@/constants/theme";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { Providers } from "@/src/components/Providers";
 import {
+  Baloo2_500Medium,
+  Baloo2_600SemiBold,
+  Baloo2_700Bold,
+  Baloo2_800ExtraBold,
+} from "@expo-google-fonts/baloo-2";
+import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_600SemiBold,
   Inter_700Bold,
-  Inter_800ExtraBold,
   useFonts,
 } from "@expo-google-fonts/inter";
 import { Stack } from "expo-router";
@@ -21,7 +26,10 @@ export default function RootLayout() {
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
-    Inter_800ExtraBold,
+    Baloo2_500Medium,
+    Baloo2_600SemiBold,
+    Baloo2_700Bold,
+    Baloo2_800ExtraBold,
   });
 
   useEffect(() => {

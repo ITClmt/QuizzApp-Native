@@ -1,4 +1,5 @@
-import { Colors, Spacing } from "@/constants/theme";
+import { Spacing } from "@/constants/theme";
+import { GradientBackground } from "@/src/components/GradientBackground";
 import AnswerBreakdown from "@/src/features/quiz/components/AnswerBreakdown";
 import DifficultyBreakdown from "@/src/features/quiz/components/DifficultyBreakdown";
 import ResultsActions from "@/src/features/quiz/components/ResultsActions";
@@ -32,39 +33,40 @@ export default function ResultsScreen() {
   const questionMap = new Map(questions.map((q) => [q.id, q]));
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <ScoreSummary score={result.totalScore} total={result.answers.length} />
-        <XpSummary
-          xpEarned={result.xpEarned}
-          level={result.level}
-          leveledUp={result.leveledUp}
-        />
-        <DifficultyBreakdown details={result.details} />
-        {result.answers.length > 0 && (
-          <AnswerBreakdown
-            answers={result.answers}
-            questionMap={questionMap}
-            userAnswers={userAnswers}
+    <GradientBackground>
+      <SafeAreaView style={styles.container}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <ScoreSummary score={result.totalScore} total={result.answers.length} />
+          <XpSummary
+            xpEarned={result.xpEarned}
+            level={result.level}
+            leveledUp={result.leveledUp}
           />
-        )}
-      </ScrollView>
+          <DifficultyBreakdown details={result.details} />
+          {result.answers.length > 0 && (
+            <AnswerBreakdown
+              answers={result.answers}
+              questionMap={questionMap}
+              userAnswers={userAnswers}
+            />
+          )}
+        </ScrollView>
 
-      <ResultsActions
-        onReplay={() => router.replace("/(quiz)/preQuiz")}
-        onHome={() => router.replace("/(app)")}
-      />
-    </SafeAreaView>
+        <ResultsActions
+          onReplay={() => router.replace("/(quiz)/preQuiz")}
+          onHome={() => router.replace("/(app)")}
+        />
+      </SafeAreaView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   scrollContent: {
     padding: Spacing.xl,

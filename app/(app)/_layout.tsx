@@ -1,8 +1,27 @@
+import { Colors, Radius, Shadows } from "@/constants/theme";
 import { Navbar } from "@/src/components/Navbar";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+
+function TabIcon({
+  name,
+  focused,
+}: {
+  name: React.ComponentProps<typeof Ionicons>["name"];
+  focused: boolean;
+}) {
+  return (
+    <View style={[styles.tabIconWrapper, focused && styles.tabIconWrapperActive]}>
+      <Ionicons
+        name={name}
+        color={focused ? Colors.onPrimary : Colors.outline}
+        size={22}
+      />
+    </View>
+  );
+}
 
 export default function AppLayout() {
   const { user, isLoading } = useAuth();
@@ -23,16 +42,19 @@ export default function AppLayout() {
     <Tabs
       screenOptions={{
         header: () => <Navbar />,
-        tabBarActiveTintColor: "#6366f1",
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.outline,
         tabBarStyle: styles.tabBar,
+        tabBarItemStyle: styles.tabBarItem,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="game-controller" color={color} size={24} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon name="game-controller" focused={focused} />
           ),
         }}
       />
@@ -40,8 +62,8 @@ export default function AppLayout() {
         name="leaderboard"
         options={{
           title: "Leaderboard",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="podium" color={color} size={24} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon name="podium" focused={focused} />
           ),
         }}
       />
@@ -49,8 +71,8 @@ export default function AppLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person" color={color} size={24} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon name="person" focused={focused} />
           ),
         }}
       />
@@ -58,8 +80,8 @@ export default function AppLayout() {
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="settings" color={color} size={24} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon name="settings" focused={focused} />
           ),
         }}
       />
@@ -69,6 +91,28 @@ export default function AppLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    borderRadius: 50,
+    position: "absolute",
+    left: 20,
+    right: 20,
+    bottom: 20,
+    height: 64,
+    borderRadius: Radius.xl,
+    backgroundColor: Colors.surface,
+    borderTopWidth: 0,
+    ...Shadows.nav,
+  },
+  tabBarItem: {
+    height: 64,
+    justifyContent: "center",
+  },
+  tabIconWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: Radius.sm,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tabIconWrapperActive: {
+    backgroundColor: Colors.primary,
   },
 });

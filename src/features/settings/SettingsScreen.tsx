@@ -6,6 +6,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { GradientBackground } from "@/src/components/GradientBackground";
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,37 +21,39 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
-      <View style={styles.card}>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Username</Text>
-          <Text style={styles.value}>{user?.username || "N/A"}</Text>
+    <GradientBackground>
+      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+        <View style={styles.card}>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Username</Text>
+            <Text style={styles.value}>{user?.username || "N/A"}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Email</Text>
+            <Text style={styles.value}>{user?.email || "N/A"}</Text>
+          </View>
         </View>
-        <View style={styles.divider} />
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{user?.email || "N/A"}</Text>
-        </View>
-      </View>
 
-      <Pressable onPress={handleSignOut} style={styles.logoutButton}>
-        <Text style={styles.logoutButtonText}>Logout</Text>
-      </Pressable>
-    </SafeAreaView>
+        <Pressable onPress={handleSignOut} style={styles.logoutButton}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </Pressable>
+      </SafeAreaView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.background,
-    padding: Spacing["2xl"],
+    padding: Spacing.xl,
   },
   card: {
-    backgroundColor: Colors.surfaceContainer,
-    borderRadius: Radius.xl,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
     padding: Spacing.lg,
     marginBottom: Spacing["4xl"],
+    ...Shadows.card,
   },
   infoRow: {
     flexDirection: "row",
@@ -62,10 +65,9 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: Colors.outlineVariant,
     marginVertical: Spacing.xs,
-    opacity: 0.3,
   },
   label: {
-    fontFamily: FontFamily.label,
+    fontFamily: FontFamily.bodyBold,
     fontSize: FontSize.labelLg,
     color: Colors.onSurfaceVariant,
   },
@@ -75,14 +77,16 @@ const styles = StyleSheet.create({
     color: Colors.onSurface,
   },
   logoutButton: {
-    backgroundColor: Colors.errorContainer,
+    backgroundColor: Colors.surface,
+    borderWidth: 2,
+    borderColor: Colors.error,
     padding: Spacing.lg,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.lg,
     alignItems: "center",
     ...Shadows.card,
   },
   logoutButtonText: {
-    color: Colors.onErrorContainer,
+    color: Colors.error,
     fontFamily: FontFamily.headlineSemibold,
     fontSize: FontSize.titleMd,
   },

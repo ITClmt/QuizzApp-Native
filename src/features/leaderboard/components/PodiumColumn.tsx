@@ -11,9 +11,30 @@ import type { LeaderboardEntry } from "@/src/services/leaderboard/leaderboard.ap
 import { Image, StyleSheet, Text, View } from "react-native";
 
 export const MEDAL = {
-  0: { bg: "#FFD700", border: "#FFD700", size: 80, barHeight: 120 },
-  1: { bg: "#C0C0C0", border: "#C0C0C0", size: 64, barHeight: 80 },
-  2: { bg: "#CD7F32", border: "#CD7F32", size: 64, barHeight: 60 },
+  0: {
+    bg: Colors.gold,
+    border: Colors.gold,
+    badgeBg: Colors.primary,
+    barBg: Colors.primaryContainer,
+    size: 80,
+    barHeight: 120,
+  },
+  1: {
+    bg: Colors.silver,
+    border: Colors.silver,
+    badgeBg: Colors.silverDim,
+    barBg: Colors.surface,
+    size: 64,
+    barHeight: 80,
+  },
+  2: {
+    bg: Colors.bronze,
+    border: Colors.bronze,
+    badgeBg: Colors.accentOrange,
+    barBg: Colors.surface,
+    size: 64,
+    barHeight: 60,
+  },
 } as const;
 
 export interface PodiumColumnProps {
@@ -64,7 +85,7 @@ export function PodiumColumn({
             },
           ]}
         />
-        <View style={[styles.badge, { backgroundColor: medal.bg }]}>
+        <View style={[styles.badge, { backgroundColor: medal.badgeBg }]}>
           <Text style={styles.badgeText}>{rank + 1}</Text>
         </View>
       </View>
@@ -73,9 +94,7 @@ export function PodiumColumn({
           styles.bar,
           {
             height: medal.barHeight,
-            backgroundColor: isFirst
-              ? Colors.primaryContainer
-              : Colors.surfaceContainerHigh,
+            backgroundColor: medal.barBg,
             borderWidth: isSelf ? 2 : 0,
             borderColor: Colors.primary,
           },
@@ -113,7 +132,7 @@ const styles = StyleSheet.create({
     right: -4,
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.card,
@@ -121,7 +140,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontFamily: FontFamily.headline,
     fontSize: FontSize.labelSm,
-    color: "#ffffff",
+    color: Colors.white,
   },
   bar: {
     width: "100%",

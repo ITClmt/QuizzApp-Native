@@ -1,10 +1,21 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import {
+  Colors,
+  FontFamily,
+  FontSize,
+  Radius,
+  Shadows,
+  Spacing,
+} from "@/constants/theme";
+import { GradientBackground } from "@/src/components/GradientBackground";
+import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
+import { DottedProgress } from "@/src/features/quiz/components/DottedProgress";
 import {
   finishQuizSession,
   startQuizSession,
 } from "@/src/services/quiz/quiz.api";
 import type { QuizQuestion, QuizResult, QuizSession } from "@/src/types";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
@@ -19,15 +30,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const ANSWER_LABELS = ["A", "B", "C", "D"];
 const QUIZ_DURATION_SECONDS = 1.5 * 60;
 const LOW_TIME_THRESHOLD_SECONDS = 30;
-
-function formatTime(totalSeconds: number) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
 
 export default function QuizScreen() {
   const { difficulty, category } = useLocalSearchParams<{
@@ -136,59 +140,44 @@ export default function QuizScreen() {
 
   if (isPending) {
     return (
-      <SafeAreaView style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-        <Text style={styles.loadingText}>Starting your session...</Text>
-      </SafeAreaView>
+      <GradientBackground>
+        <SafeAreaView style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+          <Text style={styles.loadingText}>Starting your session...</Text>
+        </SafeAreaView>
+      </GradientBackground>
     );
   }
 
   if (isError) {
     return (
-      <SafeAreaView style={styles.centered}>
-        <Text style={styles.errorText}>Error: {error.message}</Text>
-      </SafeAreaView>
+      <GradientBackground>
+        <SafeAreaView style={styles.centered}>
+          <Text style={styles.errorText}>Error: {error.message}</Text>
+        </SafeAreaView>
+      </GradientBackground>
     );
   }
 
   if (questions.length === 0) {
     return (
-      <SafeAreaView style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </SafeAreaView>
+      <GradientBackground>
+        <SafeAreaView style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </SafeAreaView>
+      </GradientBackground>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
   const selectedAnswerIndex = userAnswers[currentQuestionIndex];
-  const progress = currentQuestionIndex / questions.length;
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const isUrgent = timeLeft <= LOW_TIME_THRESHOLD_SECONDS;
 
   const getButtonStyle = (index: number) => {
     if (!showAnswer) return null;
     if (index === currentQuestion.correctIndex) return styles.correctButton;
     if (index === selectedAnswerIndex) return styles.wrongButton;
-    return null;
-  };
-
-  const getBadgeStyle = (index: number) => {
-    if (!showAnswer) return null;
-    if (index === currentQuestion.correctIndex) return styles.correctBadge;
-    if (index === selectedAnswerIndex) return styles.wrongBadge;
-    return null;
-  };
-
-  const getBadgeTextStyle = (index: number) => {
-    if (!showAnswer) return null;
-    if (index === currentQuestion.correctIndex) return styles.correctBadgeText;
-    if (index === selectedAnswerIndex) return styles.wrongBadgeText;
-    return null;
-  };
-
-  const getDividerStyle = (index: number) => {
-    if (!showAnswer) return null;
-    if (index === currentQuestion.correctIndex) return styles.correctDivider;
-    if (index === selectedAnswerIndex) return styles.wrongDivider;
     return null;
   };
 
@@ -199,75 +188,92 @@ export default function QuizScreen() {
     return null;
   };
 
+  const renderStatusIcon = (index: number) => {
+    if (!showAnswer) return null;
+    if (index === currentQuestion.correctIndex) {
+      return (
+        <View style={[styles.statusIcon, styles.statusIconCorrect]}>
+          <MaterialIcons name="check" size={16} color={Colors.onSuccess} />
+        </View>
+      );
+    }
+    if (index === selectedAnswerIndex) {
+      return (
+        <View style={[styles.statusIcon, styles.statusIconWrong]}>
+          <MaterialIcons name="close" size={16} color={Colors.onError} />
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <CancelSessionButton sessionId={data!.sessionId} />
-        <Text
-          style={[
-            styles.timer,
-            timeLeft <= LOW_TIME_THRESHOLD_SECONDS && styles.timerLow,
-          ]}
-        >
-          {formatTime(timeLeft)}
+    <GradientBackground>
+      <SafeAreaView style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <CancelSessionButton sessionId={data!.sessionId} />
+          <DottedProgress total={questions.length} current={currentQuestionIndex} />
+          <View style={styles.headerSpacer} />
+        </View>
+
+        {/* Timer */}
+        <View style={styles.timerContainer}>
+          <CircularTimer
+            secondsLeft={timeLeft}
+            totalSeconds={QUIZ_DURATION_SECONDS}
+            urgent={isUrgent}
+          />
+        </View>
+
+        {/* Category + question label */}
+        <Text style={styles.metaLabel}>
+          {currentQuestion.category.toUpperCase()} · QUESTION{" "}
+          {currentQuestionIndex + 1}/{questions.length}
         </Text>
-        <Text style={styles.questionCounter}>
-          {currentQuestionIndex + 1} / {questions.length}
-        </Text>
-      </View>
 
-      {/* Progress bar */}
-      <View style={styles.progressTrack}>
-        <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
-      </View>
+        {/* Question */}
+        <View style={styles.questionContainer}>
+          <Text style={styles.questionText}>{currentQuestion.questionEn}</Text>
+        </View>
 
-      {/* Question */}
-      <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>{currentQuestion.questionEn}</Text>
-      </View>
-
-      {/* Answers */}
-      <View style={styles.answersContainer}>
-        {currentQuestion.answers.map((answer, index) => (
-          <Pressable
-            key={index}
-            style={[styles.answerButton, getButtonStyle(index)]}
-            onPress={() => handleAnswer(index)}
-            disabled={showAnswer}
-          >
-            <View style={[styles.answerBadge, getBadgeStyle(index)]}>
-              <Text style={[styles.answerBadgeText, getBadgeTextStyle(index)]}>
-                {ANSWER_LABELS[index]}
+        {/* Answers */}
+        <View style={styles.answersContainer}>
+          {currentQuestion.answers.map((answer, index) => (
+            <Pressable
+              key={index}
+              style={[styles.answerButton, getButtonStyle(index)]}
+              onPress={() => handleAnswer(index)}
+              disabled={showAnswer}
+            >
+              <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
+                {answer}
               </Text>
-            </View>
-            <View style={[styles.answerDivider, getDividerStyle(index)]} />
-            <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
-              {answer}
-            </Text>
-          </Pressable>
-        ))}
+              {renderStatusIcon(index)}
+            </Pressable>
+          ))}
 
-        {showAnswer && (
-          <Pressable
-            style={[
-              styles.nextButton,
-              isFinishing && styles.nextButtonDisabled,
-            ]}
-            onPress={handleNextQuestion}
-            disabled={isFinishing}
-          >
-            {isFinishing ? (
-              <ActivityIndicator color={Colors.onPrimary} />
-            ) : (
-              <Text style={styles.nextButtonText}>
-                {isLastQuestion ? "Voir mes résultats" : "Next Question →"}
-              </Text>
-            )}
-          </Pressable>
-        )}
-      </View>
-    </SafeAreaView>
+          {showAnswer && (
+            <Pressable
+              style={[
+                styles.nextButton,
+                isFinishing && styles.nextButtonDisabled,
+              ]}
+              onPress={handleNextQuestion}
+              disabled={isFinishing}
+            >
+              {isFinishing ? (
+                <ActivityIndicator color={Colors.onPrimary} />
+              ) : (
+                <Text style={styles.nextButtonText}>
+                  {isLastQuestion ? "Voir mes résultats" : "Next Question →"}
+                </Text>
+              )}
+            </Pressable>
+          )}
+        </View>
+      </SafeAreaView>
+    </GradientBackground>
   );
 }
 
@@ -276,64 +282,56 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.background,
   },
   loadingText: {
     marginTop: Spacing.md,
     color: Colors.onSurfaceVariant,
-    fontSize: 14,
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.bodyMd,
   },
   errorText: {
     color: Colors.error,
-    fontSize: 14,
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.bodyMd,
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
     paddingHorizontal: Spacing.xl,
     paddingBottom: Spacing.xl,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    gap: Spacing.md,
     paddingTop: Spacing.md,
+    marginBottom: Spacing.xl,
+  },
+  headerSpacer: {
+    width: 36,
+  },
+  timerContainer: {
+    alignItems: "center",
+    marginBottom: Spacing.lg,
+  },
+  metaLabel: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelMd,
+    color: Colors.primary,
+    textAlign: "center",
+    letterSpacing: 0.5,
     marginBottom: Spacing.md,
-  },
-  questionCounter: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.onSurfaceVariant,
-  },
-  timer: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: Colors.onSurface,
-    fontVariant: ["tabular-nums"],
-  },
-  timerLow: {
-    color: Colors.error,
-  },
-  progressTrack: {
-    height: 6,
-    borderRadius: Radius.full,
-    backgroundColor: Colors.surfaceContainerHigh,
-    marginBottom: Spacing["2xl"],
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: Radius.full,
-    backgroundColor: Colors.primary,
   },
   questionContainer: {
     flex: 1,
     justifyContent: "center",
+    paddingBottom: Spacing.lg,
   },
   questionText: {
-    fontSize: 26,
-    fontWeight: "bold",
+    fontFamily: FontFamily.headline,
+    fontSize: FontSize.headlineMd,
     color: Colors.onSurface,
-    lineHeight: 36,
+    textAlign: "center",
+    lineHeight: 28,
   },
   answersContainer: {
     gap: Spacing.sm,
@@ -341,67 +339,50 @@ const styles = StyleSheet.create({
   answerButton: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     borderRadius: Radius.md,
-    backgroundColor: Colors.surfaceContainerHigh,
-    overflow: "hidden",
-  },
-  answerBadge: {
-    width: 52,
-    alignSelf: "stretch",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.primary,
-  },
-  answerBadgeText: {
-    fontSize: 15,
-    fontWeight: "bold",
-    color: Colors.onPrimary,
-  },
-  answerDivider: {
-    width: 1,
-    alignSelf: "stretch",
-    backgroundColor: Colors.outlineVariant,
+    borderWidth: 2,
+    borderColor: Colors.outlineVariant,
+    backgroundColor: Colors.surface,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.lg,
+    ...Shadows.card,
   },
   answerText: {
     flex: 1,
-    fontSize: 16,
+    fontFamily: FontFamily.bodySemibold,
+    fontSize: FontSize.bodyLg,
     color: Colors.onSurface,
-    paddingHorizontal: Spacing.base,
-    paddingVertical: Spacing.lg,
   },
   // Correct answer
   correctButton: {
     backgroundColor: Colors.successContainer,
-  },
-  correctBadge: {
-    backgroundColor: Colors.success,
-  },
-  correctBadgeText: {
-    color: Colors.onSuccess,
-  },
-  correctDivider: {
-    backgroundColor: Colors.successDim,
+    borderColor: Colors.success,
   },
   correctAnswerText: {
     color: Colors.onSuccessContainer,
-    fontWeight: "600",
   },
   // Wrong answer
   wrongButton: {
     backgroundColor: Colors.errorContainer,
-  },
-  wrongBadge: {
-    backgroundColor: Colors.error,
-  },
-  wrongBadgeText: {
-    color: Colors.onError,
-  },
-  wrongDivider: {
-    backgroundColor: Colors.errorDim,
+    borderColor: Colors.error,
   },
   wrongAnswerText: {
     color: Colors.onErrorContainer,
-    fontWeight: "600",
+  },
+  statusIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: Spacing.sm,
+  },
+  statusIconCorrect: {
+    backgroundColor: Colors.success,
+  },
+  statusIconWrong: {
+    backgroundColor: Colors.error,
   },
   // Next button
   nextButton: {
@@ -410,10 +391,11 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
     backgroundColor: Colors.primary,
     alignItems: "center",
+    ...Shadows.card,
   },
   nextButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.bodyLg,
     color: Colors.onPrimary,
   },
   nextButtonDisabled: {

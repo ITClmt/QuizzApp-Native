@@ -1,4 +1,11 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import {
+  Colors,
+  FontFamily,
+  FontSize,
+  Radius,
+  Shadows,
+  Spacing,
+} from "@/constants/theme";
 import { StyleSheet, Text, View } from "react-native";
 
 interface XpSummaryProps {
@@ -41,20 +48,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.base,
   },
   levelUpText: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.bodyMd,
     color: Colors.onPrimaryContainer,
     textAlign: "center",
   },
   xpCard: {
-    backgroundColor: Colors.surfaceContainerLow,
+    backgroundColor: Colors.surface,
     borderRadius: Radius.full,
     paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.lg,
+    ...Shadows.card,
   },
   xpText: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontFamily: FontFamily.headline,
+    fontSize: FontSize.titleMd,
     color: Colors.primary,
   },
 });

@@ -19,7 +19,7 @@ export default function StartQuizBtn() {
       ]}
     >
       <LinearGradient
-        colors={["#4647d3", "#9396ff"]}
+        colors={[Colors.primary, Colors.inversePrimary]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.gradient}
@@ -49,11 +49,11 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     minHeight: 180,
-    borderRadius: 24,
-    shadowColor: "#4647d3",
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.15,
-    shadowRadius: 32,
+    borderRadius: 18,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.2,
+    shadowRadius: 24,
     elevation: 8,
     marginBottom: Spacing.xl,
   },
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    borderRadius: 24,
+    borderRadius: 18,
     padding: Spacing["2xl"],
     justifyContent: "flex-end",
     alignItems: "flex-start",

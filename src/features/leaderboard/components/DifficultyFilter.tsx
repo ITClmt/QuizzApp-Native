@@ -3,6 +3,7 @@ import {
   FontFamily,
   FontSize,
   Radius,
+  Shadows,
   Spacing,
 } from "@/constants/theme";
 import type { LeaderboardFilter } from "@/src/services/leaderboard/leaderboard.api";
@@ -15,13 +16,6 @@ const DIFFICULTIES: { label: string; difficulty: LeaderboardFilter }[] = [
   { label: "Global", difficulty: "global" },
 ];
 
-const DIFFICULTY_COLORS: Record<LeaderboardFilter, string> = {
-  easy: Colors.success,
-  medium: Colors.secondary,
-  hard: Colors.error,
-  global: Colors.primary,
-};
-
 interface DifficultyFilterProps {
   difficulty: LeaderboardFilter;
   setDifficulty: (d: LeaderboardFilter) => void;
@@ -32,29 +26,16 @@ export function DifficultyFilter({
   setDifficulty,
 }: DifficultyFilterProps) {
   return (
-    <View style={styles.row}>
+    <View style={styles.track}>
       {DIFFICULTIES.map((d) => {
         const active = difficulty === d.difficulty;
         return (
           <Pressable
             key={d.difficulty}
             onPress={() => setDifficulty(d.difficulty)}
-            style={[
-              styles.btn,
-              active && {
-                backgroundColor: DIFFICULTY_COLORS[d.difficulty],
-                borderColor: DIFFICULTY_COLORS[d.difficulty],
-              },
-            ]}
+            style={[styles.btn, active && styles.btnActive]}
           >
-            <Text
-              style={[
-                styles.text,
-                active
-                  ? styles.textActive
-                  : { color: DIFFICULTY_COLORS[d.difficulty] },
-              ]}
-            >
+            <Text style={[styles.text, active && styles.textActive]}>
               {d.label}
             </Text>
           </Pressable>
@@ -65,24 +46,30 @@ export function DifficultyFilter({
 }
 
 const styles = StyleSheet.create({
-  row: {
+  track: {
     flexDirection: "row",
-    gap: Spacing.sm,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xl,
+    padding: 4,
+    gap: 4,
+    ...Shadows.card,
   },
   btn: {
     flex: 1,
     paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-    borderRadius: Radius.full,
-    borderWidth: 2,
-    borderColor: Colors.outlineVariant,
+    paddingHorizontal: Spacing.xs,
+    borderRadius: Radius.xl - 4,
     alignItems: "center",
   },
+  btnActive: {
+    backgroundColor: Colors.primary,
+  },
   text: {
-    fontFamily: FontFamily.label,
-    fontSize: FontSize.titleSm,
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelMd,
+    color: Colors.onSurfaceVariant,
   },
   textActive: {
-    color: "#ffffff",
+    color: Colors.white,
   },
 });

@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
-    backgroundColor: Colors.surfaceContainerLowest,
+    backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
     padding: Spacing.base,
     ...Shadows.card,

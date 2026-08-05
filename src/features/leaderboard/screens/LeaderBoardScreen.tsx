@@ -1,4 +1,5 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAuth } from "@/src/contexts/AuthContext";
 import {
   type LeaderboardEntry,
@@ -124,48 +125,49 @@ export default function LeaderBoardScreen() {
   );
 
   return (
-    <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
-      <FlatList
-        data={rest}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        refreshing={isRefreshing}
-        onRefresh={handleRefresh}
-        ListHeaderComponent={renderHeader}
-        renderItem={({ item, index }) => (
-          <LeaderboardRow
-            entry={item}
-            rank={index + 4}
-            isSelf={item.userData.id === user?.sub}
-            unit={unit}
-          />
-        )}
-        ListFooterComponent={
-          !isInTop10 && myRank && user
-            ? () => <MyRankBanner myRank={myRank} user={user} unit={unit} />
-            : null
-        }
-      />
-    </SafeAreaView>
+    <GradientBackground>
+      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+        <FlatList
+          data={rest}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          refreshing={isRefreshing}
+          onRefresh={handleRefresh}
+          ListHeaderComponent={renderHeader}
+          renderItem={({ item, index }) => (
+            <LeaderboardRow
+              entry={item}
+              rank={index + 4}
+              isSelf={item.userData.id === user?.sub}
+              unit={unit}
+            />
+          )}
+          ListFooterComponent={
+            !isInTop10 && myRank && user
+              ? () => <MyRankBanner myRank={myRank} user={user} unit={unit} />
+              : null
+          }
+        />
+      </SafeAreaView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   listContent: {
-    paddingBottom: Spacing["4xl"],
+    paddingBottom: Spacing["4xl"] + Spacing.xl,
   },
   header: {
-    paddingHorizontal: Spacing["2xl"],
-    paddingTop: Spacing["2xl"],
+    paddingHorizontal: Spacing.xl,
+    paddingTop: Spacing.base,
     paddingBottom: Spacing.base,
     gap: Spacing.base,
   },
   title: {
-    fontFamily: FontFamily.headline,
+    fontFamily: FontFamily.headlineExtrabold,
     fontSize: FontSize.headlineLg,
     color: Colors.onSurface,
   },

@@ -4,6 +4,7 @@ import {
   FontFamily,
   FontSize,
   Radius,
+  Shadows,
   Spacing,
 } from "../../constants/theme";
 
@@ -74,12 +75,15 @@ const styles = StyleSheet.create({
   },
   primaryBg: {
     backgroundColor: Colors.primary,
+    ...Shadows.card,
   },
   secondaryBg: {
-    backgroundColor: Colors.surfaceContainerHigh,
+    backgroundColor: Colors.surface,
+    borderColor: Colors.outlineVariant,
+    ...Shadows.card,
   },
   outlinedBg: {
-    backgroundColor: "transparent",
+    backgroundColor: Colors.surface,
     borderColor: Colors.primary,
   },
   text: {

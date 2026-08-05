@@ -1,4 +1,11 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import {
+  Colors,
+  FontFamily,
+  FontSize,
+  Radius,
+  Shadows,
+  Spacing,
+} from "@/constants/theme";
 import { StyleSheet, Text, View } from "react-native";
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -51,18 +58,19 @@ export default function DifficultyBreakdown({
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: Spacing["2xl"],
+    marginBottom: Spacing.xl,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontFamily: FontFamily.headlineSemibold,
+    fontSize: FontSize.titleMd,
     color: Colors.onSurface,
     marginBottom: Spacing.md,
   },
   detailsContainer: {
-    backgroundColor: Colors.surfaceContainerLow,
-    borderRadius: Radius.md,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
     overflow: "hidden",
+    ...Shadows.card,
   },
   difficultyRow: {
     flexDirection: "row",
@@ -70,7 +78,7 @@ const styles = StyleSheet.create({
     padding: Spacing.base,
     gap: Spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.surfaceContainerHigh,
+    borderBottomColor: Colors.outlineVariant,
   },
   difficultyDot: {
     width: 10,
@@ -79,12 +87,13 @@ const styles = StyleSheet.create({
   },
   difficultyLabel: {
     flex: 1,
-    fontSize: 15,
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.bodyLg,
     color: Colors.onSurface,
   },
   difficultyScore: {
-    fontSize: 15,
-    fontWeight: "600",
+    fontFamily: FontFamily.bodySemibold,
+    fontSize: FontSize.bodyLg,
     color: Colors.onSurfaceVariant,
   },
 });

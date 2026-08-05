@@ -1,8 +1,7 @@
 import { getAvatarImage } from "@/constants/avatars";
-import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { Colors, FontFamily, FontSize, Radius, Shadows, Spacing } from "@/constants/theme";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useProfile } from "@/src/hooks/useProfile";
-import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,15 +12,13 @@ export function Navbar() {
   const insets = useSafeAreaInsets();
 
   return (
-    <LinearGradient
-      colors={[Colors.surfaceContainerLow, Colors.background]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-      style={[styles.container, { paddingTop: insets.top }]}
-    >
-      <View style={styles.appNameRow}>
-        <Text style={styles.appNamePrimary}>Quizz</Text>
-        <Text style={styles.appNameSecondary}>App</Text>
+    <View style={[styles.container, { paddingTop: insets.top + Spacing.sm }]}>
+      <View style={styles.brandRow}>
+        <Image
+          source={require("../../assets/images/QuizzAppLogo.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.appName}>QuizzApp</Text>
       </View>
       <View style={styles.rightGroup}>
         {profile && (
@@ -40,33 +37,33 @@ export function Navbar() {
           />
         </Pressable>
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: Spacing["2xl"],
-    paddingBottom: Spacing.base,
+    paddingHorizontal: Spacing.xl,
+    paddingBottom: Spacing.md,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.surfaceDim,
+    backgroundColor: Colors.skyGradient[0],
   },
-  appNameRow: {
+  brandRow: {
     flexDirection: "row",
-    alignItems: "baseline",
+    alignItems: "center",
+    gap: Spacing.sm,
   },
-  appNamePrimary: {
-    fontFamily: FontFamily.headlineExtrabold,
-    fontSize: FontSize.titleLg,
-    color: Colors.primary,
+  logo: {
+    width: 38,
+    height: 38,
+    borderRadius: 11,
   },
-  appNameSecondary: {
-    fontFamily: FontFamily.headlineExtrabold,
+  appName: {
+    fontFamily: FontFamily.headline,
     fontSize: FontSize.titleLg,
-    color: Colors.secondary,
+    color: Colors.onSurface,
   },
   rightGroup: {
     flexDirection: "row",
@@ -74,25 +71,26 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   levelBadge: {
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 4,
-    borderRadius: 999,
-    backgroundColor: Colors.primaryContainer,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 6,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.surface,
+    ...Shadows.card,
   },
   levelBadgeText: {
-    fontFamily: FontFamily.bodySemibold,
+    fontFamily: FontFamily.bodyBold,
     fontSize: FontSize.labelSm,
-    color: Colors.onPrimaryContainer,
+    color: Colors.primary,
   },
   avatarRing: {
     padding: 2,
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: Colors.primary,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.surface,
+    ...Shadows.card,
   },
   avatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
   },
 });

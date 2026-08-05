@@ -1,4 +1,11 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import {
+  Colors,
+  FontFamily,
+  FontSize,
+  Radius,
+  Shadows,
+  Spacing,
+} from "@/constants/theme";
 import { StyleSheet, Text, View } from "react-native";
 
 interface ScoreSummaryProps {
@@ -56,11 +63,11 @@ export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
 const styles = StyleSheet.create({
   scoreCard: {
     alignItems: "center",
-    marginVertical: Spacing["2xl"],
+    marginVertical: Spacing.xl,
   },
   finishedLabel: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelMd,
     color: Colors.onSurfaceVariant,
     textTransform: "uppercase",
     letterSpacing: 1.5,
@@ -69,30 +76,33 @@ const styles = StyleSheet.create({
   scoreBadge: {
     flexDirection: "row",
     alignItems: "flex-end",
+    backgroundColor: Colors.surface,
     borderWidth: 3,
     borderRadius: Radius.xl,
     paddingHorizontal: Spacing["2xl"],
     paddingVertical: Spacing.lg,
     marginBottom: Spacing.md,
+    ...Shadows.elevated,
   },
   scoreNumber: {
-    fontSize: 64,
-    fontWeight: "bold",
-    lineHeight: 72,
+    fontFamily: FontFamily.headlineExtrabold,
+    fontSize: FontSize.displayLg,
+    lineHeight: 56,
   },
   scoreTotal: {
-    fontSize: 28,
-    fontWeight: "600",
+    fontFamily: FontFamily.headlineSemibold,
+    fontSize: FontSize.headlineSm,
     marginBottom: 10,
     marginLeft: Spacing.xs,
   },
   scoreLabel: {
-    fontSize: 22,
-    fontWeight: "bold",
+    fontFamily: FontFamily.headline,
+    fontSize: FontSize.headlineSm,
     marginBottom: Spacing.xs,
   },
   percentageText: {
-    fontSize: 14,
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.bodyMd,
     color: Colors.onSurfaceVariant,
   },
 });

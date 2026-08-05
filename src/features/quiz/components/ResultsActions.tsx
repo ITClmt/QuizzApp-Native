@@ -1,4 +1,11 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import {
+  Colors,
+  FontFamily,
+  FontSize,
+  Radius,
+  Shadows,
+  Spacing,
+} from "@/constants/theme";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface ResultsActionsProps {
@@ -28,8 +35,6 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
     padding: Spacing.xl,
     paddingTop: Spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: Colors.surfaceContainerHigh,
   },
   replayButton: {
     flex: 1,
@@ -37,11 +42,12 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
     borderWidth: 2,
     borderColor: Colors.primary,
+    backgroundColor: Colors.surface,
     alignItems: "center",
   },
   replayButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.bodyLg,
     color: Colors.primary,
   },
   homeButton: {
@@ -50,10 +56,11 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
     backgroundColor: Colors.primary,
     alignItems: "center",
+    ...Shadows.card,
   },
   homeButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.bodyLg,
     color: Colors.onPrimary,
   },
 });

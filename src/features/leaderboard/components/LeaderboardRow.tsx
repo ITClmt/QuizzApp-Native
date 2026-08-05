@@ -39,9 +39,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: Spacing["2xl"],
+    marginHorizontal: Spacing.xl,
     marginBottom: Spacing.sm,
-    backgroundColor: Colors.surfaceContainerLowest,
+    backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.base,
@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
   },
   rowSelf: {
     backgroundColor: Colors.primaryContainer,
-    transform: [{ scale: 1.02 }],
+    borderWidth: 2,
+    borderColor: Colors.primary,
     ...Shadows.elevated,
   },
   rank: {

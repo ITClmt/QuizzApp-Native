@@ -69,21 +69,18 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: Spacing["2xl"],
-    backgroundColor: Colors.surfaceContainerHigh,
+    marginHorizontal: Spacing.xl,
+    backgroundColor: Colors.inverseSurface,
     borderRadius: Radius.lg,
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.base,
-    borderWidth: 2,
-    borderColor: Colors.outlineVariant,
-    borderStyle: "dashed",
-    ...Shadows.card,
+    ...Shadows.elevated,
   },
   rank: {
     width: 40,
     fontFamily: FontFamily.headline,
     fontSize: FontSize.titleSm,
-    color: Colors.onSurfaceVariant,
+    color: Colors.inverseOnSurface,
     textAlign: "center",
   },
   avatar: {
@@ -91,7 +88,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginHorizontal: Spacing.sm,
-    opacity: 0.8,
+    borderWidth: 2,
+    borderColor: Colors.inversePrimary,
   },
   info: {
     flex: 1,
@@ -99,17 +97,17 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: FontFamily.bodyBold,
     fontSize: FontSize.bodyMd,
-    color: Colors.onSurface,
+    color: Colors.inverseOnSurface,
   },
   subtitle: {
     fontFamily: FontFamily.body,
     fontSize: FontSize.labelSm,
-    color: Colors.onSurfaceVariant,
+    color: Colors.inversePrimary,
     marginTop: 2,
   },
   score: {
     fontFamily: FontFamily.headline,
     fontSize: FontSize.titleSm,
-    color: Colors.onSurfaceVariant,
+    color: Colors.inverseOnSurface,
   },
 });

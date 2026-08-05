@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/Button";
+import { GradientBackground } from "@/src/components/GradientBackground";
 import { Input } from "@/src/components/Input";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { ApiError } from "@/src/lib/api";
@@ -49,6 +50,7 @@ export default function LoginScreen() {
   }
 
   return (
+    <GradientBackground>
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -110,13 +112,13 @@ export default function LoginScreen() {
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   keyboardView: {
     flex: 1,

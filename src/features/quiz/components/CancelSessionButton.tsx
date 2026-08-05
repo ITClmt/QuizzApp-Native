@@ -1,4 +1,4 @@
-import { Colors, Spacing } from "@/constants/theme";
+import { Colors, Shadows } from "@/constants/theme";
 import { cancelQuizSession } from "@/src/services/quiz/quiz.api";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
@@ -58,7 +58,7 @@ export default function CancelSessionButton({
     >
       <MaterialIcons
         name="close"
-        size={24}
+        size={20}
         // Feedback visuel subtil pendant le chargement
         color={isPending ? Colors.onSurfaceVariant : Colors.onSurface}
       />
@@ -68,8 +68,12 @@ export default function CancelSessionButton({
 
 const styles = StyleSheet.create({
   button: {
-    padding: Spacing.sm,
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 999,
-    backgroundColor: Colors.surfaceContainerHigh,
+    backgroundColor: Colors.surface,
+    ...Shadows.card,
   },
 });

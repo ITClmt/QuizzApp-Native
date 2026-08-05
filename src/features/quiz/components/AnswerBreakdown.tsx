@@ -1,4 +1,10 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import {
+  Colors,
+  FontFamily,
+  FontSize,
+  Radius,
+  Spacing,
+} from "@/constants/theme";
 import type { QuizAnswerResult, QuizQuestion } from "@/src/types";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -67,11 +73,11 @@ export default function AnswerBreakdown({
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: Spacing["2xl"],
+    marginBottom: Spacing.xl,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontFamily: FontFamily.headlineSemibold,
+    fontSize: FontSize.titleMd,
     color: Colors.onSurface,
     marginBottom: Spacing.md,
   },
@@ -102,8 +108,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.error,
   },
   answerIconText: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: FontFamily.headline,
+    fontSize: FontSize.titleLg,
     color: Colors.onPrimary,
   },
   answerContent: {
@@ -112,17 +118,18 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   answerQuestion: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontFamily: FontFamily.bodySemibold,
+    fontSize: FontSize.bodyMd,
     color: Colors.onSurface,
   },
   answerWrongText: {
-    fontSize: 12,
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.labelMd,
     color: Colors.onErrorContainer,
   },
   answerCorrectText: {
-    fontSize: 12,
-    fontWeight: "600",
+    fontFamily: FontFamily.bodySemibold,
+    fontSize: FontSize.labelMd,
     color: Colors.onSuccessContainer,
   },
 });
