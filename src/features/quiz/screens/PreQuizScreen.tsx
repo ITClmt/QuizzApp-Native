@@ -15,17 +15,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const CATEGORY_ACCENTS = [
-  Colors.success,
-  Colors.accentOrange,
-  Colors.primary,
-  Colors.secondary,
-  Colors.accentPink,
-  Colors.tertiary,
-];
 
 const DIFFICULTIES: { value: string; label: string; color: string }[] = [
   { value: "easy", label: "Easy", color: Colors.success },
@@ -70,7 +61,7 @@ export default function PreQuizScreen() {
     <GradientBackground>
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Select Difficulty</Text>
+          <Text style={styles.title}>Select Difficulty (Optional)</Text>
 
           <View style={styles.difficultiesContainer}>
             {DIFFICULTIES.map((d) => {
@@ -101,33 +92,35 @@ export default function PreQuizScreen() {
           </View>
 
           <Text style={[styles.title, styles.categoryTitle]}>
-            Select Category
+            Select Category (Optional)
           </Text>
 
-          <View style={styles.categoriesGrid}>
+          <ScrollView
+            style={styles.categoriesScroll}
+            contentContainerStyle={styles.categoriesGrid}
+            showsVerticalScrollIndicator={false}
+          >
             {categories
               ?.filter((category) => category.unlocked)
-              .map((category, index) => {
+              .map((category) => {
                 const active = selectedCategory === category.id;
-                const accent = CATEGORY_ACCENTS[index % CATEGORY_ACCENTS.length];
                 return (
                   <Pressable
                     key={category.id}
                     onPress={() => handleCategory(category.id)}
                     style={[styles.categoryCard, active && styles.categoryCardActive]}
                   >
-                    <View style={[styles.categoryIcon, { backgroundColor: accent }]}>
-                      <Text style={styles.categoryIconText}>
-                        {category.name.charAt(0).toUpperCase()}
-                      </Text>
-                    </View>
-                    <Text style={styles.categoryName} numberOfLines={1}>
+                    <Text
+                      style={styles.categoryName}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                    >
                       {category.name}
                     </Text>
                   </Pressable>
                 );
               })}
-          </View>
+          </ScrollView>
 
           <View style={styles.timerContainer}>
             <Text style={styles.timerText}>
@@ -164,7 +157,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: "center",
   },
   title: {
     fontFamily: FontFamily.headlineExtrabold,
@@ -203,43 +195,37 @@ const styles = StyleSheet.create({
   categoryTitle: {
     marginTop: Spacing.xl,
   },
+  categoriesScroll: {
+    flexGrow: 0,
+    maxHeight: 260,
+  },
   categoriesGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: Spacing.md,
+    gap: Spacing.sm,
+    paddingBottom: Spacing.xs,
   },
   categoryCard: {
-    width: "47%",
-    flexDirection: "row",
+    width: "31%",
+    flexDirection: "column",
     alignItems: "center",
-    gap: Spacing.sm,
+    gap: Spacing.xs,
     backgroundColor: Colors.surface,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.md,
     borderWidth: 2,
     borderColor: "transparent",
-    padding: Spacing.md,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.xs,
     ...Shadows.card,
   },
   categoryCardActive: {
     borderColor: Colors.primary,
   },
-  categoryIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: Radius.sm,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  categoryIconText: {
-    fontFamily: FontFamily.headline,
-    fontSize: FontSize.titleMd,
-    color: Colors.white,
-  },
   categoryName: {
-    flex: 1,
     fontFamily: FontFamily.bodyBold,
-    fontSize: FontSize.titleSm,
+    fontSize: FontSize.bodySm,
     color: Colors.onSurface,
+    textAlign: "center",
   },
   footer: {
     paddingBottom: Spacing.xl,
