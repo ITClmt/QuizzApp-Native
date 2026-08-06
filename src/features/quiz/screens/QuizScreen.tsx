@@ -236,7 +236,7 @@ export default function QuizScreen() {
 
         {/* Question */}
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>{currentQuestion.questionEn}</Text>
+          <Text style={styles.questionText}>{currentQuestion.question}</Text>
         </View>
 
         {/* Answers */}

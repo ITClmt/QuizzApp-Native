@@ -50,7 +50,7 @@ export default function AnswerBreakdown({
               </View>
               <View style={styles.answerContent}>
                 <Text style={styles.answerQuestion} numberOfLines={2}>
-                  {question?.questionEn ?? `Question ${index + 1}`}
+                  {question?.question ?? `Question ${index + 1}`}
                 </Text>
                 {!answer.isCorrect && (
                   <>

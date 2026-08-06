@@ -14,8 +14,7 @@ export type AuthTokens = {
 
 export interface QuizQuestion {
   id: string;
-  questionEn: string;
-  questionFr: string | null;
+  question: string;
   answers: string[];
   correctIndex: number;
   category: string;
