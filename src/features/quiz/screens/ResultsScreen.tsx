@@ -4,6 +4,7 @@ import AnswerBreakdown from "@/src/features/quiz/components/AnswerBreakdown";
 import DifficultyBreakdown from "@/src/features/quiz/components/DifficultyBreakdown";
 import ResultsActions from "@/src/features/quiz/components/ResultsActions";
 import ScoreSummary from "@/src/features/quiz/components/ScoreSummary";
+import UnlockedCategories from "@/src/features/quiz/components/UnlockedCategories";
 import XpSummary from "@/src/features/quiz/components/XpSummary";
 import type { QuizQuestion, QuizResult } from "@/src/types";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
@@ -45,6 +46,7 @@ export default function ResultsScreen() {
             level={result.level}
             leveledUp={result.leveledUp}
           />
+          <UnlockedCategories categoryIds={result.unlockedCategoryIds ?? []} />
           <DifficultyBreakdown details={result.details} />
           {result.answers.length > 0 && (
             <AnswerBreakdown

@@ -7,6 +7,8 @@
   "preQuiz": {
     "selectDifficulty": "Choisis la difficulté (optionnel)",
     "selectCategory": "Choisis une catégorie (optionnel)",
+    "unlockAtLevel": "Niv. {{level}}",
+    "categoryLocked": "{{category}} — se débloque au niveau {{level}}",
     "timerNotice": "Tu as 1 minute 30 pour répondre à 50 questions.",
     "startQuiz": "Commencer"
   },
@@ -36,7 +38,9 @@
       "okay": "Pas mal !",
       "low": "Continue d'apprendre !"
     },
-    "levelUp": "Niveau supérieur ! Tu as atteint le niveau {{level}} 🎉",
+    "levelUp": "Niveau supérieur ! Tu as atteint le niveau {{level}}",
+    "categoriesUnlocked_one": "Nouvelle catégorie débloquée !",
+    "categoriesUnlocked_other": "Nouvelles catégories débloquées !",
     "xpEarned": "+{{xp}} XP",
     "byDifficultyTitle": "Par difficulté",
     "correctCount_one": "{{count}} bonne réponse",

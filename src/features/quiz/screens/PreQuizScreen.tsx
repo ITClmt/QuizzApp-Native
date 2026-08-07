@@ -13,6 +13,7 @@ import {
   type QuizCategory,
   getQuizCategories,
 } from "@/src/services/quiz/quiz.api";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -50,6 +51,12 @@ export default function PreQuizScreen() {
 
     setSelectedDifficulty(difficulty);
   };
+
+  // Unlocked first, then the locked ones ordered by how soon they unlock
+  const sortedCategories = [...(categories ?? [])].sort((a, b) => {
+    if (a.unlocked !== b.unlocked) return a.unlocked ? -1 : 1;
+    return a.unlockLevel - b.unlockLevel;
+  });
 
   const handleCategory = (categoryId: string) => {
     if (selectedCategory === categoryId) {
@@ -103,26 +110,63 @@ export default function PreQuizScreen() {
             contentContainerStyle={styles.categoriesGrid}
             showsVerticalScrollIndicator={false}
           >
-            {categories
-              ?.filter((category) => category.unlocked)
-              .map((category) => {
-                const active = selectedCategory === category.id;
+            {sortedCategories.map((category) => {
+              const active = selectedCategory === category.id;
+              const label = getCategoryLabelById(category.id, i18n.language);
+
+              if (!category.unlocked) {
                 return (
-                  <Pressable
+                  <View
                     key={category.id}
-                    onPress={() => handleCategory(category.id)}
-                    style={[styles.categoryCard, active && styles.categoryCardActive]}
+                    style={[styles.categoryCard, styles.categoryCardLocked]}
+                    accessible
+                    accessibilityLabel={t("preQuiz.categoryLocked", {
+                      category: label,
+                      level: category.unlockLevel,
+                    })}
                   >
                     <Text
-                      style={styles.categoryName}
+                      style={[styles.categoryName, styles.categoryNameLocked]}
                       numberOfLines={1}
                       adjustsFontSizeToFit
                     >
-                      {getCategoryLabelById(category.id, i18n.language)}
+                      {label}
                     </Text>
-                  </Pressable>
+                    <View style={styles.lockRow}>
+                      <MaterialIcons
+                        name="lock"
+                        size={12}
+                        color={Colors.outline}
+                      />
+                      <Text style={styles.categoryUnlockLevel}>
+                        {t("preQuiz.unlockAtLevel", {
+                          level: category.unlockLevel,
+                        })}
+                      </Text>
+                    </View>
+                  </View>
                 );
-              })}
+              }
+
+              return (
+                <Pressable
+                  key={category.id}
+                  onPress={() => handleCategory(category.id)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                  accessibilityLabel={label}
+                  style={[styles.categoryCard, active && styles.categoryCardActive]}
+                >
+                  <Text
+                    style={styles.categoryName}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    {label}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </ScrollView>
 
           <View style={styles.timerContainer}>
@@ -208,8 +252,10 @@ const styles = StyleSheet.create({
   },
   categoryCard: {
     width: "31%",
+    minHeight: 62,
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
     gap: Spacing.xs,
     backgroundColor: Colors.surface,
     borderRadius: Radius.md,
@@ -222,11 +268,30 @@ const styles = StyleSheet.create({
   categoryCardActive: {
     borderColor: Colors.primary,
   },
+  categoryCardLocked: {
+    backgroundColor: Colors.surfaceVariant,
+    opacity: 0.6,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   categoryName: {
     fontFamily: FontFamily.bodyBold,
     fontSize: FontSize.bodySm,
     color: Colors.onSurface,
     textAlign: "center",
+  },
+  categoryNameLocked: {
+    color: Colors.outline,
+  },
+  lockRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+  },
+  categoryUnlockLevel: {
+    fontFamily: FontFamily.bodySemibold,
+    fontSize: FontSize.labelMd,
+    color: Colors.outline,
   },
   footer: {
     paddingBottom: Spacing.xl,

@@ -39,8 +39,11 @@ export interface QuizResult {
   details: { difficulty: string; value: number }[];
   answers: QuizAnswerResult[];
   xpEarned: number;
+  previousLevel: number;
   level: number;
   leveledUp: boolean;
+  /** Category ids unlocked by this session's level up — empty otherwise */
+  unlockedCategoryIds: string[];
 }
 
 export interface UserProfile {
