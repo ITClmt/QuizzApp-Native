@@ -1,0 +1,11 @@
+{
+  "title": "Leaderboard",
+  "loadError": "Failed to load leaderboard.",
+  "empty": "No scores yet for this difficulty.",
+  "filters": {
+    "global": "Global"
+  },
+  "you": "You ({{username}})",
+  "yourPosition": "Your position",
+  "outsideTop10": "Outside top 10"
+}

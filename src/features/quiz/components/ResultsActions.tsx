@@ -6,6 +6,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface ResultsActionsProps {
@@ -17,13 +18,14 @@ export default function ResultsActions({
   onReplay,
   onHome,
 }: ResultsActionsProps) {
+  const { t } = useTranslation("quiz");
   return (
     <View style={styles.actions}>
       <Pressable style={styles.replayButton} onPress={onReplay}>
-        <Text style={styles.replayButtonText}>Play again</Text>
+        <Text style={styles.replayButtonText}>{t("results.playAgain")}</Text>
       </Pressable>
       <Pressable style={styles.homeButton} onPress={onHome}>
-        <Text style={styles.homeButtonText}>Home</Text>
+        <Text style={styles.homeButtonText}>{t("results.home")}</Text>
       </Pressable>
     </View>
   );

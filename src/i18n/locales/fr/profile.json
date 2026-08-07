@@ -1,0 +1,5 @@
+{
+  "totalScore": "Score total",
+  "scoresByDifficulty": "Scores par difficulté",
+  "loadError": "Impossible de charger les scores."
+}

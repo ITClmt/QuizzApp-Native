@@ -1,5 +1,6 @@
 import { Colors, FontFamily, FontSize } from "@/constants/theme";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -31,6 +32,7 @@ export function CircularTimer({
   urgent = false,
   size = 150,
 }: CircularTimerProps) {
+  const { t } = useTranslation("quiz");
   const strokeWidth = 12;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -89,7 +91,7 @@ export function CircularTimer({
         <Text style={[styles.number, urgent && { color: Colors.error }]}>
           {formatTime(secondsLeft)}
         </Text>
-        <Text style={styles.unit}>seconds</Text>
+        <Text style={styles.unit}>{t("session.secondsUnit")}</Text>
       </View>
     </Animated.View>
   );

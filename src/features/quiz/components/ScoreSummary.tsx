@@ -6,6 +6,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 interface ScoreSummaryProps {
@@ -13,12 +14,12 @@ interface ScoreSummaryProps {
   total: number;
 }
 
-function getScoreLabel(percentage: number): string {
-  if (percentage === 100) return "Perfect!";
-  if (percentage >= 80) return "Excellent!";
-  if (percentage >= 60) return "Well done!";
-  if (percentage >= 40) return "Not bad!";
-  return "Keep learning!";
+function getScoreLabelKey(percentage: number): string {
+  if (percentage === 100) return "results.scoreLabel.perfect";
+  if (percentage >= 80) return "results.scoreLabel.excellent";
+  if (percentage >= 60) return "results.scoreLabel.good";
+  if (percentage >= 40) return "results.scoreLabel.okay";
+  return "results.scoreLabel.low";
 }
 
 function getScoreColor(percentage: number): string {
@@ -28,14 +29,16 @@ function getScoreColor(percentage: number): string {
 }
 
 export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
+  const { t } = useTranslation("quiz");
+
   if (total === 0) {
     return (
       <View style={styles.scoreCard}>
-        <Text style={styles.finishedLabel}>Quiz completed</Text>
+        <Text style={styles.finishedLabel}>{t("results.quizCompleted")}</Text>
         <Text style={[styles.scoreLabel, { color: Colors.onSurfaceVariant }]}>
-          Time&apos;s up!
+          {t("results.timesUp")}
         </Text>
-        <Text style={styles.percentageText}>No question answered in time.</Text>
+        <Text style={styles.percentageText}>{t("results.noAnswerInTime")}</Text>
       </View>
     );
   }
@@ -45,7 +48,7 @@ export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
 
   return (
     <View style={styles.scoreCard}>
-      <Text style={styles.finishedLabel}>Quiz completed</Text>
+      <Text style={styles.finishedLabel}>{t("results.quizCompleted")}</Text>
       <View style={[styles.scoreBadge, { borderColor: scoreColor }]}>
         <Text style={[styles.scoreNumber, { color: scoreColor }]}>{score}</Text>
         <Text style={[styles.scoreTotal, { color: scoreColor }]}>
@@ -53,9 +56,11 @@ export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
         </Text>
       </View>
       <Text style={[styles.scoreLabel, { color: scoreColor }]}>
-        {getScoreLabel(percentage)}
+        {t(getScoreLabelKey(percentage))}
       </Text>
-      <Text style={styles.percentageText}>{percentage}% correct answers</Text>
+      <Text style={styles.percentageText}>
+        {t("results.percentCorrect", { percentage })}
+      </Text>
     </View>
   );
 }

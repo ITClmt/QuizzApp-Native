@@ -3,6 +3,7 @@ import { cancelQuizSession } from "@/src/services/quiz/quiz.api";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, StyleSheet } from "react-native";
 
 interface CancelSessionButtonProps {
@@ -13,6 +14,7 @@ export default function CancelSessionButton({
   sessionId,
 }: CancelSessionButtonProps) {
   const router = useRouter();
+  const { t } = useTranslation(["quiz", "common"]);
 
   const { mutate: cancelSession, isPending } = useMutation({
     mutationFn: () => cancelQuizSession(sessionId),
@@ -22,7 +24,10 @@ export default function CancelSessionButton({
     },
 
     onError: (err: Error) => {
-      Alert.alert("Error", `Could not cancel session: ${err.message}`);
+      Alert.alert(
+        t("common:errors.title"),
+        t("session.cancelError", { message: err.message }),
+      );
     },
   });
 
@@ -31,15 +36,15 @@ export default function CancelSessionButton({
   // le choix de l'utilisateur avant d'exécuter le callback.
   const handlePress = () => {
     Alert.alert(
-      "Quit the quiz?", // Titre
-      "Your progress will be lost.", // Message
+      t("session.cancelConfirmTitle"), // Titre
+      t("session.cancelConfirmMessage"), // Message
       [
         {
-          text: "Keep playing",
+          text: t("session.keepPlaying"),
           style: "cancel", // Sur iOS : met ce bouton en gras (action "safe")
         },
         {
-          text: "Quit",
+          text: t("session.quit"),
           style: "destructive", // Sur iOS : affiche en rouge pour signaler le danger
           onPress: () => cancelSession(),
         },
@@ -53,7 +58,7 @@ export default function CancelSessionButton({
       style={styles.button}
       hitSlop={8} // Agrandit la zone de clic sans changer l'apparence visuelle
       disabled={isPending} // Évite un double-tap pendant le call réseau
-      accessibilityLabel="Cancel quiz session"
+      accessibilityLabel={t("session.cancelAccessibilityLabel")}
       accessibilityRole="button"
     >
       <MaterialIcons

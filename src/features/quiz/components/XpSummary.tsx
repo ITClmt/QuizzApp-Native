@@ -6,6 +6,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 interface XpSummaryProps {
@@ -19,17 +20,18 @@ export default function XpSummary({
   level,
   leveledUp,
 }: XpSummaryProps) {
+  const { t } = useTranslation("quiz");
   if (xpEarned === 0) return null;
 
   return (
     <View style={styles.section}>
       {leveledUp && (
         <View style={styles.levelUpBanner}>
-          <Text style={styles.levelUpText}>Level up! You reached level {level} 🎉</Text>
+          <Text style={styles.levelUpText}>{t("results.levelUp", { level })}</Text>
         </View>
       )}
       <View style={styles.xpCard}>
-        <Text style={styles.xpText}>+{xpEarned} XP</Text>
+        <Text style={styles.xpText}>{t("results.xpEarned", { xp: xpEarned })}</Text>
       </View>
     </View>
   );

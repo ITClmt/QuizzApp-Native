@@ -1,0 +1,11 @@
+{
+  "username": "Nom d'utilisateur",
+  "email": "E-mail",
+  "notAvailable": "N/A",
+  "language": "Langue",
+  "languageFr": "Français",
+  "languageEn": "English",
+  "languageConfirmTitle": "Changer de langue ?",
+  "languageConfirmMessage": "L'application passera en {{language}}.",
+  "logout": "Déconnexion"
+}

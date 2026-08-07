@@ -1,0 +1,51 @@
+{
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "preQuiz": {
+    "selectDifficulty": "Select Difficulty (Optional)",
+    "selectCategory": "Select Category (Optional)",
+    "timerNotice": "You have 1 minute 30 to answer 50 questions.",
+    "startQuiz": "Start Quiz"
+  },
+  "session": {
+    "startingSession": "Starting your session...",
+    "errorPrefix": "Error: {{message}}",
+    "metaLabel": "{{category}} · QUESTION {{current}}/{{total}}",
+    "secondsUnit": "seconds",
+    "nextQuestion": "Next Question →",
+    "viewResults": "View my results",
+    "cancelAccessibilityLabel": "Cancel quiz session",
+    "cancelConfirmTitle": "Quit the quiz?",
+    "cancelConfirmMessage": "Your progress will be lost.",
+    "keepPlaying": "Keep playing",
+    "quit": "Quit",
+    "cancelError": "Could not cancel session: {{message}}"
+  },
+  "results": {
+    "quizCompleted": "Quiz completed",
+    "timesUp": "Time's up!",
+    "noAnswerInTime": "No question answered in time.",
+    "percentCorrect": "{{percentage}}% correct answers",
+    "scoreLabel": {
+      "perfect": "Perfect!",
+      "excellent": "Excellent!",
+      "good": "Well done!",
+      "okay": "Not bad!",
+      "low": "Keep learning!"
+    },
+    "levelUp": "Level up! You reached level {{level}} 🎉",
+    "xpEarned": "+{{xp}} XP",
+    "byDifficultyTitle": "By difficulty",
+    "correctCount_one": "{{count}} correct",
+    "correctCount_other": "{{count}} correct",
+    "answerBreakdownTitle": "Answer breakdown",
+    "questionFallback": "Question {{number}}",
+    "yourAnswer": "Your answer: {{answer}}",
+    "correctAnswer": "Correct answer: {{answer}}",
+    "playAgain": "Play again",
+    "home": "Home"
+  }
+}

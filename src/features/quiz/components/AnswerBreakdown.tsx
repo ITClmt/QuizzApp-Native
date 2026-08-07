@@ -6,6 +6,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import type { QuizAnswerResult, QuizQuestion } from "@/src/types";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 interface AnswerBreakdownProps {
@@ -19,9 +20,10 @@ export default function AnswerBreakdown({
   questionMap,
   userAnswers,
 }: AnswerBreakdownProps) {
+  const { t } = useTranslation("quiz");
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Answer breakdown</Text>
+      <Text style={styles.sectionTitle}>{t("results.answerBreakdownTitle")}</Text>
       <View style={styles.answersContainer}>
         {answers.map((answer, index) => {
           const question = questionMap.get(answer.questionId);
@@ -50,15 +52,16 @@ export default function AnswerBreakdown({
               </View>
               <View style={styles.answerContent}>
                 <Text style={styles.answerQuestion} numberOfLines={2}>
-                  {question?.question ?? `Question ${index + 1}`}
+                  {question?.question ??
+                    t("results.questionFallback", { number: index + 1 })}
                 </Text>
                 {!answer.isCorrect && (
                   <>
                     <Text style={styles.answerWrongText}>
-                      Your answer: {userAnswerText}
+                      {t("results.yourAnswer", { answer: userAnswerText })}
                     </Text>
                     <Text style={styles.answerCorrectText}>
-                      Correct answer: {answer.correctAnswer}
+                      {t("results.correctAnswer", { answer: answer.correctAnswer })}
                     </Text>
                   </>
                 )}

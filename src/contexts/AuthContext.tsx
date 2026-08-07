@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
+import { setAppLanguage } from "../i18n";
 import { ApiError } from "../lib/api";
 import { queryClient } from "../lib/queryClient";
 import { Storage } from "../lib/storage";
@@ -10,6 +11,12 @@ import {
   registerRequest,
 } from "../services/auth/auth.api";
 import type { User } from "@/src/types";
+
+function syncAppLanguage(user: User) {
+  if (user.lang === "fr" || user.lang === "en") {
+    setAppLanguage(user.lang);
+  }
+}
 
 // --- Types ---
 
@@ -24,6 +31,7 @@ type AuthContextType = {
     lang?: string,
   ) => Promise<void>;
   signOut: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 };
 
 // --- Helpers ---
@@ -67,7 +75,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!token) return;
 
         if (!isTokenExpired(token)) {
-          setUser(decodeJwtPayload(token));
+          const decoded = decodeJwtPayload(token);
+          syncAppLanguage(decoded);
+          setUser(decoded);
           return;
         }
 
@@ -79,6 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           newTokens.access_token,
           newTokens.refresh_token,
         );
+        syncAppLanguage(decoded);
         setUser(decoded);
       } catch {
         await Storage.deleteItemAsync("access_token");
@@ -97,6 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       tokens.access_token,
       tokens.refresh_token,
     );
+    syncAppLanguage(decoded);
     setUser(decoded);
   }
 
@@ -111,6 +123,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       tokens.access_token,
       tokens.refresh_token,
     );
+    syncAppLanguage(decoded);
+    setUser(decoded);
+  }
+
+  // Relit l'utilisateur en base et réémet un token frais : sert à
+  // resynchroniser le JWT (donc user.lang) juste après un changement de
+  // langue, sans attendre le prochain refresh naturel (401 ou reconnexion).
+  async function refreshUser() {
+    const refreshToken = await Storage.getItemAsync("refresh_token");
+    if (!refreshToken) return;
+
+    const newTokens = await refreshTokensRequest(refreshToken);
+    const decoded = await saveTokensAndDecodeUser(
+      newTokens.access_token,
+      newTokens.refresh_token,
+    );
+    syncAppLanguage(decoded);
     setUser(decoded);
   }
 
@@ -128,7 +157,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, signIn, signUp, signOut }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, signIn, signUp, signOut, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,7 @@
 import { getAvatarImage } from "@/constants/avatars";
 import { Colors, FontFamily, FontSize, Radius, Shadows, Spacing } from "@/constants/theme";
 import type { LeaderboardEntry } from "@/src/services/leaderboard/leaderboard.api";
+import { useTranslation } from "react-i18next";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 interface LeaderboardRowProps {
@@ -16,6 +17,7 @@ export function LeaderboardRow({
   isSelf,
   unit = "pts",
 }: LeaderboardRowProps) {
+  const { t } = useTranslation("leaderboard");
   return (
     <View style={[styles.row, isSelf && styles.rowSelf]}>
       <Text style={[styles.rank, isSelf && styles.rankSelf]}>{rank}</Text>
@@ -25,7 +27,9 @@ export function LeaderboardRow({
       />
       <View style={styles.info}>
         <Text style={[styles.name, isSelf && styles.nameSelf]}>
-          {isSelf ? `You (${entry.userData.username})` : entry.userData.username}
+          {isSelf
+            ? t("you", { username: entry.userData.username })
+            : entry.userData.username}
         </Text>
       </View>
       <Text style={[styles.score, isSelf && styles.scoreSelf]}>

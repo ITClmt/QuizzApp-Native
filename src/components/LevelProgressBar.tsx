@@ -8,10 +8,12 @@ import {
 } from "@/constants/theme";
 import { useProfile } from "@/src/hooks/useProfile";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 export function LevelProgressBar() {
   const profile = useProfile();
+  const { t } = useTranslation("common");
 
   if (!profile) return null;
 
@@ -22,11 +24,11 @@ export function LevelProgressBar() {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.label}>Level {profile.level}</Text>
+        <Text style={styles.label}>{t("level", { level: profile.level })}</Text>
         <Text style={styles.xpText}>
           {xpForThisLevel > 0
-            ? `${xpIntoLevel} / ${xpForThisLevel} XP`
-            : "Max level reached"}
+            ? t("xpProgress", { current: xpIntoLevel, total: xpForThisLevel })
+            : t("maxLevelReached")}
         </Text>
       </View>
       <View style={styles.barTrack}>

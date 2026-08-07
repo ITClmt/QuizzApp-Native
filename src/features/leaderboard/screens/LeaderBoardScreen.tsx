@@ -13,6 +13,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   FlatList,
@@ -30,6 +31,7 @@ export default function LeaderBoardScreen() {
   const [difficulty, setDifficulty] = useState<LeaderboardFilter>("easy");
   const isGlobal = difficulty === "global";
   const { user } = useAuth();
+  const { t } = useTranslation("leaderboard");
 
   const {
     data,
@@ -97,7 +99,7 @@ export default function LeaderBoardScreen() {
   const renderHeader = () => (
     <>
       <View style={styles.header}>
-        <Text style={styles.title}>Leaderboard</Text>
+        <Text style={styles.title}>{t("title")}</Text>
         <DifficultyFilter
           difficulty={difficulty}
           setDifficulty={setDifficulty}
@@ -110,13 +112,11 @@ export default function LeaderBoardScreen() {
         </View>
       ) : isError ? (
         <View style={styles.centered}>
-          <Text style={styles.errorText}>Failed to load leaderboard.</Text>
+          <Text style={styles.errorText}>{t("loadError")}</Text>
         </View>
       ) : data?.length === 0 ? (
         <View style={styles.centered}>
-          <Text style={styles.emptyText}>
-            No scores yet for this difficulty.
-          </Text>
+          <Text style={styles.emptyText}>{t("empty")}</Text>
         </View>
       ) : (
         <PodiumSection top3={top3} currentUserId={user?.sub} unit={unit} />

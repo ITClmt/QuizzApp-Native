@@ -3,11 +3,13 @@ import { useNetworkStatus } from "@/src/hooks/useNetworkStatus";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function StartQuizBtn() {
   const router = useRouter();
   const { isOnline } = useNetworkStatus();
+  const { t } = useTranslation("home");
 
   return (
     <Pressable
@@ -38,8 +40,8 @@ export default function StartQuizBtn() {
           color={Colors.onPrimary}
           style={styles.icon}
         />
-        <Text style={styles.title}>Solo Play</Text>
-        <Text style={styles.subtitle}>Test your limits alone</Text>
+        <Text style={styles.title}>{t("soloPlay")}</Text>
+        <Text style={styles.subtitle}>{t("soloPlaySubtitle")}</Text>
       </LinearGradient>
     </Pressable>
   );

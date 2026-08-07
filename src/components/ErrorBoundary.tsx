@@ -1,4 +1,5 @@
 import { Colors, Radius, Spacing } from "@/constants/theme";
+import { i18n } from "@/src/i18n";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -7,6 +8,8 @@ interface State {
   error: Error | null;
 }
 
+// Classe (pas de hooks disponibles) : on lit directement l'instance i18n
+// partagée plutôt que useTranslation().
 export class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
   State
@@ -21,13 +24,15 @@ export class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <View style={styles.container}>
-          <Text style={styles.title}>Something went wrong</Text>
+          <Text style={styles.title}>{i18n.t("common:errorBoundary.title")}</Text>
           <Text style={styles.message}>{this.state.error?.message}</Text>
           <Pressable
             style={styles.button}
             onPress={() => this.setState({ hasError: false, error: null })}
           >
-            <Text style={styles.buttonText}>Try again</Text>
+            <Text style={styles.buttonText}>
+              {i18n.t("common:errorBoundary.tryAgain")}
+            </Text>
           </Pressable>
         </View>
       );

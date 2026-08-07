@@ -1,0 +1,5 @@
+{
+  "welcome": "Bienvenue, {{username}} !",
+  "soloPlay": "Solo",
+  "soloPlaySubtitle": "Teste tes limites en solo"
+}

@@ -7,13 +7,49 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import { SUPPORTED_LANGUAGES, setAppLanguage, type AppLanguage } from "@/src/i18n";
+import { updateUserRequest } from "@/src/services/users/users.api";
+import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
 
+const LANGUAGE_LABEL_KEYS: Record<AppLanguage, "languageFr" | "languageEn"> = {
+  fr: "languageFr",
+  en: "languageEn",
+};
+
 export default function SettingsScreen() {
-  const { signOut, user } = useAuth();
+  const { signOut, user, refreshUser } = useAuth();
+  const { t, i18n } = useTranslation(["settings", "common"]);
+
+  // 1) applique la langue localement, 2) persiste côté compte (pilote aussi
+  // la langue des questions), 3) réémet un JWT frais pour que le backend
+  // voie le nouveau `lang` immédiatement (voir refreshUser dans AuthContext).
+  const { mutate: applyLanguageChange, isPending: isChangingLanguage } = useMutation({
+    mutationFn: async (lang: AppLanguage) => {
+      await setAppLanguage(lang);
+      if (user) {
+        await updateUserRequest(user.sub, { lang });
+        await refreshUser();
+      }
+    },
+  });
+
+  const handleLanguageChange = (lang: AppLanguage) => {
+    if (lang === i18n.language || isChangingLanguage) return;
+
+    Alert.alert(
+      t("languageConfirmTitle"),
+      t("languageConfirmMessage", { language: t(LANGUAGE_LABEL_KEYS[lang]) }),
+      [
+        { text: t("common:cancel"), style: "cancel" },
+        { text: t("common:confirm"), onPress: () => applyLanguageChange(lang) },
+      ],
+    );
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -25,18 +61,44 @@ export default function SettingsScreen() {
       <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
         <View style={styles.card}>
           <View style={styles.infoRow}>
-            <Text style={styles.label}>Username</Text>
-            <Text style={styles.value}>{user?.username || "N/A"}</Text>
+            <Text style={styles.label}>{t("username")}</Text>
+            <Text style={styles.value}>{user?.username || t("notAvailable")}</Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.infoRow}>
-            <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>{user?.email || "N/A"}</Text>
+            <Text style={styles.label}>{t("email")}</Text>
+            <Text style={styles.value}>{user?.email || t("notAvailable")}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>{t("language")}</Text>
+            <View style={styles.languageSwitch}>
+              {SUPPORTED_LANGUAGES.map((lang) => {
+                const active = i18n.language === lang;
+                return (
+                  <Pressable
+                    key={lang}
+                    onPress={() => handleLanguageChange(lang)}
+                    disabled={isChangingLanguage}
+                    style={[styles.languagePill, active && styles.languagePillActive]}
+                  >
+                    <Text
+                      style={[
+                        styles.languagePillText,
+                        active && styles.languagePillTextActive,
+                      ]}
+                    >
+                      {t(LANGUAGE_LABEL_KEYS[lang])}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
         </View>
 
         <Pressable onPress={handleSignOut} style={styles.logoutButton}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
+          <Text style={styles.logoutButtonText}>{t("logout")}</Text>
         </Pressable>
       </SafeAreaView>
     </GradientBackground>
@@ -75,6 +137,29 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bodySemibold,
     fontSize: FontSize.bodyLg,
     color: Colors.onSurface,
+  },
+  languageSwitch: {
+    flexDirection: "row",
+    backgroundColor: Colors.surfaceContainerHigh,
+    borderRadius: Radius.full,
+    padding: 3,
+    gap: 3,
+  },
+  languagePill: {
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    borderRadius: Radius.full,
+  },
+  languagePillActive: {
+    backgroundColor: Colors.primary,
+  },
+  languagePillText: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelSm,
+    color: Colors.onSurfaceVariant,
+  },
+  languagePillTextActive: {
+    color: Colors.onPrimary,
   },
   logoutButton: {
     backgroundColor: Colors.surface,

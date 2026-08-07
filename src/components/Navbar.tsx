@@ -3,6 +3,7 @@ import { Colors, FontFamily, FontSize, Radius, Shadows, Spacing } from "@/consta
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useProfile } from "@/src/hooks/useProfile";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -10,6 +11,7 @@ export function Navbar() {
   const { user } = useAuth();
   const profile = useProfile();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation("common");
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + Spacing.sm }]}>
@@ -19,7 +21,9 @@ export function Navbar() {
       <View style={styles.rightGroup}>
         {profile && (
           <View style={styles.levelBadge}>
-            <Text style={styles.levelBadgeText}>Lvl {profile.level}</Text>
+            <Text style={styles.levelBadgeText}>
+              {t("levelBadge", { level: profile.level })}
+            </Text>
           </View>
         )}
         <Pressable

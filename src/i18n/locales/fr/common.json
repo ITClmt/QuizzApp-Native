@@ -1,0 +1,18 @@
+{
+  "levelBadge": "Niv. {{level}}",
+  "level": "Niveau {{level}}",
+  "xpProgress": "{{current}} / {{total}} XP",
+  "maxLevelReached": "Niveau max atteint",
+  "errorBoundary": {
+    "title": "Une erreur est survenue",
+    "tryAgain": "Réessayer"
+  },
+  "offline": "Pas de connexion internet",
+  "confirm": "Confirmer",
+  "cancel": "Annuler",
+  "errors": {
+    "title": "Erreur",
+    "networkTitle": "Erreur réseau",
+    "networkMessage": "Impossible de contacter le serveur"
+  }
+}

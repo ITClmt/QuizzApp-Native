@@ -8,6 +8,7 @@ import {
 } from "@/constants/theme";
 import { Button } from "@/src/components/Button";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import { getCategoryLabelById } from "@/src/constants/categories";
 import {
   type QuizCategory,
   getQuizCategories,
@@ -15,17 +16,19 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const DIFFICULTIES: { value: string; label: string; color: string }[] = [
-  { value: "easy", label: "Easy", color: Colors.success },
-  { value: "medium", label: "Medium", color: Colors.secondary },
-  { value: "hard", label: "Hard", color: Colors.error },
+const DIFFICULTIES: { value: string; color: string }[] = [
+  { value: "easy", color: Colors.success },
+  { value: "medium", color: Colors.secondary },
+  { value: "hard", color: Colors.error },
 ];
 
 export default function PreQuizScreen() {
   const router = useRouter();
+  const { t, i18n } = useTranslation("quiz");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
     null,
   );
@@ -61,7 +64,7 @@ export default function PreQuizScreen() {
     <GradientBackground>
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Select Difficulty (Optional)</Text>
+          <Text style={styles.title}>{t("preQuiz.selectDifficulty")}</Text>
 
           <View style={styles.difficultiesContainer}>
             {DIFFICULTIES.map((d) => {
@@ -84,7 +87,7 @@ export default function PreQuizScreen() {
                       { color: active ? Colors.white : d.color },
                     ]}
                   >
-                    {d.label}
+                    {t(`difficulty.${d.value}`)}
                   </Text>
                 </Pressable>
               );
@@ -92,7 +95,7 @@ export default function PreQuizScreen() {
           </View>
 
           <Text style={[styles.title, styles.categoryTitle]}>
-            Select Category (Optional)
+            {t("preQuiz.selectCategory")}
           </Text>
 
           <ScrollView
@@ -115,7 +118,7 @@ export default function PreQuizScreen() {
                       numberOfLines={1}
                       adjustsFontSizeToFit
                     >
-                      {category.name}
+                      {getCategoryLabelById(category.id, i18n.language)}
                     </Text>
                   </Pressable>
                 );
@@ -123,16 +126,14 @@ export default function PreQuizScreen() {
           </ScrollView>
 
           <View style={styles.timerContainer}>
-            <Text style={styles.timerText}>
-              You have 1 minute 30 to answer 50 questions.
-            </Text>
+            <Text style={styles.timerText}>{t("preQuiz.timerNotice")}</Text>
           </View>
         </View>
 
         <View style={styles.footer}>
           <Button
             variant="primary"
-            title="Start Quiz"
+            title={t("preQuiz.startQuiz")}
             onPress={() => {
               const params: Record<string, string> = {};
               if (selectedDifficulty) params.difficulty = selectedDifficulty;

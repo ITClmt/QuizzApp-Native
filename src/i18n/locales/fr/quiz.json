@@ -1,0 +1,51 @@
+{
+  "difficulty": {
+    "easy": "Facile",
+    "medium": "Moyen",
+    "hard": "Difficile"
+  },
+  "preQuiz": {
+    "selectDifficulty": "Choisis la difficulté (optionnel)",
+    "selectCategory": "Choisis une catégorie (optionnel)",
+    "timerNotice": "Tu as 1 minute 30 pour répondre à 50 questions.",
+    "startQuiz": "Commencer"
+  },
+  "session": {
+    "startingSession": "Démarrage de la session...",
+    "errorPrefix": "Erreur : {{message}}",
+    "metaLabel": "{{category}} · QUESTION {{current}}/{{total}}",
+    "secondsUnit": "secondes",
+    "nextQuestion": "Question suivante →",
+    "viewResults": "Voir mes résultats",
+    "cancelAccessibilityLabel": "Annuler la session de quiz",
+    "cancelConfirmTitle": "Quitter le quiz ?",
+    "cancelConfirmMessage": "Ta progression sera perdue.",
+    "keepPlaying": "Continuer",
+    "quit": "Quitter",
+    "cancelError": "Impossible d'annuler la session : {{message}}"
+  },
+  "results": {
+    "quizCompleted": "Quiz terminé",
+    "timesUp": "Temps écoulé !",
+    "noAnswerInTime": "Aucune question répondue à temps.",
+    "percentCorrect": "{{percentage}}% de bonnes réponses",
+    "scoreLabel": {
+      "perfect": "Parfait !",
+      "excellent": "Excellent !",
+      "good": "Bien joué !",
+      "okay": "Pas mal !",
+      "low": "Continue d'apprendre !"
+    },
+    "levelUp": "Niveau supérieur ! Tu as atteint le niveau {{level}} 🎉",
+    "xpEarned": "+{{xp}} XP",
+    "byDifficultyTitle": "Par difficulté",
+    "correctCount_one": "{{count}} bonne réponse",
+    "correctCount_other": "{{count}} bonnes réponses",
+    "answerBreakdownTitle": "Détail des réponses",
+    "questionFallback": "Question {{number}}",
+    "yourAnswer": "Ta réponse : {{answer}}",
+    "correctAnswer": "Bonne réponse : {{answer}}",
+    "playAgain": "Rejouer",
+    "home": "Accueil"
+  }
+}

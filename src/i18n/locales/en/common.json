@@ -1,0 +1,18 @@
+{
+  "levelBadge": "Lvl {{level}}",
+  "level": "Level {{level}}",
+  "xpProgress": "{{current}} / {{total}} XP",
+  "maxLevelReached": "Max level reached",
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "tryAgain": "Try again"
+  },
+  "offline": "No internet connection",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "errors": {
+    "title": "Error",
+    "networkTitle": "Network Error",
+    "networkMessage": "Unable to reach the server"
+  }
+}

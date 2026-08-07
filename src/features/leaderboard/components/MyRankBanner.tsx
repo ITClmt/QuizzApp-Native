@@ -2,6 +2,7 @@ import { getAvatarImage } from "@/constants/avatars";
 import { Colors, FontFamily, FontSize, Radius, Shadows, Spacing } from "@/constants/theme";
 import type { MyRank } from "@/src/services/leaderboard/leaderboard.api";
 import type { User } from "@/src/types";
+import { useTranslation } from "react-i18next";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 interface MyRankBannerProps {
@@ -15,11 +16,12 @@ export function MyRankBanner({
   user,
   unit = "pts",
 }: MyRankBannerProps) {
+  const { t } = useTranslation("leaderboard");
   return (
     <View style={styles.wrapper}>
       <View style={styles.separator}>
         <View style={styles.separatorLine} />
-        <Text style={styles.separatorText}>Your position</Text>
+        <Text style={styles.separatorText}>{t("yourPosition")}</Text>
         <View style={styles.separatorLine} />
       </View>
 
@@ -30,8 +32,8 @@ export function MyRankBanner({
           style={styles.avatar}
         />
         <View style={styles.info}>
-          <Text style={styles.name}>You ({user.username})</Text>
-          <Text style={styles.subtitle}>Outside top 10</Text>
+          <Text style={styles.name}>{t("you", { username: user.username })}</Text>
+          <Text style={styles.subtitle}>{t("outsideTop10")}</Text>
         </View>
         <Text style={styles.score}>
           {myRank.value} {unit}

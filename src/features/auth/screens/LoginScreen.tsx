@@ -5,7 +5,9 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { ApiError } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -22,10 +24,12 @@ import {
   FontSize,
   Spacing,
 } from "../../../../constants/theme";
-import { loginSchema, type LoginFormValues } from "../schemas";
+import { makeLoginSchema, type LoginFormValues } from "../schemas";
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
+  const { t } = useTranslation(["auth", "common"]);
+  const loginSchema = useMemo(() => makeLoginSchema(t), [t]);
 
   const {
     control,
@@ -42,9 +46,9 @@ export default function LoginScreen() {
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
-        Alert.alert("Error", error.message);
+        Alert.alert(t("common:errors.title"), error.message);
       } else {
-        Alert.alert("Network Error", "Unable to reach the server");
+        Alert.alert(t("common:errors.networkTitle"), t("errors.networkMessage"));
       }
     }
   }
@@ -57,7 +61,7 @@ export default function LoginScreen() {
         style={styles.keyboardView}
       >
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Welcome back</Text>
+          <Text style={styles.title}>{t("login.title")}</Text>
         </View>
 
         <View style={styles.formContainer}>
@@ -66,7 +70,7 @@ export default function LoginScreen() {
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="Email Address"
+                label={t("login.emailLabel")}
                 placeholder="hello@example.com"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -84,7 +88,7 @@ export default function LoginScreen() {
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="Password"
+                label={t("login.passwordLabel")}
                 placeholder="••••••••"
                 secureTextEntry
                 autoComplete="password"
@@ -97,7 +101,7 @@ export default function LoginScreen() {
           />
 
           <Button
-            title={isSubmitting ? "Signing in..." : "Sign in"}
+            title={isSubmitting ? t("login.signingIn") : t("login.signIn")}
             style={styles.loginButton}
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
@@ -105,9 +109,9 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>{"Don't have an account? "}</Text>
+          <Text style={styles.footerText}>{t("login.noAccount")}</Text>
           <Pressable onPress={() => router.replace("/(auth)/register")}>
-            <Text style={styles.footerLink}>Sign up</Text>
+            <Text style={styles.footerLink}>{t("login.signUpLink")}</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>

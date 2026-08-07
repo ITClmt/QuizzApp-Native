@@ -1,6 +1,7 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -14,6 +15,7 @@ export function OfflineBanner() {
   const { isOnline } = useNetworkStatus();
   const { bottom } = useSafeAreaInsets();
   const translateY = useSharedValue(100);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     translateY.value = withTiming(isOnline ? 100 : 0, { duration: 300 });
@@ -34,7 +36,7 @@ export function OfflineBanner() {
     >
       <View style={styles.content}>
         <MaterialIcons name="wifi-off" size={18} color={Colors.onError} />
-        <Text style={styles.text}>No internet connection</Text>
+        <Text style={styles.text}>{t("offline")}</Text>
       </View>
     </Animated.View>
   );

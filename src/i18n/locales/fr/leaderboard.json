@@ -1,0 +1,11 @@
+{
+  "title": "Classement",
+  "loadError": "Impossible de charger le classement.",
+  "empty": "Pas encore de scores pour cette difficulté.",
+  "filters": {
+    "global": "Général"
+  },
+  "you": "Toi ({{username}})",
+  "yourPosition": "Ta position",
+  "outsideTop10": "Hors du top 10"
+}

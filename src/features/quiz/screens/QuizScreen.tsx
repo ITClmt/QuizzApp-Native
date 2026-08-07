@@ -7,6 +7,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import { getCategoryLabelByOtdName } from "@/src/constants/categories";
 import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
 import { DottedProgress } from "@/src/features/quiz/components/DottedProgress";
@@ -20,6 +21,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -40,6 +42,7 @@ export default function QuizScreen() {
   }>();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { t, i18n } = useTranslation(["quiz", "common"]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -86,7 +89,7 @@ export default function QuizScreen() {
       setQuestions(session.questions);
     },
     onError: (err) => {
-      Alert.alert("Error", err.message);
+      Alert.alert(t("common:errors.title"), err.message);
     },
   });
 
@@ -112,7 +115,7 @@ export default function QuizScreen() {
         });
       },
       onError: (err) => {
-        Alert.alert("Error", err.message);
+        Alert.alert(t("common:errors.title"), err.message);
       },
     });
 
@@ -145,7 +148,7 @@ export default function QuizScreen() {
       <GradientBackground>
         <SafeAreaView style={styles.centered}>
           <ActivityIndicator size="large" color={Colors.primary} />
-          <Text style={styles.loadingText}>Starting your session...</Text>
+          <Text style={styles.loadingText}>{t("session.startingSession")}</Text>
         </SafeAreaView>
       </GradientBackground>
     );
@@ -155,7 +158,9 @@ export default function QuizScreen() {
     return (
       <GradientBackground>
         <SafeAreaView style={styles.centered}>
-          <Text style={styles.errorText}>Error: {error.message}</Text>
+          <Text style={styles.errorText}>
+            {t("session.errorPrefix", { message: error.message })}
+          </Text>
         </SafeAreaView>
       </GradientBackground>
     );
@@ -230,8 +235,14 @@ export default function QuizScreen() {
 
         {/* Category + question label */}
         <Text style={styles.metaLabel}>
-          {currentQuestion.category.toUpperCase()} · QUESTION{" "}
-          {currentQuestionIndex + 1}/{questions.length}
+          {t("session.metaLabel", {
+            category: getCategoryLabelByOtdName(
+              currentQuestion.category,
+              i18n.language,
+            ).toUpperCase(),
+            current: currentQuestionIndex + 1,
+            total: questions.length,
+          })}
         </Text>
 
         {/* Question */}
@@ -268,7 +279,9 @@ export default function QuizScreen() {
                 <ActivityIndicator color={Colors.onPrimary} />
               ) : (
                 <Text style={styles.nextButtonText}>
-                  {isLastQuestion ? "Voir mes résultats" : "Next Question →"}
+                  {isLastQuestion
+                    ? t("session.viewResults")
+                    : t("session.nextQuestion")}
                 </Text>
               )}
             </Pressable>

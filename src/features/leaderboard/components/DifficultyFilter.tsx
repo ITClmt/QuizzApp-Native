@@ -7,14 +7,10 @@ import {
   Spacing,
 } from "@/constants/theme";
 import type { LeaderboardFilter } from "@/src/services/leaderboard/leaderboard.api";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const DIFFICULTIES: { label: string; difficulty: LeaderboardFilter }[] = [
-  { label: "Easy", difficulty: "easy" },
-  { label: "Medium", difficulty: "medium" },
-  { label: "Hard", difficulty: "hard" },
-  { label: "Global", difficulty: "global" },
-];
+const DIFFICULTIES: LeaderboardFilter[] = ["easy", "medium", "hard", "global"];
 
 interface DifficultyFilterProps {
   difficulty: LeaderboardFilter;
@@ -25,18 +21,21 @@ export function DifficultyFilter({
   difficulty,
   setDifficulty,
 }: DifficultyFilterProps) {
+  const { t } = useTranslation(["quiz", "leaderboard"]);
+
   return (
     <View style={styles.track}>
       {DIFFICULTIES.map((d) => {
-        const active = difficulty === d.difficulty;
+        const active = difficulty === d;
+        const label = d === "global" ? t("leaderboard:filters.global") : t(`difficulty.${d}`);
         return (
           <Pressable
-            key={d.difficulty}
-            onPress={() => setDifficulty(d.difficulty)}
+            key={d}
+            onPress={() => setDifficulty(d)}
             style={[styles.btn, active && styles.btnActive]}
           >
             <Text style={[styles.text, active && styles.textActive]}>
-              {d.label}
+              {label}
             </Text>
           </Pressable>
         );

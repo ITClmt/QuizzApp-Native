@@ -1,6 +1,7 @@
 import { Colors } from "@/constants/theme";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { Providers } from "@/src/components/Providers";
+import { initI18n } from "@/src/i18n";
 import {
   Baloo2_500Medium,
   Baloo2_600SemiBold,
@@ -16,7 +17,7 @@ import {
 } from "@expo-google-fonts/inter";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,14 +32,19 @@ export default function RootLayout() {
     Baloo2_700Bold,
     Baloo2_800ExtraBold,
   });
+  const [i18nReady, setI18nReady] = useState(false);
 
   useEffect(() => {
-    if (loaded || error) {
+    initI18n().finally(() => setI18nReady(true));
+  }, []);
+
+  useEffect(() => {
+    if ((loaded || error) && i18nReady) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+  }, [loaded, error, i18nReady]);
 
-  if (!loaded && !error) {
+  if ((!loaded && !error) || !i18nReady) {
     return null;
   }
 

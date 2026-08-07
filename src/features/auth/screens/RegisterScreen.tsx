@@ -2,11 +2,13 @@ import { Button } from "@/src/components/Button";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { Input } from "@/src/components/Input";
 import { useAuth } from "@/src/contexts/AuthContext";
+import { i18n } from "@/src/i18n";
 import { ApiError } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Localization from "expo-localization";
 import { router } from "expo-router";
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -23,10 +25,12 @@ import {
   FontSize,
   Spacing,
 } from "../../../../constants/theme";
-import { registerSchema, type RegisterFormValues } from "../schemas";
+import { makeRegisterSchema, type RegisterFormValues } from "../schemas";
 
 export default function RegisterScreen() {
   const { signUp } = useAuth();
+  const { t } = useTranslation(["auth", "common"]);
+  const registerSchema = useMemo(() => makeRegisterSchema(t), [t]);
 
   const {
     control,
@@ -39,20 +43,15 @@ export default function RegisterScreen() {
 
   async function onSubmit(data: RegisterFormValues) {
     try {
-      const locales = Localization.getLocales();
-      const isFrench = locales?.some(
-        (locale) =>
-          locale.languageCode === "fr" || locale.languageTag?.startsWith("fr"),
-      );
-      const lang = isFrench ? "fr" : "en";
-
-      await signUp(data.email, data.password, data.username, lang);
+      // La langue affichée à l'écran (déjà résolue via expo-localization au
+      // démarrage) devient la langue du compte créé.
+      await signUp(data.email, data.password, data.username, i18n.language);
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
-        Alert.alert("Error", error.message);
+        Alert.alert(t("common:errors.title"), error.message);
       } else {
-        Alert.alert("Network Error", "Unable to reach the server. Check your connection.");
+        Alert.alert(t("common:errors.networkTitle"), t("errors.networkMessage"));
       }
     }
   }
@@ -65,7 +64,7 @@ export default function RegisterScreen() {
         style={styles.keyboardView}
       >
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Create an account</Text>
+          <Text style={styles.title}>{t("register.title")}</Text>
         </View>
 
         <View style={styles.formContainer}>
@@ -74,8 +73,8 @@ export default function RegisterScreen() {
             name="username"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="Username"
-                placeholder="Your username"
+                label={t("register.usernameLabel")}
+                placeholder={t("register.usernamePlaceholder")}
                 autoCapitalize="words"
                 value={value}
                 onChangeText={onChange}
@@ -90,7 +89,7 @@ export default function RegisterScreen() {
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="Email Address"
+                label={t("register.emailLabel")}
                 placeholder="hello@example.com"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -108,7 +107,7 @@ export default function RegisterScreen() {
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="Password"
+                label={t("register.passwordLabel")}
                 placeholder="••••••••"
                 secureTextEntry
                 autoComplete="new-password"
@@ -125,7 +124,7 @@ export default function RegisterScreen() {
             name="confirmPassword"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="Confirm password"
+                label={t("register.confirmPasswordLabel")}
                 placeholder="••••••••"
                 secureTextEntry
                 autoComplete="new-password"
@@ -138,16 +137,16 @@ export default function RegisterScreen() {
           />
 
           <Button
-            title={isSubmitting ? "Signing up..." : "Sign up"}
+            title={isSubmitting ? t("register.signingUp") : t("register.signUp")}
             style={styles.registerButton}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
 
         <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>Already have an account? </Text>
+          <Text style={styles.footerText}>{t("register.hasAccount")}</Text>
           <Pressable onPress={() => router.replace("/(auth)/login")}>
-            <Text style={styles.footerLink}>Sign in</Text>
+            <Text style={styles.footerLink}>{t("register.signInLink")}</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>

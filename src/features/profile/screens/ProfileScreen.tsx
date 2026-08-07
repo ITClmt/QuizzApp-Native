@@ -15,6 +15,7 @@ import { getUserScores } from "@/src/services/score/score.api";
 import { useFocusEffect } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DifficultyScoreCard } from "../components/DifficultyScoreCard";
@@ -23,6 +24,7 @@ const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
 
 export default function ProfileScreen() {
   const { user } = useAuth();
+  const { t } = useTranslation("profile");
 
   const {
     data,
@@ -71,7 +73,7 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.totalScoreCard}>
-            <Text style={styles.totalScoreLabel}>Total score</Text>
+            <Text style={styles.totalScoreLabel}>{t("totalScore")}</Text>
             <Text style={styles.totalScoreValue}>{data?.totalScore ?? 0}</Text>
           </View>
 
@@ -79,7 +81,7 @@ export default function ProfileScreen() {
             <LevelProgressBar />
           </View>
 
-          <Text style={styles.sectionTitle}>Scores by difficulty</Text>
+          <Text style={styles.sectionTitle}>{t("scoresByDifficulty")}</Text>
 
           {isLoading ? (
             <View style={styles.centered}>
@@ -87,7 +89,7 @@ export default function ProfileScreen() {
             </View>
           ) : isError ? (
             <View style={styles.centered}>
-              <Text style={styles.errorText}>Failed to load scores.</Text>
+              <Text style={styles.errorText}>{t("loadError")}</Text>
             </View>
           ) : (
             <View style={styles.scoreList}>
