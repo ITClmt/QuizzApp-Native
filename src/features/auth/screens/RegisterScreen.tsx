@@ -43,9 +43,7 @@ export default function RegisterScreen() {
 
   async function onSubmit(data: RegisterFormValues) {
     try {
-      // La langue affichée à l'écran (déjà résolue via expo-localization au
-      // démarrage) devient la langue du compte créé.
-      await signUp(data.email, data.password, data.username, i18n.language);
+      await signUp(data.email.toLowerCase(), data.password, data.username, i18n.language);
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {

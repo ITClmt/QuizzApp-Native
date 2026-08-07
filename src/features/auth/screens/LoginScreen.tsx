@@ -42,7 +42,7 @@ export default function LoginScreen() {
 
   async function onSubmit(data: LoginFormValues) {
     try {
-      await signIn(data.email, data.password);
+      await signIn(data.email.toLowerCase(), data.password);
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
