@@ -11,6 +11,7 @@ import { getCategoryLabelByOtdName } from "@/src/constants/categories";
 import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
 import { DottedProgress } from "@/src/features/quiz/components/DottedProgress";
+import { useBlockBackNavigation } from "@/src/hooks/useBlockBackNavigation";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
 import {
   finishQuizSession,
@@ -50,6 +51,10 @@ export default function QuizScreen() {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(QUIZ_DURATION_SECONDS);
   const hasEndedRef = useRef(false);
+
+  // On ne quitte un quiz en cours que par le bouton d'abandon (CancelSessionButton),
+  // qui annule aussi la session côté serveur.
+  useBlockBackNavigation();
 
   const handleAnswer = (answerIndex: number) => {
     const isCorrect =
