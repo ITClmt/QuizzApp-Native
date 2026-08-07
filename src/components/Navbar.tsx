@@ -14,10 +14,6 @@ export function Navbar() {
   return (
     <View style={[styles.container, { paddingTop: insets.top + Spacing.sm }]}>
       <View style={styles.brandRow}>
-        <Image
-          source={require("../../assets/images/QuizzAppLogo.png")}
-          style={styles.logo}
-        />
         <Text style={styles.appName}>QuizzApp</Text>
       </View>
       <View style={styles.rightGroup}>
@@ -54,11 +50,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.sm,
-  },
-  logo: {
-    width: 38,
-    height: 38,
-    borderRadius: 11,
   },
   appName: {
     fontFamily: FontFamily.headline,
