@@ -5,6 +5,7 @@ import { Storage } from "@/src/lib/storage";
 
 import authEn from "./locales/en/auth.json";
 import commonEn from "./locales/en/common.json";
+import errorsEn from "./locales/en/errors.json";
 import homeEn from "./locales/en/home.json";
 import leaderboardEn from "./locales/en/leaderboard.json";
 import profileEn from "./locales/en/profile.json";
@@ -12,6 +13,7 @@ import quizEn from "./locales/en/quiz.json";
 import settingsEn from "./locales/en/settings.json";
 import authFr from "./locales/fr/auth.json";
 import commonFr from "./locales/fr/common.json";
+import errorsFr from "./locales/fr/errors.json";
 import homeFr from "./locales/fr/home.json";
 import leaderboardFr from "./locales/fr/leaderboard.json";
 import profileFr from "./locales/fr/profile.json";
@@ -32,6 +34,7 @@ export const resources = {
     leaderboard: leaderboardFr,
     profile: profileFr,
     settings: settingsFr,
+    errors: errorsFr,
   },
   en: {
     common: commonEn,
@@ -41,6 +44,7 @@ export const resources = {
     leaderboard: leaderboardEn,
     profile: profileEn,
     settings: settingsEn,
+    errors: errorsEn,
   },
 };
 
@@ -77,7 +81,16 @@ export async function initI18n(): Promise<void> {
     resources,
     lng,
     fallbackLng: "fr",
-    ns: ["common", "auth", "home", "quiz", "leaderboard", "profile", "settings"],
+    ns: [
+      "common",
+      "auth",
+      "home",
+      "quiz",
+      "leaderboard",
+      "profile",
+      "settings",
+      "errors",
+    ],
     defaultNS: "common",
     interpolation: { escapeValue: false },
     react: { useSuspense: false },

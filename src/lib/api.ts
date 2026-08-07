@@ -1,3 +1,4 @@
+import { i18n } from "@/src/i18n";
 import { Storage } from "./storage";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -7,10 +8,18 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     message: string,
+    public code?: string,
   ) {
     super(message);
     this.name = "ApiError";
   }
+}
+
+export function getErrorMessage(error: ApiError): string {
+  if (error.code && i18n.exists(`errors:${error.code}`)) {
+    return i18n.t(`errors:${error.code}`);
+  }
+  return error.message;
 }
 
 export async function apiFetch<T>(
@@ -25,7 +34,8 @@ export async function apiFetch<T>(
   if (res.status === 204) return undefined as T;
 
   const data = await res.json();
-  if (!res.ok) throw new ApiError(res.status, data.message ?? "Unknown error");
+  if (!res.ok)
+    throw new ApiError(res.status, data.message ?? "Unknown error", data.code);
   return data;
 }
 

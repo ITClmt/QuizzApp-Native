@@ -1,5 +1,7 @@
 import { Colors, Shadows } from "@/constants/theme";
+import { ApiError, getErrorMessage } from "@/src/lib/api";
 import { cancelQuizSession } from "@/src/services/quiz/quiz.api";
+import type { QuizSession } from "@/src/types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -16,17 +18,17 @@ export default function CancelSessionButton({
   const router = useRouter();
   const { t } = useTranslation(["quiz", "common"]);
 
-  const { mutate: cancelSession, isPending } = useMutation({
+  const { mutate: cancelSession, isPending } = useMutation<QuizSession, ApiError>({
     mutationFn: () => cancelQuizSession(sessionId),
 
     onSuccess: () => {
       router.replace("/(app)");
     },
 
-    onError: (err: Error) => {
+    onError: (err) => {
       Alert.alert(
         t("common:errors.title"),
-        t("session.cancelError", { message: err.message }),
+        t("session.cancelError", { message: getErrorMessage(err) }),
       );
     },
   });

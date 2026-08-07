@@ -1,0 +1,17 @@
+{
+  "AUTH_INVALID_CREDENTIALS": "Email ou mot de passe incorrect",
+  "AUTH_REFRESH_TOKEN_INVALID": "Session expirée, reconnecte-toi",
+  "AUTH_REFRESH_TOKEN_REVOKED": "Session expirée, reconnecte-toi",
+  "AUTH_UNAUTHORIZED": "Tu dois être connecté pour faire ça",
+  "EMAIL_ALREADY_USED": "Cet e-mail est déjà utilisé",
+  "USER_NOT_FOUND": "Utilisateur introuvable",
+  "FORBIDDEN_NOT_OWNER": "Tu ne peux modifier que ton propre compte",
+  "CATEGORY_LOCKED": "Cette catégorie n'est pas encore débloquée à ton niveau",
+  "NO_QUESTIONS_AVAILABLE": "Aucune question disponible pour cette sélection",
+  "SESSION_ALREADY_IN_PROGRESS": "Une partie est déjà en cours",
+  "SESSION_NOT_FOUND": "Partie introuvable",
+  "SESSION_NOT_OWNED": "Cette partie ne t'appartient pas",
+  "SESSION_ALREADY_FINISHED": "Cette partie est déjà terminée",
+  "SESSION_EXPIRED": "Cette partie a expiré",
+  "INVALID_ANSWER_QUESTION": "Question invalide"
+}

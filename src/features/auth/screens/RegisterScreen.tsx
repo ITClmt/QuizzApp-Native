@@ -3,7 +3,7 @@ import { GradientBackground } from "@/src/components/GradientBackground";
 import { Input } from "@/src/components/Input";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { i18n } from "@/src/i18n";
-import { ApiError } from "@/src/lib/api";
+import { ApiError, getErrorMessage } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useMemo } from "react";
@@ -47,7 +47,7 @@ export default function RegisterScreen() {
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
-        Alert.alert(t("common:errors.title"), error.message);
+        Alert.alert(t("common:errors.title"), getErrorMessage(error));
       } else {
         Alert.alert(t("common:errors.networkTitle"), t("errors.networkMessage"));
       }

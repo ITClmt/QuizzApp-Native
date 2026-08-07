@@ -1,0 +1,17 @@
+{
+  "AUTH_INVALID_CREDENTIALS": "Incorrect email or password",
+  "AUTH_REFRESH_TOKEN_INVALID": "Your session has expired, please sign in again",
+  "AUTH_REFRESH_TOKEN_REVOKED": "Your session has expired, please sign in again",
+  "AUTH_UNAUTHORIZED": "You need to be signed in to do that",
+  "EMAIL_ALREADY_USED": "This email is already in use",
+  "USER_NOT_FOUND": "User not found",
+  "FORBIDDEN_NOT_OWNER": "You can only modify your own account",
+  "CATEGORY_LOCKED": "This category isn't unlocked at your level yet",
+  "NO_QUESTIONS_AVAILABLE": "No questions available for this selection",
+  "SESSION_ALREADY_IN_PROGRESS": "A game is already in progress",
+  "SESSION_NOT_FOUND": "Game not found",
+  "SESSION_NOT_OWNED": "This game doesn't belong to you",
+  "SESSION_ALREADY_FINISHED": "This game has already finished",
+  "SESSION_EXPIRED": "This game has expired",
+  "INVALID_ANSWER_QUESTION": "Invalid question"
+}

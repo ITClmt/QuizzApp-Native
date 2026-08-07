@@ -11,6 +11,7 @@ import { getCategoryLabelByOtdName } from "@/src/constants/categories";
 import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
 import { DottedProgress } from "@/src/features/quiz/components/DottedProgress";
+import { ApiError, getErrorMessage } from "@/src/lib/api";
 import {
   finishQuizSession,
   startQuizSession,
@@ -83,18 +84,18 @@ export default function QuizScreen() {
     isError,
     error,
     data,
-  } = useMutation<QuizSession>({
+  } = useMutation<QuizSession, ApiError>({
     mutationFn: () => startQuizSession({ difficulty, category }),
     onSuccess: (session) => {
       setQuestions(session.questions);
     },
     onError: (err) => {
-      Alert.alert(t("common:errors.title"), err.message);
+      Alert.alert(t("common:errors.title"), getErrorMessage(err));
     },
   });
 
   const { mutate: finishSession, isPending: isFinishing } =
-    useMutation<QuizResult>({
+    useMutation<QuizResult, ApiError>({
       mutationFn: () =>
         finishQuizSession({
           sessionId: data!.sessionId,
@@ -115,7 +116,7 @@ export default function QuizScreen() {
         });
       },
       onError: (err) => {
-        Alert.alert(t("common:errors.title"), err.message);
+        Alert.alert(t("common:errors.title"), getErrorMessage(err));
       },
     });
 
@@ -159,7 +160,7 @@ export default function QuizScreen() {
       <GradientBackground>
         <SafeAreaView style={styles.centered}>
           <Text style={styles.errorText}>
-            {t("session.errorPrefix", { message: error.message })}
+            {t("session.errorPrefix", { message: getErrorMessage(error) })}
           </Text>
         </SafeAreaView>
       </GradientBackground>
