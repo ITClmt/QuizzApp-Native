@@ -22,19 +22,16 @@ const LANGUAGE_LABEL_KEYS: Record<AppLanguage, "languageFr" | "languageEn"> = {
 };
 
 export default function SettingsScreen() {
-  const { signOut, user, refreshUser } = useAuth();
+  const { signOut, user } = useAuth();
   const { t, i18n } = useTranslation(["settings", "common"]);
 
-  // 1) applique la langue localement, 2) persiste côté compte (pilote aussi
-  // la langue des questions), 3) réémet un JWT frais pour que le backend
-  // voie le nouveau `lang` immédiatement (voir refreshUser dans AuthContext).
+  // Applique la langue localement, puis persiste côté compte. Le backend lit
+  // désormais User.lang en base à chaque requête (pas depuis le JWT), donc
+  // pas besoin de rafraîchir le token pour que ça prenne effet immédiatement.
   const { mutate: applyLanguageChange, isPending: isChangingLanguage } = useMutation({
     mutationFn: async (lang: AppLanguage) => {
       await setAppLanguage(lang);
-      if (user) {
-        await updateUserRequest(user.sub, { lang });
-        await refreshUser();
-      }
+      if (user) await updateUserRequest(user.sub, { lang });
     },
   });
 

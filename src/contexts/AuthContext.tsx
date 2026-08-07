@@ -31,7 +31,6 @@ type AuthContextType = {
     lang?: string,
   ) => Promise<void>;
   signOut: () => Promise<void>;
-  refreshUser: () => Promise<void>;
 };
 
 // --- Helpers ---
@@ -127,22 +126,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(decoded);
   }
 
-  // Relit l'utilisateur en base et réémet un token frais : sert à
-  // resynchroniser le JWT (donc user.lang) juste après un changement de
-  // langue, sans attendre le prochain refresh naturel (401 ou reconnexion).
-  async function refreshUser() {
-    const refreshToken = await Storage.getItemAsync("refresh_token");
-    if (!refreshToken) return;
-
-    const newTokens = await refreshTokensRequest(refreshToken);
-    const decoded = await saveTokensAndDecodeUser(
-      newTokens.access_token,
-      newTokens.refresh_token,
-    );
-    syncAppLanguage(decoded);
-    setUser(decoded);
-  }
-
   async function signOut() {
     try {
       await logoutRequest();
@@ -157,9 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider
-      value={{ user, isLoading, signIn, signUp, signOut, refreshUser }}
-    >
+    <AuthContext.Provider value={{ user, isLoading, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
