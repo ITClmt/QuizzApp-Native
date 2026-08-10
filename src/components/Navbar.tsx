@@ -31,7 +31,7 @@ export function Navbar() {
           onPress={() => router.push("/(app)/profile")}
         >
           <Image
-            source={getAvatarImage(user?.avatarSlug)}
+            source={getAvatarImage(profile?.avatarSlug ?? user?.avatarSlug)}
             style={styles.avatar}
             alt={user?.username}
           />

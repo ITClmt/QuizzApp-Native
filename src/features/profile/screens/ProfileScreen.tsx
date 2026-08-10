@@ -11,6 +11,7 @@ import { GradientBackground } from "@/src/components/GradientBackground";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LevelProgressBar } from "@/src/components/LevelProgressBar";
 import { useAuth } from "@/src/contexts/AuthContext";
+import { useProfile } from "@/src/hooks/useProfile";
 import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
 import { getUserScores } from "@/src/services/score/score.api";
 import { useFocusEffect } from "@react-navigation/native";
@@ -34,6 +35,9 @@ const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
 
 export default function ProfileScreen() {
   const { user } = useAuth();
+  // avatarSlug vient de /users/me et non du JWT : le token garde l'ancienne
+  // valeur jusqu'à sa rotation, donc l'avatar changerait avec un temps de retard.
+  const profile = useProfile();
   const { t } = useTranslation("profile");
 
   const {
@@ -80,7 +84,7 @@ export default function ProfileScreen() {
               accessibilityLabel={t("avatars.change")}
             >
               <Image
-                source={getAvatarImage(user?.avatarSlug)}
+                source={getAvatarImage(profile?.avatarSlug ?? user?.avatarSlug)}
                 style={styles.avatar}
               />
               <View style={styles.avatarEditBadge}>

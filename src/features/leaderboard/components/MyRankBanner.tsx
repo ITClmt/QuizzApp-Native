@@ -1,5 +1,6 @@
 import { getAvatarImage } from "@/constants/avatars";
 import { Colors, FontFamily, FontSize, Radius, Shadows, Spacing } from "@/constants/theme";
+import { useProfile } from "@/src/hooks/useProfile";
 import type { MyRank } from "@/src/services/leaderboard/leaderboard.api";
 import type { User } from "@/src/types";
 import { useTranslation } from "react-i18next";
@@ -17,6 +18,9 @@ export function MyRankBanner({
   unit = "pts",
 }: MyRankBannerProps) {
   const { t } = useTranslation("leaderboard");
+  // `user` vient du JWT : il garde l'ancien avatar jusqu'à la rotation du token
+  const profile = useProfile();
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.separator}>
@@ -28,7 +32,7 @@ export function MyRankBanner({
       <View style={styles.card}>
         <Text style={styles.rank}>#{myRank.rank}</Text>
         <Image
-          source={getAvatarImage(user.avatarSlug)}
+          source={getAvatarImage(profile?.avatarSlug ?? user.avatarSlug)}
           style={styles.avatar}
         />
         <View style={styles.info}>
