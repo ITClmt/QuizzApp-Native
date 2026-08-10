@@ -27,6 +27,32 @@ export const AVATARS: Record<string, any> = {
   "yellow-chick": require("../assets/images/profile_pics/free/yellow-chick.png"),
   "yellow-cyclops": require("../assets/images/profile_pics/free/yellow-cyclops.png"),
 
+  // Debloquables par niveau — voir src/users/constants/avatars.ts cote back
+  "amber-cyclops": require("../assets/images/profile_pics/unlockable/amber-cyclops.png"),
+  "blue-flame": require("../assets/images/profile_pics/unlockable/blue-flame.png"),
+  "blue-sprout": require("../assets/images/profile_pics/unlockable/blue-sprout.png"),
+  "copper-robot": require("../assets/images/profile_pics/unlockable/copper-robot.png"),
+  "crystal-golem": require("../assets/images/profile_pics/unlockable/crystal-golem.png"),
+  "ember-triclops": require("../assets/images/profile_pics/unlockable/ember-triclops.png"),
+  "emerald-sparkle": require("../assets/images/profile_pics/unlockable/emerald-sparkle.png"),
+  "gold-blob": require("../assets/images/profile_pics/unlockable/gold-blob.png"),
+  "honey-bunny": require("../assets/images/profile_pics/unlockable/honey-bunny.png"),
+  "honey-monster": require("../assets/images/profile_pics/unlockable/honey-monster.png"),
+  "jade-triclops": require("../assets/images/profile_pics/unlockable/jade-triclops.png"),
+  "leaf-sprite": require("../assets/images/profile_pics/unlockable/leaf-sprite.png"),
+  "mint-devil": require("../assets/images/profile_pics/unlockable/mint-devil.png"),
+  "monster-king": require("../assets/images/profile_pics/unlockable/monster-king.png"),
+  "moss-monster": require("../assets/images/profile_pics/unlockable/moss-monster.png"),
+  "opal-ghost": require("../assets/images/profile_pics/unlockable/opal-ghost.png"),
+  phoenix: require("../assets/images/profile_pics/unlockable/phoenix.png"),
+  "rune-golem": require("../assets/images/profile_pics/unlockable/rune-golem.png"),
+  "smoke-ghost": require("../assets/images/profile_pics/unlockable/smoke-ghost.png"),
+  "sparkle-cyclops": require("../assets/images/profile_pics/unlockable/sparkle-cyclops.png"),
+  "stardust-puff": require("../assets/images/profile_pics/unlockable/stardust-puff.png"),
+  "starry-cyclops": require("../assets/images/profile_pics/unlockable/starry-cyclops.png"),
+  "steam-robot": require("../assets/images/profile_pics/unlockable/steam-robot.png"),
+  "storm-monster": require("../assets/images/profile_pics/unlockable/storm-monster.png"),
+
   // Speciaux
   Epic_Spacey: require("../assets/images/profile_pics/special/Epic_Spacey.png"),
 };
