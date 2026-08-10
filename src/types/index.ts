@@ -43,6 +43,7 @@ export interface QuizResult {
   level: number;
   leveledUp: boolean;
   unlockedCategoryIds: string[];
+  unlockedAvatarSlugs: string[];
 }
 
 export interface AvatarCatalogEntry {

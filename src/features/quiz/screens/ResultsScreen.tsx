@@ -4,6 +4,7 @@ import AnswerBreakdown from "@/src/features/quiz/components/AnswerBreakdown";
 import DifficultyBreakdown from "@/src/features/quiz/components/DifficultyBreakdown";
 import ResultsActions from "@/src/features/quiz/components/ResultsActions";
 import ScoreSummary from "@/src/features/quiz/components/ScoreSummary";
+import UnlockedAvatars from "@/src/features/quiz/components/UnlockedAvatars";
 import UnlockedCategories from "@/src/features/quiz/components/UnlockedCategories";
 import XpSummary from "@/src/features/quiz/components/XpSummary";
 import type { QuizQuestion, QuizResult } from "@/src/types";
@@ -47,6 +48,7 @@ export default function ResultsScreen() {
             leveledUp={result.leveledUp}
           />
           <UnlockedCategories categoryIds={result.unlockedCategoryIds ?? []} />
+          <UnlockedAvatars slugs={result.unlockedAvatarSlugs ?? []} />
           <DifficultyBreakdown details={result.details} />
           {result.answers.length > 0 && (
             <AnswerBreakdown

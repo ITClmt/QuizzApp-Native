@@ -41,6 +41,8 @@
     "levelUp": "Level up! You reached level {{level}}",
     "categoriesUnlocked_one": "New category unlocked!",
     "categoriesUnlocked_other": "New categories unlocked!",
+    "avatarsUnlocked_one": "New avatar unlocked!",
+    "avatarsUnlocked_other": "New avatars unlocked!",
     "xpEarned": "+{{xp}} XP",
     "byDifficultyTitle": "By difficulty",
     "correctCount_one": "{{count}} correct",

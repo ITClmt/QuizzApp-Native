@@ -41,6 +41,8 @@
     "levelUp": "Niveau supérieur ! Tu as atteint le niveau {{level}}",
     "categoriesUnlocked_one": "Nouvelle catégorie débloquée !",
     "categoriesUnlocked_other": "Nouvelles catégories débloquées !",
+    "avatarsUnlocked_one": "Nouvel avatar débloqué !",
+    "avatarsUnlocked_other": "Nouveaux avatars débloqués !",
     "xpEarned": "+{{xp}} XP",
     "byDifficultyTitle": "Par difficulté",
     "correctCount_one": "{{count}} bonne réponse",
