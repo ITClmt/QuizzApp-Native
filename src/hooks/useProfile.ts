@@ -1,4 +1,4 @@
-import { getProfileRequest } from "@/src/services/auth/auth.api";
+import { getMyProfileRequest } from "@/src/services/users/users.api";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useFocusEffect } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ export function useProfile() {
 
   const { data: profile, refetch } = useQuery({
     queryKey: ["profile"],
-    queryFn: getProfileRequest,
+    queryFn: getMyProfileRequest,
     enabled: !!user?.sub,
     refetchOnWindowFocus: false,
   });
