@@ -68,15 +68,15 @@ export default function QuizScreen() {
     setUserAnswers((prev) => [...prev, answerIndex]);
   };
 
-  const endQuiz = () => {
+  const endQuiz = (timedOut: boolean) => {
     if (hasEndedRef.current) return;
     hasEndedRef.current = true;
-    finishSession();
+    finishSession(timedOut);
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex === questions.length - 1) {
-      endQuiz();
+      endQuiz(false);
     } else {
       setShowAnswer(false);
       setCurrentQuestionIndex((prev) => prev + 1);
@@ -100,14 +100,15 @@ export default function QuizScreen() {
   });
 
   const { mutate: finishSession, isPending: isFinishing } =
-    useMutation<QuizResult, ApiError>({
-      mutationFn: () =>
+    useMutation<QuizResult, ApiError, boolean>({
+      mutationFn: (timedOut) =>
         finishQuizSession({
           sessionId: data!.sessionId,
           answers: userAnswers.map((answerIndex, i) => ({
             questionId: questions[i].id,
             answerIndex,
           })),
+          timedOut,
         }),
       onSuccess: (result) => {
         queryClient.invalidateQueries({ queryKey: ["profile"] });
@@ -141,7 +142,7 @@ export default function QuizScreen() {
       setTimeLeft(remaining);
       if (remaining <= 0) {
         clearInterval(interval);
-        endQuiz();
+        endQuiz(true);
       }
     }, 1000);
 

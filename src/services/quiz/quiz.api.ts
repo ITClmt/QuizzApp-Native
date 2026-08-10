@@ -41,6 +41,7 @@ export async function cancelQuizSession(sessionId: string) {
 export interface FinishQuizParams {
   sessionId: string;
   answers: { questionId: string; answerIndex: number }[];
+  timedOut: boolean;
 }
 
 export async function finishQuizSession(params: FinishQuizParams) {
