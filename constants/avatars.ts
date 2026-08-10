@@ -1,6 +1,7 @@
-export const AVATARS: Record<string, any> = {
-  default: require("../assets/images/profile_pics/default.png"),
+/** Repli quand le slug est absent ou inconnu — aligné sur le défaut en base */
+export const DEFAULT_AVATAR_SLUG = "yellow-cyclops";
 
+export const AVATARS: Record<string, any> = {
   // Gratuits : disponibles pour tout le monde, sans condition
   "blue-blob": require("../assets/images/profile_pics/free/blue-blob.png"),
   "blue-bunny": require("../assets/images/profile_pics/free/blue-bunny.png"),
@@ -37,7 +38,7 @@ export const AVATARS: Record<string, any> = {
  */
 export const getAvatarImage = (slug?: string | null) => {
   if (!slug || !AVATARS[slug]) {
-    return AVATARS["default"];
+    return AVATARS[DEFAULT_AVATAR_SLUG];
   }
   return AVATARS[slug];
 };
