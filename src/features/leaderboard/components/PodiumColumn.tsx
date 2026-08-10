@@ -73,10 +73,9 @@ export function PodiumColumn({
   return (
     <View style={[styles.col, isFirst && styles.colFirst]}>
       <View style={styles.avatarWrapper}>
-        <Image
-          source={getAvatarImage(entry.userData.avatarSlug)}
+        <View
           style={[
-            styles.avatar,
+            styles.avatarRing,
             {
               width: medal.size,
               height: medal.size,
@@ -84,7 +83,12 @@ export function PodiumColumn({
               borderColor: medal.border,
             },
           ]}
-        />
+        >
+          <Image
+            source={getAvatarImage(entry.userData.avatarSlug)}
+            style={styles.avatar}
+          />
+        </View>
         <View style={[styles.badge, { backgroundColor: medal.badgeBg }]}>
           <Text style={styles.badgeText}>{rank + 1}</Text>
         </View>
@@ -123,8 +127,17 @@ const styles = StyleSheet.create({
     position: "relative",
     marginBottom: Spacing.sm,
   },
-  avatar: {
+  // Fond blanc + padding : le dessin détouré (ex. la lune d'Epic_Spacey) ne
+  // touche plus le bord du cercle.
+  avatarRing: {
     borderWidth: 3,
+    padding: 5,
+    backgroundColor: Colors.white,
+  },
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: Radius.full,
   },
   badge: {
     position: "absolute",

@@ -21,10 +21,12 @@ export function LeaderboardRow({
   return (
     <View style={[styles.row, isSelf && styles.rowSelf]}>
       <Text style={[styles.rank, isSelf && styles.rankSelf]}>{rank}</Text>
-      <Image
-        source={getAvatarImage(entry.userData.avatarSlug)}
-        style={[styles.avatar, isSelf && styles.avatarSelf]}
-      />
+      <View style={[styles.avatarRing, isSelf && styles.avatarRingSelf]}>
+        <Image
+          source={getAvatarImage(entry.userData.avatarSlug)}
+          style={styles.avatar}
+        />
+      </View>
       <View style={styles.info}>
         <Text style={[styles.name, isSelf && styles.nameSelf]}>
           {isSelf
@@ -67,16 +69,24 @@ const styles = StyleSheet.create({
   rankSelf: {
     color: Colors.onPrimaryContainer,
   },
-  avatar: {
+  // Le fond blanc + le padding évitent que le dessin (ex. la lune d'Epic_Spacey)
+  // ne touche le bord du cercle une fois détouré.
+  avatarRing: {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginHorizontal: Spacing.sm,
-    backgroundColor: Colors.surfaceContainerHigh,
+    padding: 3,
+    backgroundColor: Colors.white,
   },
-  avatarSelf: {
+  avatarRingSelf: {
     borderWidth: 2,
     borderColor: Colors.primary,
+  },
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: Radius.full,
   },
   info: {
     flex: 1,
