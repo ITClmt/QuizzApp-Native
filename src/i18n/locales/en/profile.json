@@ -1,5 +1,16 @@
 {
   "totalScore": "Total score",
   "scoresByDifficulty": "Scores by difficulty",
-  "loadError": "Failed to load scores."
+  "loadError": "Failed to load scores.",
+  "avatars": {
+    "title": "Pick your avatar",
+    "subtitle": "Unlock more as you level up",
+    "change": "Change avatar",
+    "done": "Done",
+    "unlockAtLevel": "Lv. {{level}}",
+    "lockedLabel": "Locked avatar, unlocked at level {{level}}",
+    "loadError": "Failed to load avatars.",
+    "updateErrorTitle": "Couldn't change avatar",
+    "updateError": "Unable to change your avatar right now."
+  }
 }

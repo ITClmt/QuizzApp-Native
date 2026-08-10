@@ -8,15 +8,25 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import { MaterialIcons } from "@expo/vector-icons";
 import { LevelProgressBar } from "@/src/components/LevelProgressBar";
 import { useAuth } from "@/src/contexts/AuthContext";
 import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
 import { getUserScores } from "@/src/services/score/score.api";
 import { useFocusEffect } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DifficultyScoreCard } from "../components/DifficultyScoreCard";
 
@@ -63,12 +73,20 @@ export default function ProfileScreen() {
           contentContainerStyle={styles.content}
         >
           <View style={styles.hero}>
-            <View style={styles.avatarRing}>
+            <Pressable
+              style={styles.avatarRing}
+              onPress={() => router.push("/(app)/avatars")}
+              accessibilityRole="button"
+              accessibilityLabel={t("avatars.change")}
+            >
               <Image
                 source={getAvatarImage(user?.avatarSlug)}
                 style={styles.avatar}
               />
-            </View>
+              <View style={styles.avatarEditBadge}>
+                <MaterialIcons name="edit" size={14} color={Colors.onPrimary} />
+              </View>
+            </Pressable>
             <Text style={styles.username}>{user?.username}</Text>
           </View>
 
@@ -131,6 +149,19 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: Radius.full,
+  },
+  avatarEditBadge: {
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    width: 28,
+    height: 28,
+    borderRadius: Radius.full,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderWidth: 2,
+    borderColor: Colors.surface,
   },
   username: {
     marginTop: Spacing.base,

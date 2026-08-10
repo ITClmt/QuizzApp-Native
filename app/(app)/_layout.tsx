@@ -86,6 +86,7 @@ export default function AppLayout() {
           ),
         }}
       />
+      <Tabs.Screen name="avatars" options={{ title: "Avatars", href: null }} />
     </Tabs>
   );
 }

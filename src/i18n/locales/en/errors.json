@@ -6,6 +6,7 @@
   "EMAIL_ALREADY_USED": "This email is already in use",
   "USER_NOT_FOUND": "User not found",
   "FORBIDDEN_NOT_OWNER": "You can only modify your own account",
+  "AVATAR_LOCKED": "This avatar isn't unlocked at your level yet",
   "CATEGORY_LOCKED": "This category isn't unlocked at your level yet",
   "NO_QUESTIONS_AVAILABLE": "No questions available for this selection",
   "SESSION_ALREADY_IN_PROGRESS": "A game is already in progress",

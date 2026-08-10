@@ -42,8 +42,13 @@ export interface QuizResult {
   previousLevel: number;
   level: number;
   leveledUp: boolean;
-  /** Category ids unlocked by this session's level up — empty otherwise */
   unlockedCategoryIds: string[];
+}
+
+export interface AvatarCatalogEntry {
+  slug: string;
+  unlockLevel: number;
+  unlocked: boolean;
 }
 
 export interface UserProfile {

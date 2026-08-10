@@ -1,5 +1,16 @@
 {
   "totalScore": "Score total",
   "scoresByDifficulty": "Scores par difficulté",
-  "loadError": "Impossible de charger les scores."
+  "loadError": "Impossible de charger les scores.",
+  "avatars": {
+    "title": "Choisis ton avatar",
+    "subtitle": "Débloque-en de nouveaux en montant de niveau",
+    "change": "Changer d'avatar",
+    "done": "Terminé",
+    "unlockAtLevel": "Niv. {{level}}",
+    "lockedLabel": "Avatar verrouillé, débloqué au niveau {{level}}",
+    "loadError": "Impossible de charger les avatars.",
+    "updateErrorTitle": "Changement impossible",
+    "updateError": "Impossible de changer d'avatar pour le moment."
+  }
 }
