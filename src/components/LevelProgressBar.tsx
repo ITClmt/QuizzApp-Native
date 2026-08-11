@@ -69,12 +69,12 @@ const styles = StyleSheet.create({
   },
   barTrack: {
     height: 9,
-    borderRadius: 6,
+    borderRadius: Radius.full,
     backgroundColor: Colors.surfaceContainerHigh,
     overflow: "hidden",
   },
   barFill: {
     height: "100%",
-    borderRadius: 6,
+    borderRadius: Radius.full,
   },
 });

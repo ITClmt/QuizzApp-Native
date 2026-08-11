@@ -138,12 +138,18 @@ export default function RegisterScreen() {
             title={isSubmitting ? t("register.signingUp") : t("register.signUp")}
             style={styles.registerButton}
             onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
           />
         </View>
 
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>{t("register.hasAccount")}</Text>
-          <Pressable onPress={() => router.replace("/(auth)/login")}>
+          <Pressable
+            onPress={() => router.replace("/(auth)/login")}
+            style={styles.footerLinkPressable}
+            accessibilityRole="link"
+            accessibilityLabel={t("register.signInLink")}
+          >
             <Text style={styles.footerLink}>{t("register.signInLink")}</Text>
           </Pressable>
         </View>
@@ -179,8 +185,13 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
     marginTop: Spacing["4xl"],
+  },
+  footerLinkPressable: {
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.sm,
   },
   footerText: {
     fontFamily: FontFamily.body,

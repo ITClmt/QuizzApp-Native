@@ -1,4 +1,4 @@
-import { Colors, Shadows } from "@/constants/theme";
+import { Colors, Radius, Shadows } from "@/constants/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet } from "react-native";
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     height: 36,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 999,
+    borderRadius: Radius.full,
     backgroundColor: Colors.surface,
     ...Shadows.card,
   },

@@ -110,7 +110,12 @@ export default function LoginScreen() {
 
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>{t("login.noAccount")}</Text>
-          <Pressable onPress={() => router.replace("/(auth)/register")}>
+          <Pressable
+            onPress={() => router.replace("/(auth)/register")}
+            style={styles.footerLinkPressable}
+            accessibilityRole="link"
+            accessibilityLabel={t("login.signUpLink")}
+          >
             <Text style={styles.footerLink}>{t("login.signUpLink")}</Text>
           </Pressable>
         </View>
@@ -146,8 +151,13 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
     marginTop: Spacing["4xl"],
+  },
+  footerLinkPressable: {
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.sm,
   },
   footerText: {
     fontFamily: FontFamily.body,

@@ -5,6 +5,7 @@ import {
   Radius,
   Spacing,
 } from "@/constants/theme";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -42,9 +43,11 @@ export default function AnswerBreakdown({ rows }: AnswerBreakdownProps) {
                   : styles.answerIconWrong,
               ]}
             >
-              <Text style={styles.answerIconText}>
-                {row.isCorrect ? "✓" : "✗"}
-              </Text>
+              <MaterialIcons
+                name={row.isCorrect ? "check" : "close"}
+                size={20}
+                color={Colors.onPrimary}
+              />
             </View>
             <View style={styles.answerContent}>
               <Text style={styles.answerQuestion} numberOfLines={2}>
@@ -108,11 +111,6 @@ const styles = StyleSheet.create({
   },
   answerIconWrong: {
     backgroundColor: Colors.error,
-  },
-  answerIconText: {
-    fontFamily: FontFamily.headline,
-    fontSize: FontSize.titleLg,
-    color: Colors.onPrimary,
   },
   answerContent: {
     flex: 1,

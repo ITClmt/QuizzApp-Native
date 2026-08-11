@@ -270,7 +270,6 @@ const styles = StyleSheet.create({
   },
   categoryCardLocked: {
     backgroundColor: Colors.surfaceVariant,
-    opacity: 0.6,
     shadowOpacity: 0,
     elevation: 0,
   },

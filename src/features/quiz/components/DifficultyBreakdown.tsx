@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   difficultyDot: {
     width: 10,
     height: 10,
-    borderRadius: 5,
+    borderRadius: Radius.full,
   },
   difficultyLabel: {
     flex: 1,

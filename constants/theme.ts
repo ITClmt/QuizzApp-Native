@@ -17,7 +17,7 @@ export const Colors = {
   onSurface: "#1F3A56", // primary text ("ink")
   onSurfaceVariant: "#4B6C87", // secondary text
   onBackground: "#1F3A56",
-  outline: "#7C93A6", // muted/tertiary text
+  outline: "#5C7084", // muted/tertiary text
   outlineVariant: "#E3EEF5", // borders / dividers
 
   // Core brand — accent violet (XP, active states, primary CTA)

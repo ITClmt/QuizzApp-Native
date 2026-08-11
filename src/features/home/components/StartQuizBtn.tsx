@@ -1,4 +1,4 @@
-import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { Colors, FontFamily, FontSize, Radius, Spacing } from "@/constants/theme";
 import { useNetworkStatus } from "@/src/hooks/useNetworkStatus";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     minHeight: 180,
-    borderRadius: 18,
+    borderRadius: Radius.lg,
     shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.2,
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    borderRadius: 18,
+    borderRadius: Radius.lg,
     padding: Spacing["2xl"],
     justifyContent: "flex-end",
     alignItems: "flex-start",

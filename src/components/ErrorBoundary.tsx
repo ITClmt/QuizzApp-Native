@@ -1,4 +1,10 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import {
+  Colors,
+  FontFamily,
+  FontSize,
+  Radius,
+  Spacing,
+} from "@/constants/theme";
 import { i18n } from "@/src/i18n";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -50,13 +56,14 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: FontFamily.headlineExtrabold,
+    fontSize: FontSize.headlineSm,
     color: Colors.onSurface,
     marginBottom: Spacing.md,
   },
   message: {
-    fontSize: 14,
+    fontFamily: FontFamily.body,
+    fontSize: FontSize.bodyMd,
     color: Colors.onSurfaceVariant,
     textAlign: "center",
     marginBottom: Spacing.xl,
@@ -68,8 +75,8 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontFamily: FontFamily.label,
+    fontSize: FontSize.titleMd,
     color: Colors.onPrimary,
   },
 });

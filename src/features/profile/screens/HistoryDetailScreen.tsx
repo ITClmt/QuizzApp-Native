@@ -26,7 +26,7 @@ import { useGameLabels } from "../hooks/useGameLabels";
 
 export default function HistoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t, i18n } = useTranslation("quiz");
+  const { t, i18n } = useTranslation(["quiz", "common"]);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["history-detail", id],
@@ -55,7 +55,9 @@ export default function HistoryDetailScreen() {
           <Pressable
             onPress={() => router.navigate("/(app)/profile")}
             style={styles.backButton}
+            hitSlop={8} // 40 visuels + 8 de marge : plancher tactile atteint
             accessibilityRole="button"
+            accessibilityLabel={t("common:back")}
           >
             <MaterialIcons
               name="arrow-back"

@@ -28,9 +28,18 @@ export default function ResultsScreen() {
     return <Redirect href="/(app)" />;
   }
 
-  const result = JSON.parse(resultParam) as QuizResult;
-  const questions = JSON.parse(questionsParam) as QuizQuestion[];
-  const userAnswers = JSON.parse(userAnswersParam) as number[];
+  // Params sérialisés : un JSON tronqué ou malformé remonterait à l'ErrorBoundary
+  // alors que l'écran sait déjà rentrer proprement à l'accueil.
+  let result: QuizResult;
+  let questions: QuizQuestion[];
+  let userAnswers: number[];
+  try {
+    result = JSON.parse(resultParam) as QuizResult;
+    questions = JSON.parse(questionsParam) as QuizQuestion[];
+    userAnswers = JSON.parse(userAnswersParam) as number[];
+  } catch {
+    return <Redirect href="/(app)" />;
+  }
 
   const questionMap = new Map(questions.map((q) => [q.id, q]));
   const answerRows = result.answers.map((answer, index) => {

@@ -10,7 +10,7 @@ import { GradientBackground } from "@/src/components/GradientBackground";
 import { getCategoryLabelByOtdName } from "@/src/constants/categories";
 import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
-import { DottedProgress } from "@/src/features/quiz/components/DottedProgress";
+import { QuestionProgress } from "@/src/features/quiz/components/QuestionProgress";
 import { useCancelQuizSession } from "@/src/features/quiz/hooks/useCancelQuizSession";
 import { useBlockBackNavigation } from "@/src/hooks/useBlockBackNavigation";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
@@ -238,7 +238,10 @@ export default function QuizScreen() {
             onPress={confirmCancel}
             isPending={isCancelling}
           />
-          <DottedProgress total={questions.length} current={currentQuestionIndex} />
+          <QuestionProgress
+            total={questions.length}
+            current={currentQuestionIndex}
+          />
           <View style={styles.headerSpacer} />
         </View>
 
