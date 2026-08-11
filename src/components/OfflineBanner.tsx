@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
@@ -15,12 +16,17 @@ export function OfflineBanner() {
   const { isOnline } = useNetworkStatus();
   const { bottom } = useSafeAreaInsets();
   const translateY = useSharedValue(100);
+  const reduceMotion = useReducedMotion();
   const { t } = useTranslation("common");
 
   useEffect(() => {
-    translateY.value = withTiming(isOnline ? 100 : 0, { duration: 300 });
+    const target = isOnline ? 100 : 0;
+    // Mouvement réduit : le bandeau apparaît/disparaît net, sans glissement.
+    translateY.value = reduceMotion
+      ? target
+      : withTiming(target, { duration: 300 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOnline]);
+  }, [isOnline, reduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],

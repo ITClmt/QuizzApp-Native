@@ -3,7 +3,8 @@
   "loadError": "Impossible de charger le classement.",
   "empty": "Pas encore de scores pour cette difficulté.",
   "filters": {
-    "global": "Général"
+    "global": "Général",
+    "accessibilityLabel": "Filtrer par difficulté"
   },
   "you": "Toi ({{username}})",
   "yourPosition": "Ta position",

@@ -3,7 +3,8 @@
   "loadError": "Failed to load leaderboard.",
   "empty": "No scores yet for this difficulty.",
   "filters": {
-    "global": "Global"
+    "global": "Global",
+    "accessibilityLabel": "Filter by difficulty"
   },
   "you": "You ({{username}})",
   "yourPosition": "Your position",

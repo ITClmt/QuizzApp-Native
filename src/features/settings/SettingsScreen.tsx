@@ -7,6 +7,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import { SegmentedControl } from "@/src/components/SegmentedControl";
 import { SUPPORTED_LANGUAGES, setAppLanguage, type AppLanguage } from "@/src/i18n";
 import { updateUserRequest } from "@/src/services/users/users.api";
 import { useMutation } from "@tanstack/react-query";
@@ -69,28 +70,17 @@ export default function SettingsScreen() {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <Text style={styles.label}>{t("language")}</Text>
-            <View style={styles.languageSwitch}>
-              {SUPPORTED_LANGUAGES.map((lang) => {
-                const active = i18n.language === lang;
-                return (
-                  <Pressable
-                    key={lang}
-                    onPress={() => handleLanguageChange(lang)}
-                    disabled={isChangingLanguage}
-                    style={[styles.languagePill, active && styles.languagePillActive]}
-                  >
-                    <Text
-                      style={[
-                        styles.languagePillText,
-                        active && styles.languagePillTextActive,
-                      ]}
-                    >
-                      {t(LANGUAGE_LABEL_KEYS[lang])}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            <SegmentedControl
+              variant="inline"
+              options={SUPPORTED_LANGUAGES.map((lang) => ({
+                value: lang,
+                label: t(LANGUAGE_LABEL_KEYS[lang]),
+              }))}
+              value={i18n.language as AppLanguage}
+              onChange={handleLanguageChange}
+              disabled={isChangingLanguage}
+              accessibilityLabel={t("language")}
+            />
           </View>
         </View>
 
@@ -134,29 +124,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bodySemibold,
     fontSize: FontSize.bodyLg,
     color: Colors.onSurface,
-  },
-  languageSwitch: {
-    flexDirection: "row",
-    backgroundColor: Colors.surfaceContainerHigh,
-    borderRadius: Radius.full,
-    padding: 3,
-    gap: 3,
-  },
-  languagePill: {
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.md,
-    borderRadius: Radius.full,
-  },
-  languagePillActive: {
-    backgroundColor: Colors.primary,
-  },
-  languagePillText: {
-    fontFamily: FontFamily.bodyBold,
-    fontSize: FontSize.labelSm,
-    color: Colors.onSurfaceVariant,
-  },
-  languagePillTextActive: {
-    color: Colors.onPrimary,
   },
   logoutButton: {
     backgroundColor: Colors.surface,

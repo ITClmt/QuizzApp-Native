@@ -29,6 +29,9 @@ export function Navbar() {
         <Pressable
           style={styles.avatarRing}
           onPress={() => router.push("/(app)/profile")}
+          hitSlop={8} // 38px visuels + 8 de marge = plancher tactile atteint
+          accessibilityRole="button"
+          accessibilityLabel={t("openProfile")}
         >
           <Image
             source={getAvatarImage(profile?.avatarSlug ?? user?.avatarSlug)}

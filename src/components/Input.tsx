@@ -19,9 +19,15 @@ export function Input({ label, style, error, ...rest }: InputProps) {
       <TextInput
         style={[styles.input, error ? styles.inputError : null, style]}
         placeholderTextColor={Colors.onSurfaceVariant}
+        accessibilityLabel={label}
+        accessibilityHint={error}
         {...rest}
       />
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {error && (
+        <Text style={styles.errorText} accessibilityLiveRegion="polite">
+          {error}
+        </Text>
+      )}
     </View>
   );
 }

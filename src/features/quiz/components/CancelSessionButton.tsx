@@ -1,67 +1,29 @@
 import { Colors, Shadows } from "@/constants/theme";
-import { ApiError, getErrorMessage } from "@/src/lib/api";
-import { cancelQuizSession } from "@/src/services/quiz/quiz.api";
-import type { QuizSession } from "@/src/types";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
 interface CancelSessionButtonProps {
-  sessionId: string;
+  /** Confirmation + annulation : voir useCancelQuizSession, porté par l'écran. */
+  onPress: () => void;
+  isPending?: boolean;
 }
 
 export default function CancelSessionButton({
-  sessionId,
+  onPress,
+  isPending = false,
 }: CancelSessionButtonProps) {
-  const router = useRouter();
-  const { t } = useTranslation(["quiz", "common"]);
-
-  const { mutate: cancelSession, isPending } = useMutation<QuizSession, ApiError>({
-    mutationFn: () => cancelQuizSession(sessionId),
-
-    onSuccess: () => {
-      router.replace("/(app)");
-    },
-
-    onError: (err) => {
-      Alert.alert(
-        t("common:errors.title"),
-        t("session.cancelError", { message: getErrorMessage(err) }),
-      );
-    },
-  });
-
-  // Affiche une modale de confirmation native avant d'appeler l'API.
-  // Alert.alert() est synchrone côté affichage : il bloque l'UI et attend
-  // le choix de l'utilisateur avant d'exécuter le callback.
-  const handlePress = () => {
-    Alert.alert(
-      t("session.cancelConfirmTitle"), // Titre
-      t("session.cancelConfirmMessage"), // Message
-      [
-        {
-          text: t("session.keepPlaying"),
-          style: "cancel", // Sur iOS : met ce bouton en gras (action "safe")
-        },
-        {
-          text: t("session.quit"),
-          style: "destructive", // Sur iOS : affiche en rouge pour signaler le danger
-          onPress: () => cancelSession(),
-        },
-      ],
-    );
-  };
+  const { t } = useTranslation("quiz");
 
   return (
     <Pressable
-      onPress={handlePress}
+      onPress={onPress}
       style={styles.button}
       hitSlop={8} // Agrandit la zone de clic sans changer l'apparence visuelle
       disabled={isPending} // Évite un double-tap pendant le call réseau
       accessibilityLabel={t("session.cancelAccessibilityLabel")}
       accessibilityRole="button"
+      accessibilityState={{ disabled: isPending }}
     >
       <MaterialIcons
         name="close"

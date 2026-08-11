@@ -1,7 +1,7 @@
 import { Colors, Radius, Shadows } from "@/constants/theme";
 import { Navbar } from "@/src/components/Navbar";
 import { useAuth } from "@/src/contexts/AuthContext";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
@@ -9,12 +9,12 @@ function TabIcon({
   name,
   focused,
 }: {
-  name: React.ComponentProps<typeof Ionicons>["name"];
+  name: React.ComponentProps<typeof MaterialIcons>["name"];
   focused: boolean;
 }) {
   return (
     <View style={[styles.tabIconWrapper, focused && styles.tabIconWrapperActive]}>
-      <Ionicons
+      <MaterialIcons
         name={name}
         color={focused ? Colors.onPrimary : Colors.outline}
         size={22}
@@ -55,7 +55,7 @@ export default function AppLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ focused }) => (
-            <TabIcon name="game-controller" focused={focused} />
+            <TabIcon name="sports-esports" focused={focused} />
           ),
         }}
       />
@@ -64,7 +64,7 @@ export default function AppLayout() {
         options={{
           title: "Leaderboard",
           tabBarIcon: ({ focused }) => (
-            <TabIcon name="podium" focused={focused} />
+            <TabIcon name="leaderboard" focused={focused} />
           ),
         }}
       />

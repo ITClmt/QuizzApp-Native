@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withRepeat,
   withSequence,
@@ -40,8 +41,16 @@ export function CircularTimer({
   const dashoffset = circumference * (1 - progress);
 
   const pulse = useSharedValue(1);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    // Mouvement réduit : on coupe la pulsation, jamais le signal. L'urgence
+    // reste lisible par le passage au rouge de l'anneau et du décompte.
+    if (reduceMotion) {
+      pulse.value = 1;
+      return;
+    }
+
     if (urgent) {
       pulse.value = withRepeat(
         withSequence(
@@ -54,7 +63,7 @@ export function CircularTimer({
     } else {
       pulse.value = withTiming(1, { duration: 200 });
     }
-  }, [urgent, pulse]);
+  }, [urgent, pulse, reduceMotion]);
 
   const pulseStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulse.value }],

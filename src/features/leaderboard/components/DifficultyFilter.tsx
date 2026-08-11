@@ -1,14 +1,6 @@
-import {
-  Colors,
-  FontFamily,
-  FontSize,
-  Radius,
-  Shadows,
-  Spacing,
-} from "@/constants/theme";
+import { SegmentedControl } from "@/src/components/SegmentedControl";
 import type { LeaderboardFilter } from "@/src/services/leaderboard/leaderboard.api";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const DIFFICULTIES: LeaderboardFilter[] = ["easy", "medium", "hard", "global"];
 
@@ -23,52 +15,18 @@ export function DifficultyFilter({
 }: DifficultyFilterProps) {
   const { t } = useTranslation(["quiz", "leaderboard"]);
 
+  const options = DIFFICULTIES.map((d) => ({
+    value: d,
+    label:
+      d === "global" ? t("leaderboard:filters.global") : t(`difficulty.${d}`),
+  }));
+
   return (
-    <View style={styles.track}>
-      {DIFFICULTIES.map((d) => {
-        const active = difficulty === d;
-        const label = d === "global" ? t("leaderboard:filters.global") : t(`difficulty.${d}`);
-        return (
-          <Pressable
-            key={d}
-            onPress={() => setDifficulty(d)}
-            style={[styles.btn, active && styles.btnActive]}
-          >
-            <Text style={[styles.text, active && styles.textActive]}>
-              {label}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
+    <SegmentedControl
+      options={options}
+      value={difficulty}
+      onChange={setDifficulty}
+      accessibilityLabel={t("leaderboard:filters.accessibilityLabel")}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  track: {
-    flexDirection: "row",
-    backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
-    padding: 4,
-    gap: 4,
-    ...Shadows.card,
-  },
-  btn: {
-    flex: 1,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.xs,
-    borderRadius: Radius.xl - 4,
-    alignItems: "center",
-  },
-  btnActive: {
-    backgroundColor: Colors.primary,
-  },
-  text: {
-    fontFamily: FontFamily.bodyBold,
-    fontSize: FontSize.labelMd,
-    color: Colors.onSurfaceVariant,
-  },
-  textActive: {
-    color: Colors.white,
-  },
-});

@@ -15,19 +15,31 @@ export function ProfileTabSwitcher({
 }: ProfileTabSwitcherProps) {
   const { t } = useTranslation("profile");
 
+  const tabs: { value: ProfileTab; label: string }[] = [
+    { value: "scores", label: t("scoresByDifficulty") },
+    { value: "history", label: t("tabs.history") },
+  ];
+
   return (
     <View>
-      <View style={styles.row}>
-        <Pressable onPress={() => onChange("scores")}>
-          <Text style={[styles.title, activeTab !== "scores" && styles.inactive]}>
-            {t("scoresByDifficulty")}
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => onChange("history")}>
-          <Text style={[styles.title, activeTab !== "history" && styles.inactive]}>
-            {t("tabs.history")}
-          </Text>
-        </Pressable>
+      <View style={styles.row} accessibilityRole="tablist">
+        {tabs.map((tab) => {
+          const active = activeTab === tab.value;
+          return (
+            <Pressable
+              key={tab.value}
+              onPress={() => onChange(tab.value)}
+              style={styles.tab}
+              accessibilityRole="tab"
+              accessibilityLabel={tab.label}
+              accessibilityState={{ selected: active }}
+            >
+              <Text style={[styles.title, !active && styles.inactive]}>
+                {tab.label}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
       <View style={styles.underline} />
     </View>
@@ -41,6 +53,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: Spacing.lg,
   },
+  tab: {
+    paddingVertical: Spacing.md,
+  },
   title: {
     fontFamily: FontFamily.headlineSemibold,
     fontSize: FontSize.titleMd,
@@ -52,6 +67,5 @@ const styles = StyleSheet.create({
   underline: {
     height: 1,
     backgroundColor: Colors.outlineVariant,
-    marginTop: Spacing.sm,
   },
 });
