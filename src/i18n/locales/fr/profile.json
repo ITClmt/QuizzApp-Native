@@ -2,6 +2,9 @@
   "totalScore": "Score total",
   "scoresByDifficulty": "Scores par difficulté",
   "loadError": "Impossible de charger les scores.",
+  "tabs": {
+    "history": "Historique"
+  },
   "avatars": {
     "title": "Choisis ton avatar",
     "subtitle": "Débloque-en de nouveaux en montant de niveau",

@@ -1,3 +1,5 @@
+import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
+
 export interface User {
   sub: string;
   email: string;
@@ -44,6 +46,37 @@ export interface QuizResult {
   leveledUp: boolean;
   unlockedCategoryIds: string[];
   unlockedAvatarSlugs: string[];
+}
+
+interface HistoryGameSummary {
+  difficulty: Difficulty | null;
+  category: string | null;
+  status: "FINISHED" | "EXPIRED";
+  createdAt: string;
+  correctCount: number;
+  totalQuestions: number;
+}
+
+export interface HistoryListItem extends HistoryGameSummary {
+  id: string;
+}
+
+export interface HistoryAnswerRow {
+  questionId: string;
+  questionText: string;
+  isCorrect: boolean;
+  userAnswerText: string;
+  correctAnswerText: string;
+}
+
+export interface HistoryDetail extends HistoryGameSummary {
+  sessionId: string;
+  answers: HistoryAnswerRow[];
+}
+
+export interface HistoryPage {
+  items: HistoryListItem[];
+  nextCursor: string | null;
 }
 
 export interface AvatarCatalogEntry {

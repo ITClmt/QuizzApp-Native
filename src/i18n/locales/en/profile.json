@@ -2,6 +2,9 @@
   "totalScore": "Total score",
   "scoresByDifficulty": "Scores by difficulty",
   "loadError": "Failed to load scores.",
+  "tabs": {
+    "history": "History"
+  },
   "avatars": {
     "title": "Pick your avatar",
     "subtitle": "Unlock more as you level up",

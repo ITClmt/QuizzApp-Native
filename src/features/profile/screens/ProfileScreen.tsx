@@ -1,44 +1,30 @@
-import { getAvatarImage } from "@/constants/avatars";
-import {
-  Colors,
-  FontFamily,
-  FontSize,
-  Radius,
-  Shadows,
-  Spacing,
-} from "@/constants/theme";
+import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
 import { GradientBackground } from "@/src/components/GradientBackground";
-import { MaterialIcons } from "@expo/vector-icons";
-import { LevelProgressBar } from "@/src/components/LevelProgressBar";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useProfile } from "@/src/hooks/useProfile";
-import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
+import { getQuizHistory } from "@/src/services/quiz/quiz.api";
 import { getUserScores } from "@/src/services/score/score.api";
+import type { HistoryListItem as HistoryListItemType } from "@/src/types";
 import { useFocusEffect } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { DifficultyScoreCard } from "../components/DifficultyScoreCard";
+import { HistoryListItem } from "../components/HistoryListItem";
+import { ProfileHeader } from "../components/ProfileHeader";
+import type { ProfileTab } from "../components/ProfileTabSwitcher";
 
-const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
+const HISTORY_PAGE_SIZE = 15;
 
 export default function ProfileScreen() {
   const { user } = useAuth();
   // avatarSlug vient de /users/me et non du JWT : le token garde l'ancienne
   // valeur jusqu'à sa rotation, donc l'avatar changerait avec un temps de retard.
   const profile = useProfile();
-  const { t } = useTranslation("profile");
+  const { t } = useTranslation(["profile", "quiz"]);
+  const [activeTab, setActiveTab] = useState<ProfileTab>("scores");
 
   const {
     data,
@@ -50,6 +36,22 @@ export default function ProfileScreen() {
     queryFn: () => getUserScores(user?.sub as string),
     enabled: !!user?.sub,
     refetchOnWindowFocus: false,
+  });
+
+  const {
+    data: historyData,
+    isLoading: isHistoryLoading,
+    isError: isHistoryError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["quiz-history", user?.sub],
+    queryFn: ({ pageParam }: { pageParam?: string }) =>
+      getQuizHistory({ cursor: pageParam, limit: HISTORY_PAGE_SIZE }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    enabled: !!user?.sub && activeTab === "history",
   });
 
   // React Navigation garde les écrans d'onglets montés : sans ce hook,
@@ -64,68 +66,73 @@ export default function ProfileScreen() {
   const scoreByDifficulty = new Map(
     data?.scores.map((s) => [s.difficulty, s.value]),
   );
-  const maxValue = Math.max(
-    1,
-    ...DIFFICULTIES.map((d) => scoreByDifficulty.get(d) ?? 0),
-  );
+
+  const historyItems: HistoryListItemType[] =
+    historyData?.pages.flatMap((page) => page.items) ?? [];
+  const listData = activeTab === "history" ? historyItems : [];
 
   return (
     <GradientBackground>
       <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
-        <ScrollView
+        <FlatList
+          data={listData}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.content}
-        >
-          <View style={styles.hero}>
-            <Pressable
-              style={styles.avatarRing}
-              onPress={() => router.push("/(app)/avatars")}
-              accessibilityRole="button"
-              accessibilityLabel={t("avatars.change")}
-            >
-              <Image
-                source={getAvatarImage(profile?.avatarSlug ?? user?.avatarSlug)}
-                style={styles.avatar}
-              />
-              <View style={styles.avatarEditBadge}>
-                <MaterialIcons name="edit" size={14} color={Colors.onPrimary} />
-              </View>
-            </Pressable>
-            <Text style={styles.username}>{user?.username}</Text>
-          </View>
-
-          <View style={styles.totalScoreCard}>
-            <Text style={styles.totalScoreLabel}>{t("totalScore")}</Text>
-            <Text style={styles.totalScoreValue}>{data?.totalScore ?? 0}</Text>
-          </View>
-
-          <View style={styles.levelCardWrapper}>
-            <LevelProgressBar />
-          </View>
-
-          <Text style={styles.sectionTitle}>{t("scoresByDifficulty")}</Text>
-
-          {isLoading ? (
-            <View style={styles.centered}>
-              <ActivityIndicator size="large" color={Colors.primary} />
-            </View>
-          ) : isError ? (
-            <View style={styles.centered}>
-              <Text style={styles.errorText}>{t("loadError")}</Text>
-            </View>
-          ) : (
-            <View style={styles.scoreList}>
-              {DIFFICULTIES.map((difficulty) => (
-                <DifficultyScoreCard
-                  key={difficulty}
-                  difficulty={difficulty}
-                  value={scoreByDifficulty.get(difficulty) ?? 0}
-                  maxValue={maxValue}
-                />
-              ))}
-            </View>
+          onEndReachedThreshold={0.4}
+          onEndReached={() => {
+            if (activeTab === "history" && hasNextPage && !isFetchingNextPage) {
+              fetchNextPage();
+            }
+          }}
+          renderItem={({ item }) => (
+            <HistoryListItem
+              item={item}
+              onPress={() =>
+                router.push({
+                  pathname: "/(app)/history/[id]",
+                  params: { id: item.id },
+                })
+              }
+            />
           )}
-        </ScrollView>
+          ListHeaderComponent={
+            <ProfileHeader
+              avatarSlug={profile?.avatarSlug ?? user?.avatarSlug}
+              username={user?.username}
+              totalScore={data?.totalScore ?? 0}
+              activeTab={activeTab}
+              onChangeTab={setActiveTab}
+              scoreByDifficulty={scoreByDifficulty}
+              isScoresLoading={isLoading}
+              isScoresError={isError}
+            />
+          }
+          ListEmptyComponent={
+            activeTab === "history" ? (
+              isHistoryLoading ? (
+                <View style={styles.centered}>
+                  <ActivityIndicator size="large" color={Colors.primary} />
+                </View>
+              ) : isHistoryError ? (
+                <View style={styles.centered}>
+                  <Text style={styles.errorText}>{t("quiz:history.loadError")}</Text>
+                </View>
+              ) : (
+                <View style={styles.centered}>
+                  <Text style={styles.emptyText}>{t("quiz:history.empty")}</Text>
+                </View>
+              )
+            ) : null
+          }
+          ListFooterComponent={
+            activeTab === "history" && isFetchingNextPage ? (
+              <View style={styles.footerLoader}>
+                <ActivityIndicator size="small" color={Colors.primary} />
+              </View>
+            ) : null
+          }
+        />
       </SafeAreaView>
     </GradientBackground>
   );
@@ -139,73 +146,6 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     paddingBottom: Spacing["4xl"] + Spacing.xl,
   },
-  hero: {
-    alignItems: "center",
-    marginBottom: Spacing.xl,
-  },
-  avatarRing: {
-    padding: 4,
-    borderRadius: Radius.full,
-    backgroundColor: Colors.surface,
-    ...Shadows.elevated,
-  },
-  avatar: {
-    width: 96,
-    height: 96,
-    borderRadius: Radius.full,
-  },
-  avatarEditBadge: {
-    position: "absolute",
-    right: 0,
-    bottom: 0,
-    width: 28,
-    height: 28,
-    borderRadius: Radius.full,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.primary,
-    borderWidth: 2,
-    borderColor: Colors.surface,
-  },
-  username: {
-    marginTop: Spacing.base,
-    fontFamily: FontFamily.headline,
-    fontSize: FontSize.headlineMd,
-    color: Colors.onSurface,
-  },
-  levelCardWrapper: {
-    marginBottom: Spacing.xl,
-  },
-  totalScoreCard: {
-    alignItems: "center",
-    backgroundColor: Colors.surface,
-    borderRadius: Radius.lg,
-    paddingVertical: Spacing.lg,
-    marginBottom: Spacing.xl,
-    ...Shadows.card,
-  },
-  totalScoreLabel: {
-    fontFamily: FontFamily.bodyBold,
-    fontSize: FontSize.labelSm,
-    color: Colors.onSurfaceVariant,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
-  totalScoreValue: {
-    marginTop: Spacing.xs,
-    fontFamily: FontFamily.headlineExtrabold,
-    fontSize: FontSize.displayMd,
-    color: Colors.primary,
-  },
-  sectionTitle: {
-    fontFamily: FontFamily.headlineSemibold,
-    fontSize: FontSize.titleMd,
-    color: Colors.onSurface,
-    marginBottom: Spacing.base,
-  },
-  scoreList: {
-    gap: Spacing.md,
-  },
   centered: {
     paddingVertical: Spacing["3xl"],
     alignItems: "center",
@@ -214,5 +154,13 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.body,
     fontSize: FontSize.bodyMd,
     color: Colors.error,
+  },
+  emptyText: {
+    fontFamily: FontFamily.body,
+    fontSize: FontSize.bodyMd,
+    color: Colors.onSurfaceVariant,
+  },
+  footerLoader: {
+    paddingVertical: Spacing.lg,
   },
 });

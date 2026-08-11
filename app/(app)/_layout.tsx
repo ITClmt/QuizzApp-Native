@@ -87,6 +87,10 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen name="avatars" options={{ title: "Avatars", href: null }} />
+      <Tabs.Screen
+        name="history/[id]"
+        options={{ title: "History", href: null }}
+      />
     </Tabs>
   );
 }
@@ -96,9 +100,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 20,
     right: 20,
-    bottom: 20,
-    height: 64,
-    borderRadius: Radius.xl,
+    bottom: 0,
+    height: 80,
     backgroundColor: Colors.surface,
     borderTopWidth: 0,
     ...Shadows.nav,

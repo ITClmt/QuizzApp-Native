@@ -1,5 +1,10 @@
 import { apiFetchAuthenticated } from "@/src/lib/api";
-import type { QuizResult, QuizSession } from "@/src/types";
+import type {
+  HistoryDetail,
+  HistoryPage,
+  QuizResult,
+  QuizSession,
+} from "@/src/types";
 
 export interface StartQuizParams {
   difficulty?: string;
@@ -49,4 +54,25 @@ export async function finishQuizSession(params: FinishQuizParams) {
     method: "POST",
     body: JSON.stringify(params),
   });
+}
+
+export interface GetQuizHistoryParams {
+  cursor?: string;
+  limit?: number;
+}
+
+export async function getQuizHistory(params: GetQuizHistoryParams = {}) {
+  const queryParams = new URLSearchParams();
+  if (params.cursor) queryParams.append("cursor", params.cursor);
+  if (params.limit) queryParams.append("limit", String(params.limit));
+
+  const queryString = queryParams.toString()
+    ? `?${queryParams.toString()}`
+    : "";
+
+  return apiFetchAuthenticated<HistoryPage>(`/quiz/history${queryString}`);
+}
+
+export async function getQuizHistoryDetail(sessionId: string) {
+  return apiFetchAuthenticated<HistoryDetail>(`/quiz/history/${sessionId}`);
 }

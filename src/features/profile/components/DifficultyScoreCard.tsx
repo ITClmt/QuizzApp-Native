@@ -6,15 +6,10 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { DIFFICULTY_COLORS } from "@/src/constants/difficulty";
 import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
-
-const DIFFICULTY_COLORS: Record<Difficulty, string> = {
-  easy: Colors.success,
-  medium: Colors.secondary,
-  hard: Colors.error,
-};
 
 interface DifficultyScoreCardProps {
   difficulty: Difficulty;

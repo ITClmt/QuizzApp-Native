@@ -33,6 +33,16 @@ export default function ResultsScreen() {
   const userAnswers = JSON.parse(userAnswersParam) as number[];
 
   const questionMap = new Map(questions.map((q) => [q.id, q]));
+  const answerRows = result.answers.map((answer, index) => {
+    const question = questionMap.get(answer.questionId);
+    return {
+      questionId: answer.questionId,
+      questionText: question?.question,
+      isCorrect: answer.isCorrect,
+      userAnswerText: question?.answers[userAnswers[index]],
+      correctAnswerText: answer.correctAnswer,
+    };
+  });
 
   return (
     <GradientBackground>
@@ -50,13 +60,7 @@ export default function ResultsScreen() {
           <UnlockedCategories categoryIds={result.unlockedCategoryIds ?? []} />
           <UnlockedAvatars slugs={result.unlockedAvatarSlugs ?? []} />
           <DifficultyBreakdown details={result.details} />
-          {result.answers.length > 0 && (
-            <AnswerBreakdown
-              answers={result.answers}
-              questionMap={questionMap}
-              userAnswers={userAnswers}
-            />
-          )}
+          {answerRows.length > 0 && <AnswerBreakdown rows={answerRows} />}
         </ScrollView>
 
         <ResultsActions

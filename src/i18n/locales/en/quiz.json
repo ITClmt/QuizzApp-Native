@@ -53,5 +53,15 @@
     "correctAnswer": "Correct answer: {{answer}}",
     "playAgain": "Play again",
     "home": "Home"
+  },
+  "history": {
+    "empty": "No games played yet.",
+    "loadError": "Failed to load history.",
+    "expiredBadge": "Expired",
+    "anyDifficulty": "Any difficulty",
+    "anyCategory": "Any category",
+    "detail": {
+      "loadError": "Failed to load this game."
+    }
   }
 }

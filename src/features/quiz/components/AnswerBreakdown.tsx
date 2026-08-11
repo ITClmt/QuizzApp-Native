@@ -5,70 +5,69 @@ import {
   Radius,
   Spacing,
 } from "@/constants/theme";
-import type { QuizAnswerResult, QuizQuestion } from "@/src/types";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
-interface AnswerBreakdownProps {
-  answers: QuizAnswerResult[];
-  questionMap: Map<string, QuizQuestion>;
-  userAnswers: number[];
+export interface AnswerBreakdownRow {
+  questionId: string;
+  questionText?: string;
+  isCorrect: boolean;
+  userAnswerText?: string;
+  correctAnswerText: string;
 }
 
-export default function AnswerBreakdown({
-  answers,
-  questionMap,
-  userAnswers,
-}: AnswerBreakdownProps) {
+interface AnswerBreakdownProps {
+  rows: AnswerBreakdownRow[];
+}
+
+export default function AnswerBreakdown({ rows }: AnswerBreakdownProps) {
   const { t } = useTranslation("quiz");
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{t("results.answerBreakdownTitle")}</Text>
       <View style={styles.answersContainer}>
-        {answers.map((answer, index) => {
-          const question = questionMap.get(answer.questionId);
-          const userAnswerText = question?.answers[userAnswers[index]];
-          return (
+        {rows.map((row, index) => (
+          <View
+            key={row.questionId}
+            style={[
+              styles.answerRow,
+              row.isCorrect ? styles.answerRowCorrect : styles.answerRowWrong,
+            ]}
+          >
             <View
-              key={answer.questionId}
               style={[
-                styles.answerRow,
-                answer.isCorrect
-                  ? styles.answerRowCorrect
-                  : styles.answerRowWrong,
+                styles.answerIcon,
+                row.isCorrect
+                  ? styles.answerIconCorrect
+                  : styles.answerIconWrong,
               ]}
             >
-              <View
-                style={[
-                  styles.answerIcon,
-                  answer.isCorrect
-                    ? styles.answerIconCorrect
-                    : styles.answerIconWrong,
-                ]}
-              >
-                <Text style={styles.answerIconText}>
-                  {answer.isCorrect ? "✓" : "✗"}
-                </Text>
-              </View>
-              <View style={styles.answerContent}>
-                <Text style={styles.answerQuestion} numberOfLines={2}>
-                  {question?.question ??
-                    t("results.questionFallback", { number: index + 1 })}
-                </Text>
-                {!answer.isCorrect && (
-                  <>
-                    <Text style={styles.answerWrongText}>
-                      {t("results.yourAnswer", { answer: userAnswerText })}
-                    </Text>
-                    <Text style={styles.answerCorrectText}>
-                      {t("results.correctAnswer", { answer: answer.correctAnswer })}
-                    </Text>
-                  </>
-                )}
-              </View>
+              <Text style={styles.answerIconText}>
+                {row.isCorrect ? "✓" : "✗"}
+              </Text>
             </View>
-          );
-        })}
+            <View style={styles.answerContent}>
+              <Text style={styles.answerQuestion} numberOfLines={2}>
+                {row.questionText ??
+                  t("results.questionFallback", { number: index + 1 })}
+              </Text>
+              <Text
+                style={
+                  row.isCorrect ? styles.answerCorrectText : styles.answerWrongText
+                }
+              >
+                {t("results.yourAnswer", { answer: row.userAnswerText })}
+              </Text>
+              {!row.isCorrect && (
+                <Text style={styles.answerCorrectText}>
+                  {t("results.correctAnswer", {
+                    answer: row.correctAnswerText,
+                  })}
+                </Text>
+              )}
+            </View>
+          </View>
+        ))}
       </View>
     </View>
   );

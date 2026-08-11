@@ -53,5 +53,15 @@
     "correctAnswer": "Bonne réponse : {{answer}}",
     "playAgain": "Rejouer",
     "home": "Accueil"
+  },
+  "history": {
+    "empty": "Aucune partie jouée pour l'instant.",
+    "loadError": "Impossible de charger l'historique.",
+    "expiredBadge": "Expiré",
+    "anyDifficulty": "Toutes difficultés",
+    "anyCategory": "Toutes catégories",
+    "detail": {
+      "loadError": "Impossible de charger cette partie."
+    }
   }
 }
