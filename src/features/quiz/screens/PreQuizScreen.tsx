@@ -7,6 +7,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { Button } from "@/src/components/Button";
+import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { getCategoryLabelById } from "@/src/constants/categories";
 import {
@@ -18,7 +19,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const DIFFICULTIES: { value: string; color: string }[] = [
@@ -37,7 +45,12 @@ export default function PreQuizScreen() {
     null,
   );
 
-  const { data: categories } = useQuery<QuizCategory[]>({
+  const {
+    data: categories,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+    refetch: refetchCategories,
+  } = useQuery<QuizCategory[]>({
     queryKey: ["quiz-categories"],
     queryFn: getQuizCategories,
     refetchOnWindowFocus: false,
@@ -80,12 +93,15 @@ export default function PreQuizScreen() {
                 <Pressable
                   key={d.value}
                   onPress={() => handleDifficulty(d.value)}
-                  style={[
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                  style={({ pressed }) => [
                     styles.difficultyPill,
                     active && {
                       backgroundColor: d.color,
                       borderColor: d.color,
                     },
+                    pressed && styles.pressed,
                   ]}
                 >
                   <Text
@@ -105,6 +121,18 @@ export default function PreQuizScreen() {
             {t("preQuiz.selectCategory")}
           </Text>
 
+          {isCategoriesLoading ? (
+            <View style={styles.categoriesFallback}>
+              <ActivityIndicator size="large" color={Colors.primary} />
+            </View>
+          ) : isCategoriesError ? (
+            <View style={styles.categoriesFallback}>
+              <ErrorNotice
+                message={t("preQuiz.categoriesLoadError")}
+                onRetry={refetchCategories}
+              />
+            </View>
+          ) : (
           <ScrollView
             style={styles.categoriesScroll}
             contentContainerStyle={styles.categoriesGrid}
@@ -129,6 +157,7 @@ export default function PreQuizScreen() {
                       style={[styles.categoryName, styles.categoryNameLocked]}
                       numberOfLines={1}
                       adjustsFontSizeToFit
+                      minimumFontScale={0.8}
                     >
                       {label}
                     </Text>
@@ -155,12 +184,17 @@ export default function PreQuizScreen() {
                   accessibilityRole="button"
                   accessibilityState={{ selected: active }}
                   accessibilityLabel={label}
-                  style={[styles.categoryCard, active && styles.categoryCardActive]}
+                  style={({ pressed }) => [
+                    styles.categoryCard,
+                    active && styles.categoryCardActive,
+                    pressed && styles.pressed,
+                  ]}
                 >
                   <Text
                     style={styles.categoryName}
                     numberOfLines={1}
                     adjustsFontSizeToFit
+                    minimumFontScale={0.8}
                   >
                     {label}
                   </Text>
@@ -168,6 +202,7 @@ export default function PreQuizScreen() {
               );
             })}
           </ScrollView>
+          )}
 
           <View style={styles.timerContainer}>
             <Text style={styles.timerText}>{t("preQuiz.timerNotice")}</Text>
@@ -226,12 +261,17 @@ const styles = StyleSheet.create({
   },
   difficultyPill: {
     flex: 1,
+    minHeight: 48,
     paddingVertical: Spacing.sm,
     borderRadius: Radius.full,
     borderWidth: 2,
     borderColor: Colors.outlineVariant,
     backgroundColor: Colors.surface,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  pressed: {
+    opacity: 0.8,
   },
   difficultyText: {
     fontFamily: FontFamily.bodyBold,
@@ -243,6 +283,10 @@ const styles = StyleSheet.create({
   categoriesScroll: {
     flexGrow: 0,
     maxHeight: 260,
+  },
+  categoriesFallback: {
+    height: 260,
+    justifyContent: "center",
   },
   categoriesGrid: {
     flexDirection: "row",

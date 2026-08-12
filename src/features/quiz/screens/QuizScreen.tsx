@@ -6,6 +6,8 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { Button } from "@/src/components/Button";
+import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { getCategoryLabelByOtdName } from "@/src/constants/categories";
 import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
@@ -29,6 +31,7 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -52,8 +55,12 @@ export default function QuizScreen() {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(QUIZ_DURATION_SECONDS);
   const hasEndedRef = useRef(false);
+  const hasAnsweredRef = useRef(false);
 
   const handleAnswer = (answerIndex: number) => {
+    if (hasAnsweredRef.current) return;
+    hasAnsweredRef.current = true;
+
     const isCorrect =
       answerIndex === questions[currentQuestionIndex].correctIndex;
     if (isCorrect) {
@@ -75,6 +82,7 @@ export default function QuizScreen() {
     if (currentQuestionIndex === questions.length - 1) {
       endQuiz(false);
     } else {
+      hasAnsweredRef.current = false;
       setShowAnswer(false);
       setCurrentQuestionIndex((prev) => prev + 1);
     }
@@ -145,16 +153,25 @@ export default function QuizScreen() {
     const deadline =
       new Date(data.createdAt).getTime() + QUIZ_DURATION_SECONDS * 1000;
 
-    const interval = setInterval(() => {
+    let interval: ReturnType<typeof setInterval> | undefined;
+
+    const tick = () => {
       const remaining = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
       setTimeLeft(remaining);
       if (remaining <= 0) {
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
         endQuiz(true);
       }
-    }, 1000);
+    };
 
-    return () => clearInterval(interval);
+    tick();
+    if (!hasEndedRef.current) {
+      interval = setInterval(tick, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.createdAt]);
 
@@ -173,9 +190,17 @@ export default function QuizScreen() {
     return (
       <GradientBackground>
         <SafeAreaView style={styles.centered}>
-          <Text style={styles.errorText}>
-            {t("session.errorPrefix", { message: getErrorMessage(error) })}
-          </Text>
+          <ErrorNotice
+            message={t("session.errorPrefix", {
+              message: getErrorMessage(error),
+            })}
+            onRetry={startSession}
+          />
+          <Button
+            variant="outlined"
+            title={t("results.home")}
+            onPress={() => router.replace("/(app)")}
+          />
         </SafeAreaView>
       </GradientBackground>
     );
@@ -267,18 +292,28 @@ export default function QuizScreen() {
         </Text>
 
         {/* Question */}
-        <View style={styles.questionContainer}>
+        <ScrollView
+          style={styles.questionContainer}
+          contentContainerStyle={styles.questionContent}
+          showsVerticalScrollIndicator={false}
+        >
           <Text style={styles.questionText}>{currentQuestion.question}</Text>
-        </View>
+        </ScrollView>
 
         {/* Answers */}
         <View style={styles.answersContainer}>
           {currentQuestion.answers.map((answer, index) => (
             <Pressable
               key={index}
-              style={[styles.answerButton, getButtonStyle(index)]}
+              style={({ pressed }) => [
+                styles.answerButton,
+                getButtonStyle(index),
+                pressed && styles.pressed,
+              ]}
               onPress={() => handleAnswer(index)}
-              disabled={showAnswer}
+              disabled={showAnswer || isFinishing}
+              accessibilityRole="button"
+              accessibilityState={{ disabled: showAnswer || isFinishing }}
             >
               <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
                 {answer}
@@ -289,12 +324,15 @@ export default function QuizScreen() {
 
           {showAnswer && (
             <Pressable
-              style={[
+              style={({ pressed }) => [
                 styles.nextButton,
                 isFinishing && styles.nextButtonDisabled,
+                pressed && styles.pressed,
               ]}
               onPress={handleNextQuestion}
               disabled={isFinishing}
+              accessibilityRole="button"
+              accessibilityState={{ disabled: isFinishing }}
             >
               {isFinishing ? (
                 <ActivityIndicator color={Colors.onPrimary} />
@@ -325,11 +363,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bodyMedium,
     fontSize: FontSize.bodyMd,
   },
-  errorText: {
-    color: Colors.error,
-    fontFamily: FontFamily.bodyMedium,
-    fontSize: FontSize.bodyMd,
-  },
   container: {
     flex: 1,
     paddingHorizontal: Spacing.xl,
@@ -343,7 +376,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xl,
   },
   headerSpacer: {
-    width: 36,
+    width: 48,
   },
   timerContainer: {
     alignItems: "center",
@@ -359,6 +392,9 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     flex: 1,
+  },
+  questionContent: {
+    flexGrow: 1,
     justifyContent: "center",
     paddingBottom: Spacing.lg,
   },
@@ -383,6 +419,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.lg,
     ...Shadows.card,
+  },
+  pressed: {
+    opacity: 0.8,
   },
   answerText: {
     flex: 1,
