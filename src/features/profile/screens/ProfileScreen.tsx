@@ -30,6 +30,7 @@ export default function ProfileScreen() {
   const profile = useProfile();
   const { t } = useTranslation(["profile", "quiz"]);
   const [activeTab, setActiveTab] = useState<ProfileTab>("scores");
+  const [isManualRefresh, setIsManualRefresh] = useState(false);
   const queryClient = useQueryClient();
 
   const {
@@ -76,6 +77,19 @@ export default function ProfileScreen() {
     }, [refetchScores, queryClient, user?.sub]),
   );
 
+  const handleRefresh = async () => {
+    setIsManualRefresh(true);
+    try {
+      await Promise.all([
+        refetchScores(),
+        queryClient.refetchQueries({ queryKey: ["profile"] }),
+        activeTab === "history" ? refetchHistory() : Promise.resolve(),
+      ]);
+    } finally {
+      setIsManualRefresh(false);
+    }
+  };
+
   const scoreByDifficulty = new Map(
     data?.scores.map((s) => [s.difficulty, s.value]),
   );
@@ -92,6 +106,8 @@ export default function ProfileScreen() {
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.content}
+          refreshing={isManualRefresh}
+          onRefresh={handleRefresh}
           onEndReachedThreshold={0.4}
           onEndReached={() => {
             if (activeTab === "history" && hasNextPage && !isFetchingNextPage) {
