@@ -8,6 +8,8 @@
   "avatars": {
     "title": "Pick your avatar",
     "subtitle": "Unlock more as you level up",
+    "freeSection": "Free",
+    "unlockableSection": "Unlockable",
     "change": "Change avatar",
     "done": "Done",
     "unlockAtLevel": "Lv. {{level}}",

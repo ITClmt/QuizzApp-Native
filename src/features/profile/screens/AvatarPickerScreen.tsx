@@ -85,15 +85,64 @@ export default function AvatarPickerScreen() {
     },
   });
 
-  // Débloqués d'abord, puis les verrouillés du plus proche au plus lointain
-  const sortedAvatars = [...(avatars ?? [])].sort((a, b) => {
-    if (a.unlocked !== b.unlocked) return a.unlocked ? -1 : 1;
-    return a.unlockLevel - b.unlockLevel;
-  });
+ 
+  const freeAvatars = (avatars ?? []).filter((a) => a.unlockLevel === 0);
+  const unlockableAvatars = [...(avatars ?? [])]
+    .filter((a) => a.unlockLevel > 0)
+    .sort((a, b) => {
+      if (a.unlocked !== b.unlocked) return a.unlocked ? -1 : 1;
+      return a.unlockLevel - b.unlockLevel;
+    });
 
   const handlePress = (avatar: AvatarCatalogEntry) => {
     if (isPending || avatar.slug === currentSlug) return;
     selectAvatar(avatar.slug);
+  };
+
+  const renderAvatarCard = (avatar: AvatarCatalogEntry) => {
+    const selected = avatar.slug === currentSlug;
+
+    if (!avatar.unlocked) {
+      return (
+        <View
+          key={avatar.slug}
+          style={[styles.card, styles.cardLocked]}
+          accessible
+          accessibilityLabel={t("avatars.lockedLabel", {
+            level: avatar.unlockLevel,
+          })}
+        >
+          <Image
+            source={getAvatarImage(avatar.slug)}
+            style={[styles.avatar, styles.avatarLocked]}
+          />
+          <View style={styles.lockRow}>
+            <MaterialIcons name="lock" size={12} color={Colors.outline} />
+            <Text style={styles.unlockLevel}>
+              {t("avatars.unlockAtLevel", { level: avatar.unlockLevel })}
+            </Text>
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <Pressable
+        key={avatar.slug}
+        onPress={() => handlePress(avatar)}
+        disabled={isPending}
+        accessibilityRole="button"
+        accessibilityState={{ selected, disabled: isPending }}
+        style={[styles.card, selected && styles.cardSelected]}
+      >
+        <Image source={getAvatarImage(avatar.slug)} style={styles.avatar} />
+        {selected && (
+          <View style={styles.checkBadge}>
+            <MaterialIcons name="check" size={12} color={Colors.onPrimary} />
+          </View>
+        )}
+      </Pressable>
+    );
   };
 
   return (
@@ -116,66 +165,31 @@ export default function AvatarPickerScreen() {
               <Text style={styles.errorText}>{t("avatars.loadError")}</Text>
             </View>
           ) : (
-            <View style={styles.grid}>
-              {sortedAvatars.map((avatar) => {
-                const selected = avatar.slug === currentSlug;
+            <>
+              {freeAvatars.length > 0 && (
+                <View>
+                  <Text style={styles.sectionLabel}>
+                    {t("avatars.freeSection")}
+                  </Text>
+                  <View style={styles.sectionRule} />
+                  <View style={styles.grid}>
+                    {freeAvatars.map(renderAvatarCard)}
+                  </View>
+                </View>
+              )}
 
-                if (!avatar.unlocked) {
-                  return (
-                    <View
-                      key={avatar.slug}
-                      style={[styles.card, styles.cardLocked]}
-                      accessible
-                      accessibilityLabel={t("avatars.lockedLabel", {
-                        level: avatar.unlockLevel,
-                      })}
-                    >
-                      <Image
-                        source={getAvatarImage(avatar.slug)}
-                        style={[styles.avatar, styles.avatarLocked]}
-                      />
-                      <View style={styles.lockRow}>
-                        <MaterialIcons
-                          name="lock"
-                          size={12}
-                          color={Colors.outline}
-                        />
-                        <Text style={styles.unlockLevel}>
-                          {t("avatars.unlockAtLevel", {
-                            level: avatar.unlockLevel,
-                          })}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                }
-
-                return (
-                  <Pressable
-                    key={avatar.slug}
-                    onPress={() => handlePress(avatar)}
-                    disabled={isPending}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected, disabled: isPending }}
-                    style={[styles.card, selected && styles.cardSelected]}
-                  >
-                    <Image
-                      source={getAvatarImage(avatar.slug)}
-                      style={styles.avatar}
-                    />
-                    {selected && (
-                      <View style={styles.checkBadge}>
-                        <MaterialIcons
-                          name="check"
-                          size={12}
-                          color={Colors.onPrimary}
-                        />
-                      </View>
-                    )}
-                  </Pressable>
-                );
-              })}
-            </View>
+              {unlockableAvatars.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionLabel}>
+                    {t("avatars.unlockableSection")}
+                  </Text>
+                  <View style={styles.sectionRule} />
+                  <View style={styles.grid}>
+                    {unlockableAvatars.map(renderAvatarCard)}
+                  </View>
+                </View>
+              )}
+            </>
           )}
         </ScrollView>
 
@@ -183,8 +197,6 @@ export default function AvatarPickerScreen() {
           <Button
             variant="primary"
             title={t("avatars.done")}
-            // Retour explicite sur le profil : back() rendrait la main à l'onglet
-            // précédemment actif, qui n'est pas forcément celui d'où l'on vient.
             onPress={() => router.navigate("/(app)/profile")}
           />
         </View>
@@ -197,8 +209,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  // Sans flex explicite, la ScrollView se dimensionne à son contenu et pousse
-  // le footer hors de l'écran dès que la grille dépasse la hauteur disponible.
   scroll: {
     flex: 1,
   },
@@ -209,7 +219,6 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: Spacing.xl,
     paddingTop: Spacing.md,
-    // Dégage la barre d'onglets flottante (bottom: 20 + hauteur 64)
     paddingBottom: Spacing["5xl"] + Spacing.lg,
   },
   title: {
@@ -225,6 +234,22 @@ const styles = StyleSheet.create({
     fontSize: FontSize.bodySm,
     color: Colors.onSurfaceVariant,
     textAlign: "center",
+  },
+  section: {
+    marginTop: Spacing["2xl"],
+  },
+  sectionLabel: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelSm,
+    color: Colors.onSurfaceVariant,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: Spacing.sm,
+  },
+  sectionRule: {
+    height: 1,
+    backgroundColor: Colors.outlineVariant,
+    marginBottom: Spacing.md,
   },
   grid: {
     flexDirection: "row",

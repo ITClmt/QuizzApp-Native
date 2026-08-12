@@ -8,6 +8,8 @@
   "avatars": {
     "title": "Choisis ton avatar",
     "subtitle": "Débloque-en de nouveaux en montant de niveau",
+    "freeSection": "Gratuits",
+    "unlockableSection": "Débloquables",
     "change": "Changer d'avatar",
     "done": "Terminé",
     "unlockAtLevel": "Niv. {{level}}",
