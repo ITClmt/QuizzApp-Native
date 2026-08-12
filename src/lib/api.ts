@@ -33,10 +33,16 @@ export async function apiFetch<T>(
 
   if (res.status === 204) return undefined as T;
 
-  const data = await res.json();
+  let data: { message?: string; code?: string };
+  try {
+    data = await res.json();
+  } catch {
+    throw new ApiError(res.status, i18n.t("common:errors.networkMessage"));
+  }
+
   if (!res.ok)
     throw new ApiError(res.status, data.message ?? "Unknown error", data.code);
-  return data;
+  return data as T;
 }
 
 // Un seul refresh en vol à la fois — les 401 concurrents partagent la même promesse

@@ -1,20 +1,17 @@
-import NetInfo from "@react-native-community/netinfo";
+import { onlineManager } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
+/**
+ * État réseau de l'appli.
+ *
+ * On s'abonne au onlineManager de React Query plutôt qu'à NetInfo directement :
+ * queryClient.ts y branche déjà NetInfo, donc un second écouteur ferait doublon
+ * et pourrait diverger. Une seule source de vérité pour "en ligne".
+ */
 export function useNetworkStatus() {
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(() => onlineManager.isOnline());
 
-  useEffect(() => {
-    NetInfo.fetch().then((state) => {
-      setIsOnline(!!state.isConnected && state.isInternetReachable !== false);
-    });
-
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      setIsOnline(!!state.isConnected && state.isInternetReachable !== false);
-    });
-
-    return unsubscribe;
-  }, []);
+  useEffect(() => onlineManager.subscribe(setIsOnline), []);
 
   return { isOnline };
 }

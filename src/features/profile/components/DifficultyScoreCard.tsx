@@ -54,13 +54,6 @@ const styles = StyleSheet.create({
     padding: Spacing.base,
     ...Shadows.card,
   },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: Radius.full,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   info: {
     flex: 1,
     gap: Spacing.xs,

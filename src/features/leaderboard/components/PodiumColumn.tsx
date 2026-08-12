@@ -60,7 +60,7 @@ export function PodiumColumn({
           style={[
             styles.bar,
             {
-              height: medal.barHeight,
+              minHeight: medal.barHeight,
               backgroundColor: Colors.surfaceContainerHigh,
               opacity: 0.4,
             },

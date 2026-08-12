@@ -232,12 +232,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     gap: Spacing.sm,
   },
-  // Hauteur figée plutôt qu'un aspectRatio : le contenu varie selon l'état
-  // (pastille de sélection, ligne « Niv. X ») et ferait sinon grandir la carte,
-  // qui étirerait toute sa rangée à chaque clic.
   card: {
     width: "31%",
-    height: 112,
+    minHeight: 112,
     alignItems: "center",
     justifyContent: "center",
     gap: Spacing.xs,

@@ -1,4 +1,5 @@
 import { Colors, Radius, Shadows } from "@/constants/theme";
+import { GradientBackground } from "@/src/components/GradientBackground";
 import { Navbar } from "@/src/components/Navbar";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -28,9 +29,11 @@ export default function AppLayout() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
+      <GradientBackground>
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
+      </GradientBackground>
     );
   }
 
@@ -96,6 +99,11 @@ export default function AppLayout() {
 }
 
 const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   tabBar: {
     position: "absolute",
     left: 20,

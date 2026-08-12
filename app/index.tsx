@@ -1,15 +1,19 @@
+import { Colors } from "@/constants/theme";
+import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { Redirect } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 export default function Index() {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
+      <GradientBackground>
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
+      </GradientBackground>
     );
   }
 
@@ -19,3 +23,11 @@ export default function Index() {
 
   return <Redirect href="/(auth)/login" />;
 }
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
