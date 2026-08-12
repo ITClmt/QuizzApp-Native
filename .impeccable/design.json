@@ -1,0 +1,484 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-12T00:00:00.000Z",
+  "title": "Design System: QuizzApp — Playful Sky",
+  "extensions": {
+    "colorMeta": {
+      "horizon-blue": {
+        "role": "neutral",
+        "displayName": "Horizon Blue",
+        "canonical": "#BFE6FA",
+        "tonalRamp": [
+          "oklch(15% 0.05 225)",
+          "oklch(26% 0.05 225)",
+          "oklch(37% 0.05 225)",
+          "oklch(48% 0.05 225)",
+          "oklch(60% 0.05 225)",
+          "oklch(72% 0.05 225)",
+          "oklch(84% 0.05 225)",
+          "oklch(95% 0.05 225)"
+        ]
+      },
+      "daylight-blue": {
+        "role": "neutral",
+        "displayName": "Daylight Blue",
+        "canonical": "#EAF7FD"
+      },
+      "pale-sky": {
+        "role": "neutral",
+        "displayName": "Pale Sky",
+        "canonical": "#F7FCFF"
+      },
+      "cloud-white": {
+        "role": "neutral",
+        "displayName": "Cloud White",
+        "canonical": "#FFFFFF"
+      },
+      "ink-navy": {
+        "role": "neutral",
+        "displayName": "Ink Navy",
+        "canonical": "#1F3A56",
+        "tonalRamp": [
+          "oklch(15% 0.05 250)",
+          "oklch(26% 0.05 250)",
+          "oklch(37% 0.05 250)",
+          "oklch(48% 0.05 250)",
+          "oklch(60% 0.05 250)",
+          "oklch(72% 0.05 250)",
+          "oklch(84% 0.05 250)",
+          "oklch(95% 0.05 250)"
+        ]
+      },
+      "overcast-blue": {
+        "role": "neutral",
+        "displayName": "Overcast Blue",
+        "canonical": "#4B6C87"
+      },
+      "storm-grey": {
+        "role": "neutral",
+        "displayName": "Storm Grey",
+        "canonical": "#5C7084"
+      },
+      "mist": {
+        "role": "neutral",
+        "displayName": "Mist",
+        "canonical": "#E3EEF5"
+      },
+      "overcast-wash": {
+        "role": "neutral",
+        "displayName": "Overcast Wash",
+        "canonical": "#EEF3F7"
+      },
+      "dusk-violet": {
+        "role": "primary",
+        "displayName": "Dusk Violet",
+        "canonical": "#7B5FBE",
+        "tonalRamp": [
+          "oklch(15% 0.14 295)",
+          "oklch(26% 0.14 295)",
+          "oklch(37% 0.14 295)",
+          "oklch(48% 0.14 295)",
+          "oklch(60% 0.14 295)",
+          "oklch(72% 0.14 295)",
+          "oklch(84% 0.14 295)",
+          "oklch(95% 0.14 295)"
+        ]
+      },
+      "violet-haze": {
+        "role": "primary",
+        "displayName": "Violet Haze",
+        "canonical": "#EDE7F9"
+      },
+      "violet-mist": {
+        "role": "primary",
+        "displayName": "Violet Mist",
+        "canonical": "#C4B4E8"
+      },
+      "clear-sky-blue": {
+        "role": "secondary",
+        "displayName": "Clear-Sky Blue",
+        "canonical": "#4FA3D1",
+        "tonalRamp": [
+          "oklch(15% 0.10 233)",
+          "oklch(26% 0.10 233)",
+          "oklch(37% 0.10 233)",
+          "oklch(48% 0.10 233)",
+          "oklch(60% 0.10 233)",
+          "oklch(72% 0.10 233)",
+          "oklch(84% 0.10 233)",
+          "oklch(95% 0.10 233)"
+        ]
+      },
+      "sky-tint": {
+        "role": "secondary",
+        "displayName": "Sky Tint",
+        "canonical": "#E4F2FA"
+      },
+      "meadow-green": {
+        "role": "semantic",
+        "displayName": "Meadow Green",
+        "canonical": "#8BC34A",
+        "tonalRamp": [
+          "oklch(15% 0.16 130)",
+          "oklch(26% 0.16 130)",
+          "oklch(37% 0.16 130)",
+          "oklch(48% 0.16 130)",
+          "oklch(60% 0.16 130)",
+          "oklch(72% 0.16 130)",
+          "oklch(84% 0.16 130)",
+          "oklch(95% 0.16 130)"
+        ]
+      },
+      "meadow-tint": {
+        "role": "semantic",
+        "displayName": "Meadow Tint",
+        "canonical": "#E8F3DC"
+      },
+      "meadow-ink": {
+        "role": "semantic",
+        "displayName": "Meadow Ink",
+        "canonical": "#4C7423"
+      },
+      "sunset-coral": {
+        "role": "semantic",
+        "displayName": "Sunset Coral",
+        "canonical": "#E4574C",
+        "tonalRamp": [
+          "oklch(15% 0.17 27)",
+          "oklch(26% 0.17 27)",
+          "oklch(37% 0.17 27)",
+          "oklch(48% 0.17 27)",
+          "oklch(60% 0.17 27)",
+          "oklch(72% 0.17 27)",
+          "oklch(84% 0.17 27)",
+          "oklch(95% 0.17 27)"
+        ]
+      },
+      "coral-tint": {
+        "role": "semantic",
+        "displayName": "Coral Tint",
+        "canonical": "#FBE7E5"
+      },
+      "coral-ink": {
+        "role": "semantic",
+        "displayName": "Coral Ink",
+        "canonical": "#B23A31"
+      },
+      "ember-orange": {
+        "role": "semantic",
+        "displayName": "Ember Orange",
+        "canonical": "#F0932B",
+        "tonalRamp": [
+          "oklch(15% 0.16 62)",
+          "oklch(26% 0.16 62)",
+          "oklch(37% 0.16 62)",
+          "oklch(48% 0.16 62)",
+          "oklch(60% 0.16 62)",
+          "oklch(72% 0.16 62)",
+          "oklch(84% 0.16 62)",
+          "oklch(95% 0.16 62)"
+        ]
+      },
+      "sunlight-gold": {
+        "role": "accent",
+        "displayName": "Sunlight Gold",
+        "canonical": "#FFC94D",
+        "tonalRamp": [
+          "oklch(15% 0.14 85)",
+          "oklch(26% 0.14 85)",
+          "oklch(37% 0.14 85)",
+          "oklch(48% 0.14 85)",
+          "oklch(60% 0.14 85)",
+          "oklch(72% 0.14 85)",
+          "oklch(84% 0.14 85)",
+          "oklch(95% 0.14 85)"
+        ]
+      },
+      "cloud-silver": {
+        "role": "accent",
+        "displayName": "Cloud Silver",
+        "canonical": "#D9E2E8"
+      },
+      "cloud-silver-ink": {
+        "role": "accent",
+        "displayName": "Cloud Silver Ink",
+        "canonical": "#8CA0AE"
+      },
+      "sandstone-bronze": {
+        "role": "accent",
+        "displayName": "Sandstone Bronze",
+        "canonical": "#F6C89B"
+      },
+      "lagoon": {
+        "role": "tertiary",
+        "displayName": "Lagoon (reserve — currently unused)",
+        "canonical": "#3CBFAE",
+        "tonalRamp": [
+          "oklch(15% 0.10 178)",
+          "oklch(26% 0.10 178)",
+          "oklch(37% 0.10 178)",
+          "oklch(48% 0.10 178)",
+          "oklch(60% 0.10 178)",
+          "oklch(72% 0.10 178)",
+          "oklch(84% 0.10 178)",
+          "oklch(95% 0.10 178)"
+        ]
+      },
+      "blossom-pink": {
+        "role": "tertiary",
+        "displayName": "Blossom Pink (reserve — currently unused)",
+        "canonical": "#E27DA0",
+        "tonalRamp": [
+          "oklch(15% 0.10 5)",
+          "oklch(26% 0.10 5)",
+          "oklch(37% 0.10 5)",
+          "oklch(48% 0.10 5)",
+          "oklch(60% 0.10 5)",
+          "oklch(72% 0.10 5)",
+          "oklch(84% 0.10 5)",
+          "oklch(95% 0.10 5)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Score reveal, total score, countdown digits. Baloo 2 ExtraBold at 48px (56px line) with a 38px step. One per screen, never two."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Screen titles at 24px, the quiz question at 21px/28px (Baloo 2 Bold, centred), username, score verdict at 19px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card headings, difficulty values, leaderboard rank and score at 18/15/13.5px. Button labels are Inter Bold 15px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Answer options (Inter SemiBold 15px), form fields, descriptive copy, error text. 15/14/13px."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Eyebrows, level badges, unlock levels, the timer unit. Inter Bold 12/11/10.5px, 1px letter-spacing, frequently uppercase. 10.5px is the floor."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card",
+        "value": "0 4px 16px rgba(31, 58, 86, 0.06)",
+        "purpose": "The default resting lift for every white card, pill, badge, tile, input and row. Android elevation 2. Constant — never changes on state."
+      },
+      {
+        "name": "elevated",
+        "value": "0 8px 24px rgba(31, 58, 86, 0.08)",
+        "purpose": "Surfaces that outrank the page: the results score badge, the profile avatar, the 'you' row on a leaderboard. Android elevation 4."
+      },
+      {
+        "name": "nav",
+        "value": "0 -4px 20px rgba(31, 58, 86, 0.08)",
+        "purpose": "Upward-cast shadow for the floating bottom tab bar only. Android elevation 8."
+      },
+      {
+        "name": "cta-glow",
+        "value": "0 12px 24px rgba(123, 95, 190, 0.20)",
+        "purpose": "The Solo Play card alone. The only tinted shadow in the system, matching its own violet gradient. Android elevation 8."
+      }
+    ],
+    "motion": [
+      {
+        "name": "press-fade",
+        "value": "opacity 0.8, instant",
+        "purpose": "Universal press feedback. No colour change, no shadow change."
+      },
+      {
+        "name": "press-scale",
+        "value": "scale 0.95",
+        "purpose": "Added to press-fade on large tappable surfaces only (the Solo Play card)."
+      },
+      {
+        "name": "banner-slide",
+        "value": "translateY 100 → 0 over 300ms, linear timing",
+        "purpose": "The offline banner entering and leaving from the bottom edge. Cut to an instant show/hide under Reduce Motion."
+      },
+      {
+        "name": "urgent-pulse",
+        "value": "scale 1.00 → 1.06 → 1.00, 400ms each way, repeating",
+        "purpose": "The countdown ring when time is short. Disabled entirely under Reduce Motion — the coral colour shift carries urgency on its own."
+      },
+      {
+        "name": "pulse-settle",
+        "value": "scale → 1.00 over 200ms",
+        "purpose": "Returning the countdown ring to rest when urgency ends."
+      },
+      {
+        "name": "answer-haptic",
+        "value": "Haptics.notificationAsync(Success | Error)",
+        "purpose": "Fires on answer validation. A physical channel alongside the colour change, not a replacement for it."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "content-max",
+        "value": "640px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action per screen. Full pill, Dusk Violet, white Inter Bold label.",
+      "html": "<button class=\"ds-btn-primary\">Start Quiz</button>",
+      "css": ".ds-btn-primary { background: #7B5FBE; color: #FFFFFF; font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 15px; padding: 16px 24px; border: 2px solid transparent; border-radius: 9999px; box-shadow: 0 4px 16px rgba(31,58,86,0.06); cursor: pointer; transition: opacity 0.12s ease; } .ds-btn-primary:hover, .ds-btn-primary:active { opacity: 0.8; } .ds-btn-primary:focus-visible { outline: 2px solid #7B5FBE; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White pill with a Mist border for the non-primary action in a pair.",
+      "html": "<button class=\"ds-btn-secondary\">Home</button>",
+      "css": ".ds-btn-secondary { background: #FFFFFF; color: #1F3A56; font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 15px; padding: 16px 24px; border: 2px solid #E3EEF5; border-radius: 9999px; box-shadow: 0 4px 16px rgba(31,58,86,0.06); cursor: pointer; transition: opacity 0.12s ease; } .ds-btn-secondary:hover, .ds-btn-secondary:active { opacity: 0.8; } .ds-btn-secondary:focus-visible { outline: 2px solid #7B5FBE; outline-offset: 3px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Labelled field with a 2px Mist border. The error state swaps the border to Sunset Coral and adds a 10.5px coral message; the fill never changes.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-email\">Email</label><input class=\"ds-input\" id=\"ds-email\" type=\"email\" placeholder=\"you@example.com\" /></div><div class=\"ds-field ds-field-invalid\"><label class=\"ds-field-label\" for=\"ds-user\">Username</label><input class=\"ds-input\" id=\"ds-user\" value=\"a\" /><span class=\"ds-field-error\">Username is too short</span></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin-bottom: 20px; } .ds-field-label { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 11px; color: #1F3A56; margin-left: 4px; } .ds-input { background: #FFFFFF; color: #1F3A56; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: 15px; padding: 16px 20px; border: 2px solid #E3EEF5; border-radius: 14px; } .ds-input::placeholder { color: #4B6C87; } .ds-input:focus-visible { outline: none; border-color: #7B5FBE; } .ds-field-invalid .ds-input { border-color: #E4574C; } .ds-field-error { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 10.5px; color: #E4574C; margin-left: 4px; }"
+    },
+    {
+      "name": "Answer Option",
+      "kind": "custom",
+      "refersTo": "answer-option",
+      "description": "The quiz answer row: white at rest, Meadow wash when correct, Coral wash when wrong, each with a matching 2px border and a filled status dot.",
+      "html": "<div class=\"ds-answers\"><button class=\"ds-answer\"><span>Jupiter</span></button><button class=\"ds-answer ds-answer-correct\"><span>Saturn</span><span class=\"ds-answer-dot ds-answer-dot-correct\">✓</span></button><button class=\"ds-answer ds-answer-wrong\"><span>Neptune</span><span class=\"ds-answer-dot ds-answer-dot-wrong\">✕</span></button></div>",
+      "css": ".ds-answers { display: flex; flex-direction: column; gap: 8px; max-width: 360px; } .ds-answer { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; text-align: left; background: #FFFFFF; color: #1F3A56; font-family: 'Inter', system-ui, sans-serif; font-weight: 600; font-size: 15px; padding: 20px; border: 2px solid #E3EEF5; border-radius: 14px; box-shadow: 0 4px 16px rgba(31,58,86,0.06); cursor: pointer; transition: opacity 0.12s ease; } .ds-answer:hover, .ds-answer:active { opacity: 0.8; } .ds-answer:focus-visible { outline: 2px solid #7B5FBE; outline-offset: 3px; } .ds-answer-correct { background: #E8F3DC; border-color: #8BC34A; color: #4C7423; } .ds-answer-wrong { background: #FBE7E5; border-color: #E4574C; color: #B23A31; } .ds-answer-dot { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 9999px; color: #FFFFFF; font-size: 13px; } .ds-answer-dot-correct { background: #8BC34A; } .ds-answer-dot-wrong { background: #E4574C; }"
+    },
+    {
+      "name": "Category Tile",
+      "kind": "card",
+      "refersTo": "category-tile",
+      "description": "Three-up sticker tile. Selected takes a Dusk Violet border; locked swaps to the Overcast Wash fill, drops its shadow, and shows the unlock level.",
+      "html": "<div class=\"ds-tiles\"><button class=\"ds-tile\">Geography</button><button class=\"ds-tile ds-tile-selected\">History</button><div class=\"ds-tile ds-tile-locked\"><span>Mythology</span><span class=\"ds-tile-lock\">🔒 Lvl 12</span></div></div>",
+      "css": ".ds-tiles { display: flex; flex-wrap: wrap; gap: 8px; max-width: 360px; } .ds-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 31%; min-height: 62px; background: #FFFFFF; color: #1F3A56; font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 13px; text-align: center; padding: 8px 4px; border: 2px solid transparent; border-radius: 14px; box-shadow: 0 4px 16px rgba(31,58,86,0.06); cursor: pointer; transition: opacity 0.12s ease; } .ds-tile:hover, .ds-tile:active { opacity: 0.8; } .ds-tile:focus-visible { outline: 2px solid #7B5FBE; outline-offset: 3px; } .ds-tile-selected { border-color: #7B5FBE; } .ds-tile-locked { background: #EEF3F7; color: #5C7084; box-shadow: none; cursor: default; } .ds-tile-lock { font-family: 'Inter', system-ui, sans-serif; font-weight: 600; font-size: 11px; color: #5C7084; }"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "nav",
+      "refersTo": "segment-active",
+      "description": "Full-width filter track. The active segment is a Dusk Violet fill inside a white 20px-radius track; segments are a real 48px tall rather than relying on hit slop.",
+      "html": "<div class=\"ds-segmented\" role=\"radiogroup\"><button class=\"ds-segment ds-segment-active\" role=\"radio\" aria-checked=\"true\">Easy</button><button class=\"ds-segment\" role=\"radio\" aria-checked=\"false\">Medium</button><button class=\"ds-segment\" role=\"radio\" aria-checked=\"false\">Hard</button></div>",
+      "css": ".ds-segmented { display: flex; gap: 4px; padding: 4px; max-width: 360px; background: #FFFFFF; border-radius: 20px; box-shadow: 0 4px 16px rgba(31,58,86,0.06); } .ds-segment { flex: 1; min-height: 48px; display: flex; align-items: center; justify-content: center; padding: 8px 4px; background: transparent; color: #4B6C87; font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 11px; border: none; border-radius: 16px; cursor: pointer; transition: opacity 0.12s ease; } .ds-segment:hover, .ds-segment:active { opacity: 0.8; } .ds-segment:focus-visible { outline: 2px solid #7B5FBE; outline-offset: 2px; } .ds-segment-active { background: #7B5FBE; color: #FFFFFF; }"
+    },
+    {
+      "name": "Leaderboard Row",
+      "kind": "card",
+      "refersTo": "leaderboard-row",
+      "description": "Rank, ringed avatar, name, score. The player's own row switches to the Violet Haze wash with a 2px violet border and the elevated shadow.",
+      "html": "<div class=\"ds-lb\"><div class=\"ds-lb-row\"><span class=\"ds-lb-rank\">4</span><span class=\"ds-lb-avatar\"></span><span class=\"ds-lb-name\">pixelfox</span><span class=\"ds-lb-score\">1420 pts</span></div><div class=\"ds-lb-row ds-lb-row-self\"><span class=\"ds-lb-rank\">5</span><span class=\"ds-lb-avatar ds-lb-avatar-self\"></span><span class=\"ds-lb-name\">You</span><span class=\"ds-lb-score\">1180 pts</span></div></div>",
+      "css": ".ds-lb { display: flex; flex-direction: column; gap: 8px; max-width: 360px; } .ds-lb-row { display: flex; align-items: center; background: #FFFFFF; border-radius: 18px; padding: 12px 16px; box-shadow: 0 4px 16px rgba(31,58,86,0.06); } .ds-lb-rank { width: 28px; text-align: center; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 700; font-size: 13.5px; color: #4B6C87; } .ds-lb-avatar { width: 40px; height: 40px; margin: 0 8px; border-radius: 9999px; background: #EDE7F9; } .ds-lb-avatar-self { border: 2px solid #7B5FBE; } .ds-lb-name { flex: 1; font-family: 'Inter', system-ui, sans-serif; font-weight: 600; font-size: 14px; color: #1F3A56; } .ds-lb-score { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 700; font-size: 13.5px; color: #7B5FBE; } .ds-lb-row-self { background: #EDE7F9; border: 2px solid #7B5FBE; box-shadow: 0 8px 24px rgba(31,58,86,0.08); } .ds-lb-row-self .ds-lb-rank, .ds-lb-row-self .ds-lb-score { color: #7B5FBE; } .ds-lb-row-self .ds-lb-name { color: #7B5FBE; font-weight: 700; }"
+    },
+    {
+      "name": "XP Progress Card",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "The level card. A 9px full-round track in Overcast Wash filled by a Meadow Green → Dusk Violet gradient — progress starts as a correct answer and ends as you.",
+      "html": "<div class=\"ds-xp-card\"><div class=\"ds-xp-head\"><span class=\"ds-xp-level\">Level 7</span><span class=\"ds-xp-count\">140 / 320 XP</span></div><div class=\"ds-xp-track\"><div class=\"ds-xp-fill\"></div></div></div>",
+      "css": ".ds-xp-card { max-width: 360px; background: #FFFFFF; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 16px rgba(31,58,86,0.06); } .ds-xp-head { display: flex; align-items: center; justify-content: space-between; } .ds-xp-level { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 600; font-size: 15px; color: #1F3A56; } .ds-xp-count { font-family: 'Inter', system-ui, sans-serif; font-weight: 600; font-size: 10.5px; color: #4B6C87; } .ds-xp-track { height: 9px; border-radius: 9999px; background: #EEF3F7; overflow: hidden; } .ds-xp-fill { height: 100%; width: 44%; border-radius: 9999px; background: linear-gradient(90deg, #8BC34A 0%, #7B5FBE 100%); }"
+    },
+    {
+      "name": "Countdown Ring",
+      "kind": "custom",
+      "description": "The signature timer. 150px ring, 12px rounded stroke, depleting clockwise from 12 o'clock over a Sky Tint track. Ember Orange at rest, Sunset Coral plus a 400ms breathing pulse when urgent — the pulse is dropped under Reduce Motion while the colour shift stays.",
+      "html": "<div class=\"ds-timer\"><svg width=\"150\" height=\"150\" viewBox=\"0 0 150 150\"><circle cx=\"75\" cy=\"75\" r=\"69\" fill=\"none\" stroke=\"#E4F2FA\" stroke-width=\"12\"></circle><circle cx=\"75\" cy=\"75\" r=\"69\" fill=\"none\" stroke=\"#F0932B\" stroke-width=\"12\" stroke-linecap=\"round\" stroke-dasharray=\"433.5\" stroke-dashoffset=\"130\" transform=\"rotate(-90 75 75)\"></circle></svg><div class=\"ds-timer-center\"><span class=\"ds-timer-number\">1:04</span><span class=\"ds-timer-unit\">seconds</span></div></div>",
+      "css": ".ds-timer { position: relative; width: 150px; height: 150px; } .ds-timer-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; } .ds-timer-number { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 38px; color: #1F3A56; font-variant-numeric: tabular-nums; } .ds-timer-unit { margin-top: -2px; font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: #4B6C87; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Sticker Album",
+    "overview": "The screen is a page of sky-blue paper, and everything on it is a sticker: white, softly rounded, lifted just off the surface by a diffuse shadow. Nothing is inset, nothing is framed, nothing is a panel — every piece of content is a discrete little object laid onto the sky. The 48 monster avatars are the collectibles, and the whole progression system exists to fill the album, so the interface behaves like a page you add to rather than a dashboard you read.\n\nThe register is soft and reassuring. Corners never go below 10px, buttons are full pills, borders are a generous 2px, and press feedback is a gentle fade rather than a snap. Contrast at rest is deliberately low — sky against white against a soft navy ink — so that the moments that do raise their voice (a 48px score, a coral timer, a green correct answer) land without competition. The interface never scolds; even a wrong answer arrives as a soft coral wash, not an alarm.\n\nDensity is loose. Screens use a 24px margin, cards use 16–20px of internal padding, and vertical rhythm runs in 8/12/20/24px steps with real air between groups. This is a one-handed phone product, so the layout stays a single column, and every tappable thing is sized past the platform floor rather than relying on hit slop. The confirmed anti-reference is the dark neon gamer arcade: black canvases, neon glow, angular geometry and esports energy are the opposite of this world and must never creep in, however \"game-like\" a feature is.",
+    "keyCharacteristics": [
+      "One sky gradient canvas; every other surface is a white sticker-card",
+      "Ambient soft shadow at rest, 2px borders for state",
+      "Baloo 2 for anything that celebrates, Inter for anything that explains",
+      "Violet means you; green/blue/coral mean difficulty and outcome",
+      "Pills and rounded rectangles only — no sharp corner anywhere",
+      "Low contrast at rest so that big numbers and state changes carry all the emphasis"
+    ],
+    "rules": [
+      {
+        "name": "The One Canvas Rule",
+        "body": "The sky gradient is the only background in the app. Every other surface is a white card sitting on it. Never introduce a second background colour, a tinted section, or a coloured page — if content needs separation, it becomes a card.",
+        "section": "colors"
+      },
+      {
+        "name": "The Self Rule",
+        "body": "Dusk Violet means you and your progress: your XP, your level, your rank, your score, and the one primary action you're being offered. Difficulty and outcome colours never borrow it, and it never appears as decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Outcome Trio Rule",
+        "body": "Meadow Green, Clear-Sky Blue, and Sunset Coral are load-bearing: easy/medium/hard, and right/neutral/wrong. Never use any of the three for an unrelated accent, or the difficulty legend stops being learnable.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Baloo 2 counts and celebrates; Inter explains. A number that represents an achievement is always Baloo 2. Running text, questions, answers, and form labels are always Inter. Never swap them for variety.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ticking Number Rule",
+        "body": "Any figure that changes in place — the countdown above all — sets tabular figures so it doesn't jitter as digits change.",
+        "section": "typography"
+      },
+      {
+        "name": "The 10.5 Floor Rule",
+        "body": "10.5px is the smallest type in the system, reserved for uppercase letter-spaced labels. Never go below it, and never set a 10.5px label in sentence case — at that size the letter-spacing is what keeps it legible.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Column Rule",
+        "body": "There is no multi-column layout in this system and no responsive re-flow; wider screens get a wider gradient and the same 640px column. Anything that wants a sidebar wants a different screen.",
+        "section": "layout"
+      },
+      {
+        "name": "The Ambient Float Rule",
+        "body": "Shadows are atmosphere, never feedback. A surface's shadow does not deepen on press, on selection, or on hover. If you're reaching for a shadow to communicate state, reach for the border instead.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Border Carries State Rule",
+        "body": "Selection and validity are always a 2px border colour change on an otherwise unchanged surface: Mist at rest, Dusk Violet when selected, Sunset Coral when invalid, Meadow Green when correct. The layout must not shift — the border is 2px in every state, including the resting one.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No Sharp Corner Rule",
+        "body": "Nothing in this system has a corner below 10px, including nested elements. An inner radius is derived from its parent (track radius minus its padding), never set to zero.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do put new content on a white card over the gradient. That single move keeps almost anything on-system.",
+      "Do carry state on the 2px border and keep the shadow constant.",
+      "Do set achievement numbers in Baloo 2 ExtraBold and running text in Inter.",
+      "Do reserve Dusk Violet for the player's own progress and the one primary action per screen.",
+      "Do size touch targets to a real 48dp/44pt minimum rather than relying on hitSlop — on Android hit slop is clipped by the parent's bounds.",
+      "Do pair every motion cue with a non-motion one, and gate the motion behind useReducedMotion.",
+      "Do pad avatar images inside a white ring; the artwork is cut out and touches its own edges.",
+      "Do use gaps between cards for separation."
+    ],
+    "donts": [
+      "Don't introduce a second background colour, a tinted section, or a coloured page. The sky is the only canvas.",
+      "Don't drift toward the dark neon arcade — black canvases, neon glow, sharp angular geometry, esports energy. Confirmed anti-reference.",
+      "Don't use a divider or a 1px hairline. Borders are 2px, and separation is space.",
+      "Don't deepen a shadow on press, selection, or hover.",
+      "Don't spend Meadow Green, Clear-Sky Blue, or Sunset Coral on decoration — they are the difficulty and outcome legend.",
+      "Don't let a corner go below 10px, or set an inner radius to zero.",
+      "Don't put a second display-sized number on a screen that already has one.",
+      "Don't treat Lagoon or Blossom Pink as live tokens; they are a declared reserve and using one is a deliberate palette decision.",
+      "Don't design a hover state. This is a native phone app; press feedback is opacity 0.8, and scale 0.95 for large surfaces."
+    ]
+  }
+}
