@@ -1,4 +1,5 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAuth } from "@/src/contexts/AuthContext";
 import {
@@ -33,12 +34,13 @@ export default function LeaderBoardScreen() {
   const { user } = useAuth();
   const { t } = useTranslation("leaderboard");
 
+  const [isManualRefresh, setIsManualRefresh] = useState(false);
+
   const {
     data,
     isLoading,
     isError,
     refetch: refetchLeaderboard,
-    isRefetching: isRefetchingLeaderboard,
   } = useQuery<LeaderboardEntry[]>({
     queryKey: ["leaderboard", difficulty],
     queryFn: async () => {
@@ -62,11 +64,7 @@ export default function LeaderBoardScreen() {
 
   const isInTop10 = data?.some((e) => e.userData.id === user?.sub) ?? false;
 
-  const {
-    data: myRank,
-    refetch: refetchMyRank,
-    isRefetching: isRefetchingMyRank,
-  } = useQuery<MyRank | null>({
+  const { data: myRank, refetch: refetchMyRank } = useQuery<MyRank | null>({
     queryKey: ["my-rank", difficulty],
     queryFn: async () => {
       if (isGlobal) {
@@ -78,9 +76,13 @@ export default function LeaderBoardScreen() {
     refetchOnWindowFocus: false,
   });
 
-  const handleRefresh = () => {
-    refetchLeaderboard();
-    refetchMyRank();
+  const handleRefresh = async () => {
+    setIsManualRefresh(true);
+    try {
+      await Promise.all([refetchLeaderboard(), refetchMyRank()]);
+    } finally {
+      setIsManualRefresh(false);
+    }
   };
 
   // Écrans d'onglets restant montés (voir ProfileScreen) : on force le
@@ -93,7 +95,6 @@ export default function LeaderBoardScreen() {
     }, [refetchLeaderboard, refetchMyRank]),
   );
 
-  const isRefreshing = isRefetchingLeaderboard || isRefetchingMyRank;
   const unit = isGlobal ? "xp" : "pts";
 
   const renderHeader = () => (
@@ -111,9 +112,7 @@ export default function LeaderBoardScreen() {
           <ActivityIndicator size="large" color={Colors.primary} />
         </View>
       ) : isError ? (
-        <View style={styles.centered}>
-          <Text style={styles.errorText}>{t("loadError")}</Text>
-        </View>
+        <ErrorNotice message={t("loadError")} onRetry={handleRefresh} />
       ) : data?.length === 0 ? (
         <View style={styles.centered}>
           <Text style={styles.emptyText}>{t("empty")}</Text>
@@ -131,7 +130,7 @@ export default function LeaderBoardScreen() {
           data={rest}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
-          refreshing={isRefreshing}
+          refreshing={isManualRefresh}
           onRefresh={handleRefresh}
           ListHeaderComponent={renderHeader}
           renderItem={({ item, index }) => (
@@ -171,23 +170,9 @@ const styles = StyleSheet.create({
     fontSize: FontSize.headlineLg,
     color: Colors.onSurface,
   },
-  sectionLabel: {
-    fontFamily: FontFamily.headlineSemibold,
-    fontSize: FontSize.titleSm,
-    color: Colors.onSurfaceVariant,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    paddingHorizontal: Spacing["2xl"],
-    marginBottom: Spacing.sm,
-  },
   centered: {
     paddingVertical: Spacing["5xl"],
     alignItems: "center",
-  },
-  errorText: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.bodyMd,
-    color: Colors.error,
   },
   emptyText: {
     fontFamily: FontFamily.body,

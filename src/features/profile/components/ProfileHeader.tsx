@@ -7,6 +7,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { LevelProgressBar } from "@/src/components/LevelProgressBar";
 import type { Difficulty } from "@/src/services/leaderboard/leaderboard.api";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,7 +22,6 @@ import {
   View,
 } from "react-native";
 import { DifficultyScoreCard } from "./DifficultyScoreCard";
-import { ProfileErrorNotice } from "./ProfileErrorNotice";
 import { ProfileTabSwitcher, type ProfileTab } from "./ProfileTabSwitcher";
 
 const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
@@ -93,7 +93,7 @@ export function ProfileHeader({
             <ActivityIndicator size="large" color={Colors.primary} />
           </View>
         ) : isScoresError ? (
-          <ProfileErrorNotice message={t("loadError")} onRetry={onRetryScores} />
+          <ErrorNotice message={t("loadError")} onRetry={onRetryScores} />
         ) : (
           <View style={styles.scoreList}>
             {DIFFICULTIES.map((difficulty) => (

@@ -55,7 +55,11 @@ export function PodiumColumn({
 
   if (!entry) {
     return (
-      <View style={[styles.col, { alignItems: "center" }]}>
+      <View
+        style={[styles.col, { alignItems: "center" }]}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
         <View
           style={[
             styles.bar,
@@ -71,7 +75,7 @@ export function PodiumColumn({
   }
 
   return (
-    <View style={[styles.col, isFirst && styles.colFirst]}>
+    <View style={[styles.col, isFirst && styles.colFirst]} accessible>
       <View style={styles.avatarWrapper}>
         <View
           style={[

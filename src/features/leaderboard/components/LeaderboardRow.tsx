@@ -19,7 +19,7 @@ export function LeaderboardRow({
 }: LeaderboardRowProps) {
   const { t } = useTranslation("leaderboard");
   return (
-    <View style={[styles.row, isSelf && styles.rowSelf]}>
+    <View style={[styles.row, isSelf && styles.rowSelf]} accessible>
       <Text style={[styles.rank, isSelf && styles.rankSelf]}>{rank}</Text>
       <View style={[styles.avatarRing, isSelf && styles.avatarRingSelf]}>
         <Image

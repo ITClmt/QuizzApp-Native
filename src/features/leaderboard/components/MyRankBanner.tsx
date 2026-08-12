@@ -29,12 +29,14 @@ export function MyRankBanner({
         <View style={styles.separatorLine} />
       </View>
 
-      <View style={styles.card}>
+      <View style={styles.card} accessible>
         <Text style={styles.rank}>#{myRank.rank}</Text>
-        <Image
-          source={getAvatarImage(profile?.avatarSlug ?? user.avatarSlug)}
-          style={styles.avatar}
-        />
+        <View style={styles.avatarRing}>
+          <Image
+            source={getAvatarImage(profile?.avatarSlug ?? user.avatarSlug)}
+            style={styles.avatar}
+          />
+        </View>
         <View style={styles.info}>
           <Text style={styles.name}>{t("you", { username: user.username })}</Text>
           <Text style={styles.subtitle}>{t("outsideTop10")}</Text>
@@ -89,13 +91,20 @@ const styles = StyleSheet.create({
     color: Colors.inverseOnSurface,
     textAlign: "center",
   },
-  avatar: {
+  avatarRing: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: Radius.full,
     marginHorizontal: Spacing.sm,
+    padding: 3,
+    backgroundColor: Colors.white,
     borderWidth: 2,
     borderColor: Colors.inversePrimary,
+  },
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: Radius.full,
   },
   info: {
     flex: 1,

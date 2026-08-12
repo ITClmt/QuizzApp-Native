@@ -1,4 +1,5 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useProfile } from "@/src/hooks/useProfile";
@@ -17,7 +18,6 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HistoryListItem } from "../components/HistoryListItem";
-import { ProfileErrorNotice } from "../components/ProfileErrorNotice";
 import { ProfileHeader } from "../components/ProfileHeader";
 import type { ProfileTab } from "../components/ProfileTabSwitcher";
 
@@ -129,7 +129,7 @@ export default function ProfileScreen() {
                   <ActivityIndicator size="large" color={Colors.primary} />
                 </View>
               ) : isHistoryError ? (
-                <ProfileErrorNotice
+                <ErrorNotice
                   message={t("quiz:history.loadError")}
                   onRetry={refetchHistory}
                 />

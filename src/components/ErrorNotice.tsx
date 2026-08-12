@@ -3,15 +3,12 @@ import { Button } from "@/src/components/Button";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
-interface ProfileErrorNoticeProps {
+interface ErrorNoticeProps {
   message: string;
   onRetry: () => void;
 }
 
-export function ProfileErrorNotice({
-  message,
-  onRetry,
-}: ProfileErrorNoticeProps) {
+export function ErrorNotice({ message, onRetry }: ErrorNoticeProps) {
   const { t } = useTranslation("common");
 
   return (
