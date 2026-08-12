@@ -286,7 +286,9 @@ The system is built entirely on ambient lift. Every white card rests *above* the
 
 Rounded rectangles and pills, exclusively. The radius scale is meaning-bearing rather than decorative: 10px for small square-ish objects (the active tab chip, podium badges), 14px for tappable rectangles (answer options, inputs, category tiles), 18px for content cards (level card, leaderboard rows, the Solo Play card), 20px for the segmented control track, and full-round for anything that reads as a token — buttons, badges, avatars, XP pills, difficulty pills, progress tracks.
 
-Borders are 2px or nothing; 1px hairlines are absent by design and would read as a different, sharper system. The one exception is the 3px ring around the results score badge and podium avatars, where the extra weight is the emphasis. There is no dividing line anywhere: separation comes from the gap between cards.
+Component borders are 2px or nothing — 1px would read as a different, sharper system — with one exception at 3px for the results score badge and podium avatar rings, where the extra weight is the emphasis. Cards are never separated by a line; separation comes from the gap between them.
+
+A 1px Mist rule exists, and it is a different object from a border: it runs the full width beneath a row of section headings (the profile tab switcher, the personal rank banner, settings rows) to close the group. It never wraps a component, and it never appears between cards.
 
 Avatars are always circular, always backed by a padded white ring (2–5px), because the monster artwork is cut out and would otherwise touch the circle's edge.
 
@@ -350,7 +352,7 @@ A 9px full-round track in Overcast Wash, filled by a left-to-right Meadow Green 
 ### Don't:
 - **Don't** introduce a second background colour, a tinted section, or a coloured page. The sky is the only canvas.
 - **Don't** drift toward the dark neon arcade — black canvases, neon glow, sharp angular geometry, esports energy. Confirmed anti-reference.
-- **Don't** use a divider or a 1px hairline. Borders are 2px, and separation is space.
+- **Don't** border a component at 1px — component borders are 2px. 1px is reserved for the full-width section rule, and cards are separated by space, never by a line.
 - **Don't** deepen a shadow on press, selection, or hover.
 - **Don't** spend Meadow Green, Clear-Sky Blue, or Sunset Coral on decoration — they are the difficulty and outcome legend.
 - **Don't** let a corner go below 10px, or set an inner radius to zero.

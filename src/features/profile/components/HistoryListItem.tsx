@@ -35,15 +35,26 @@ export function HistoryListItem({ item, onPress }: HistoryListItemProps) {
   });
 
   return (
-    <Pressable style={styles.card} onPress={onPress}>
+    <Pressable
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      onPress={onPress}
+      accessible
+      accessibilityRole="button"
+    >
       <View style={[styles.dot, { backgroundColor: color }]} />
       <View style={styles.info}>
-        <Text style={styles.category} numberOfLines={1}>
-          {categoryLabel}
-        </Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.category} numberOfLines={1}>
+            {categoryLabel}
+          </Text>
+          {item.status === "EXPIRED" && (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{t("history.expiredBadge")}</Text>
+            </View>
+          )}
+        </View>
         <Text style={styles.meta}>
           {difficultyLabel} · {date}
-          {item.status === "EXPIRED" ? ` · ${t("history.expiredBadge")}` : ""}
         </Text>
       </View>
       <Text style={styles.score}>
@@ -69,6 +80,9 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
     ...Shadows.card,
   },
+  pressed: {
+    opacity: 0.8,
+  },
   dot: {
     width: 10,
     height: 10,
@@ -78,10 +92,27 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: Spacing.xs,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
   category: {
+    flexShrink: 1,
     fontFamily: FontFamily.bodySemibold,
     fontSize: FontSize.bodyMd,
     color: Colors.onSurface,
+  },
+  badge: {
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 2,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.surfaceContainerHigh,
+  },
+  badgeText: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelSm,
+    color: Colors.outline,
   },
   meta: {
     fontFamily: FontFamily.bodyMedium,

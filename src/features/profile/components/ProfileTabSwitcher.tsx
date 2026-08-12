@@ -29,12 +29,19 @@ export function ProfileTabSwitcher({
             <Pressable
               key={tab.value}
               onPress={() => onChange(tab.value)}
-              style={styles.tab}
+              style={({ pressed }) => [
+                styles.tab,
+                active && styles.tabActive,
+                pressed && styles.pressed,
+              ]}
               accessibilityRole="tab"
               accessibilityLabel={tab.label}
               accessibilityState={{ selected: active }}
             >
-              <Text style={[styles.title, !active && styles.inactive]}>
+              <Text
+                style={[styles.title, !active && styles.inactive]}
+                numberOfLines={1}
+              >
                 {tab.label}
               </Text>
             </Pressable>
@@ -46,15 +53,24 @@ export function ProfileTabSwitcher({
   );
 }
 
-// Même style que l'ancien titre de section unique : les onglets doivent
-// garder ce look, seule la couleur change pour distinguer actif/inactif.
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     gap: Spacing.lg,
   },
   tab: {
+    minHeight: 48,
+    flexShrink: 1,
+    justifyContent: "center",
     paddingVertical: Spacing.md,
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent",
+  },
+  tabActive: {
+    borderBottomColor: Colors.primary,
+  },
+  pressed: {
+    opacity: 0.8,
   },
   title: {
     fontFamily: FontFamily.headlineSemibold,

@@ -472,7 +472,7 @@
     "donts": [
       "Don't introduce a second background colour, a tinted section, or a coloured page. The sky is the only canvas.",
       "Don't drift toward the dark neon arcade — black canvases, neon glow, sharp angular geometry, esports energy. Confirmed anti-reference.",
-      "Don't use a divider or a 1px hairline. Borders are 2px, and separation is space.",
+      "Don't border a component at 1px — component borders are 2px. 1px is reserved for the full-width section rule, and cards are separated by space, never by a line.",
       "Don't deepen a shadow on press, selection, or hover.",
       "Don't spend Meadow Green, Clear-Sky Blue, or Sunset Coral on decoration — they are the difficulty and outcome legend.",
       "Don't let a corner go below 10px, or set an inner radius to zero.",

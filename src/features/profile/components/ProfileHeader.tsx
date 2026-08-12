@@ -21,6 +21,7 @@ import {
   View,
 } from "react-native";
 import { DifficultyScoreCard } from "./DifficultyScoreCard";
+import { ProfileErrorNotice } from "./ProfileErrorNotice";
 import { ProfileTabSwitcher, type ProfileTab } from "./ProfileTabSwitcher";
 
 const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
@@ -34,6 +35,7 @@ interface ProfileHeaderProps {
   scoreByDifficulty: Map<Difficulty, number>;
   isScoresLoading: boolean;
   isScoresError: boolean;
+  onRetryScores: () => void;
 }
 
 export function ProfileHeader({
@@ -45,6 +47,7 @@ export function ProfileHeader({
   scoreByDifficulty,
   isScoresLoading,
   isScoresError,
+  onRetryScores,
 }: ProfileHeaderProps) {
   const { t } = useTranslation("profile");
   const maxValue = Math.max(
@@ -66,7 +69,9 @@ export function ProfileHeader({
             <MaterialIcons name="edit" size={14} color={Colors.onPrimary} />
           </View>
         </Pressable>
-        <Text style={styles.username}>{username}</Text>
+        <Text style={styles.username} numberOfLines={1}>
+          {username}
+        </Text>
       </View>
 
       <View style={styles.totalScoreCard}>
@@ -88,9 +93,7 @@ export function ProfileHeader({
             <ActivityIndicator size="large" color={Colors.primary} />
           </View>
         ) : isScoresError ? (
-          <View style={styles.centered}>
-            <Text style={styles.errorText}>{t("loadError")}</Text>
-          </View>
+          <ProfileErrorNotice message={t("loadError")} onRetry={onRetryScores} />
         ) : (
           <View style={styles.scoreList}>
             {DIFFICULTIES.map((difficulty) => (
@@ -175,10 +178,5 @@ const styles = StyleSheet.create({
   centered: {
     paddingVertical: Spacing["3xl"],
     alignItems: "center",
-  },
-  errorText: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.bodyMd,
-    color: Colors.error,
   },
 });

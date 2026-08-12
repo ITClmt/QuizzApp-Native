@@ -6,13 +6,18 @@ import { getQuizHistory } from "@/src/services/quiz/quiz.api";
 import { getUserScores } from "@/src/services/score/score.api";
 import type { HistoryListItem as HistoryListItemType } from "@/src/types";
 import { useFocusEffect } from "@react-navigation/native";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HistoryListItem } from "../components/HistoryListItem";
+import { ProfileErrorNotice } from "../components/ProfileErrorNotice";
 import { ProfileHeader } from "../components/ProfileHeader";
 import type { ProfileTab } from "../components/ProfileTabSwitcher";
 
@@ -25,6 +30,7 @@ export default function ProfileScreen() {
   const profile = useProfile();
   const { t } = useTranslation(["profile", "quiz"]);
   const [activeTab, setActiveTab] = useState<ProfileTab>("scores");
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -42,6 +48,7 @@ export default function ProfileScreen() {
     data: historyData,
     isLoading: isHistoryLoading,
     isError: isHistoryError,
+    refetch: refetchHistory,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -57,10 +64,16 @@ export default function ProfileScreen() {
   // React Navigation garde les écrans d'onglets montés : sans ce hook,
   // revenir sur Profile après un quiz réaffiche les scores mis en cache
   // au premier montage (React Query ne rafraîchit pas au changement d'onglet).
+  // L'historique souffre du même décalage, mais on l'invalide au lieu de le
+  // recharger : si l'onglet est actif React Query relance la requête, sinon
+  // (enabled: false) elle est seulement marquée périmée et se rechargera à
+  // l'ouverture de l'onglet — plutôt que de rejouer d'un coup toutes les pages
+  // déjà chargées à chaque passage sur l'écran.
   useFocusEffect(
     useCallback(() => {
       refetchScores();
-    }, [refetchScores]),
+      queryClient.invalidateQueries({ queryKey: ["quiz-history", user?.sub] });
+    }, [refetchScores, queryClient, user?.sub]),
   );
 
   const scoreByDifficulty = new Map(
@@ -106,6 +119,7 @@ export default function ProfileScreen() {
               scoreByDifficulty={scoreByDifficulty}
               isScoresLoading={isLoading}
               isScoresError={isError}
+              onRetryScores={refetchScores}
             />
           }
           ListEmptyComponent={
@@ -115,9 +129,10 @@ export default function ProfileScreen() {
                   <ActivityIndicator size="large" color={Colors.primary} />
                 </View>
               ) : isHistoryError ? (
-                <View style={styles.centered}>
-                  <Text style={styles.errorText}>{t("quiz:history.loadError")}</Text>
-                </View>
+                <ProfileErrorNotice
+                  message={t("quiz:history.loadError")}
+                  onRetry={refetchHistory}
+                />
               ) : (
                 <View style={styles.centered}>
                   <Text style={styles.emptyText}>{t("quiz:history.empty")}</Text>
@@ -149,11 +164,6 @@ const styles = StyleSheet.create({
   centered: {
     paddingVertical: Spacing["3xl"],
     alignItems: "center",
-  },
-  errorText: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.bodyMd,
-    color: Colors.error,
   },
   emptyText: {
     fontFamily: FontFamily.body,

@@ -27,7 +27,7 @@ export function DifficultyScoreCard({
   const ratio = maxValue > 0 ? value / maxValue : 0;
 
   return (
-    <View style={styles.card}>
+    <View style={styles.card} accessible>
       <View style={styles.info}>
         <Text style={styles.label}>{t(`difficulty.${difficulty}`)}</Text>
         <View style={styles.barTrack}>
