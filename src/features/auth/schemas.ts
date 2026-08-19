@@ -1,6 +1,11 @@
 import type { TFunction } from "i18next";
 import { z } from "zod";
 
+// Doit rester alignée avec la regex de QuizzApp-Back/src/users/dto/create-user.dto.ts
+// pour éviter qu'un mot de passe passe le front puis se fasse rejeter par l'API
+// (chaque 400 grignote le rate-limit de /auth/register).
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S+$/;
+
 // Les messages dépendent de la langue active : on construit le schéma via
 // une factory appelée depuis le composant (useMemo sur i18n.language) plutôt
 // que de figer des messages statiques au chargement du module.
@@ -19,7 +24,11 @@ export function makeRegisterSchema(t: TFunction<"auth">) {
         .min(3, t("validation.usernameMin"))
         .max(20, t("validation.usernameMax")),
       email: z.email(t("validation.invalidEmail")),
-      password: z.string().min(8, t("validation.passwordMin")),
+      password: z
+        .string()
+        .min(8, t("validation.passwordMin"))
+        .max(128, t("validation.passwordMax"))
+        .regex(PASSWORD_REGEX, t("validation.passwordComplexity")),
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
