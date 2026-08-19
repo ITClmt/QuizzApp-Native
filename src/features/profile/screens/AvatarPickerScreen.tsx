@@ -9,6 +9,7 @@ import {
 } from "@/constants/theme";
 import { Button } from "@/src/components/Button";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import { useAlert } from "@/src/contexts/AlertContext";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useProfile } from "@/src/hooks/useProfile";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
@@ -23,7 +24,6 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -35,6 +35,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AvatarPickerScreen() {
   const { user } = useAuth();
+  const { showAlert } = useAlert();
   const profile = useProfile();
   const queryClient = useQueryClient();
   const { t } = useTranslation("profile");
@@ -72,7 +73,7 @@ export default function AvatarPickerScreen() {
         queryClient.setQueryData(["profile"], context.previous);
       }
 
-      Alert.alert(
+      showAlert(
         t("avatars.updateErrorTitle"),
         error instanceof ApiError
           ? getErrorMessage(error)

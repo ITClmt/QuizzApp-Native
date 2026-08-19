@@ -1,6 +1,7 @@
 import { Button } from "@/src/components/Button";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { Input } from "@/src/components/Input";
+import { useAlert } from "@/src/contexts/AlertContext";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,7 +10,6 @@ import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -28,6 +28,7 @@ import { makeLoginSchema, type LoginFormValues } from "../schemas";
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
+  const { showAlert } = useAlert();
   const { t } = useTranslation(["auth", "common"]);
   const loginSchema = useMemo(() => makeLoginSchema(t), [t]);
 
@@ -46,9 +47,9 @@ export default function LoginScreen() {
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
-        Alert.alert(t("common:errors.title"), getErrorMessage(error));
+        showAlert(t("common:errors.title"), getErrorMessage(error));
       } else {
-        Alert.alert(t("common:errors.networkTitle"), t("errors.networkMessage"));
+        showAlert(t("common:errors.networkTitle"), t("errors.networkMessage"));
       }
     }
   }

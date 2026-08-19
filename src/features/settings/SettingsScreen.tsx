@@ -6,6 +6,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { useAlert } from "@/src/contexts/AlertContext";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { SegmentedControl } from "@/src/components/SegmentedControl";
 import { SUPPORTED_LANGUAGES, setAppLanguage, type AppLanguage } from "@/src/i18n";
@@ -13,7 +14,7 @@ import { updateUserRequest } from "@/src/services/users/users.api";
 import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -24,6 +25,7 @@ const LANGUAGE_LABEL_KEYS: Record<AppLanguage, "languageFr" | "languageEn"> = {
 
 export default function SettingsScreen() {
   const { signOut, user } = useAuth();
+  const { showAlert } = useAlert();
   const { t, i18n } = useTranslation(["settings", "common"]);
 
   // Applique la langue localement, puis persiste côté compte. Le backend lit
@@ -39,7 +41,7 @@ export default function SettingsScreen() {
   const handleLanguageChange = (lang: AppLanguage) => {
     if (lang === i18n.language || isChangingLanguage) return;
 
-    Alert.alert(
+    showAlert(
       t("languageConfirmTitle"),
       t("languageConfirmMessage", { language: t(LANGUAGE_LABEL_KEYS[lang]) }),
       [

@@ -1,6 +1,7 @@
 import { Button } from "@/src/components/Button";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { Input } from "@/src/components/Input";
+import { useAlert } from "@/src/contexts/AlertContext";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { i18n } from "@/src/i18n";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
@@ -10,7 +11,6 @@ import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -29,6 +29,7 @@ import { makeRegisterSchema, type RegisterFormValues } from "../schemas";
 
 export default function RegisterScreen() {
   const { signUp } = useAuth();
+  const { showAlert } = useAlert();
   const { t } = useTranslation(["auth", "common"]);
   const registerSchema = useMemo(() => makeRegisterSchema(t), [t]);
 
@@ -47,9 +48,9 @@ export default function RegisterScreen() {
       router.replace("/(app)");
     } catch (error) {
       if (error instanceof ApiError) {
-        Alert.alert(t("common:errors.title"), getErrorMessage(error));
+        showAlert(t("common:errors.title"), getErrorMessage(error));
       } else {
-        Alert.alert(t("common:errors.networkTitle"), t("errors.networkMessage"));
+        showAlert(t("common:errors.networkTitle"), t("errors.networkMessage"));
       }
     }
   }

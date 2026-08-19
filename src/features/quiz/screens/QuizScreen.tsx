@@ -9,6 +9,7 @@ import {
 import { Button } from "@/src/components/Button";
 import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import { useAlert } from "@/src/contexts/AlertContext";
 import { getCategoryLabelByOtdName } from "@/src/constants/categories";
 import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
@@ -29,7 +30,6 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -48,6 +48,7 @@ export default function QuizScreen() {
   }>();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
   const { t, i18n } = useTranslation(["quiz", "common"]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
@@ -100,7 +101,7 @@ export default function QuizScreen() {
       setQuestions(session.questions);
     },
     onError: (err) => {
-      Alert.alert(t("common:errors.title"), getErrorMessage(err));
+      showAlert(t("common:errors.title"), getErrorMessage(err));
     },
   });
 
@@ -127,7 +128,7 @@ export default function QuizScreen() {
         });
       },
       onError: (err) => {
-        Alert.alert(t("common:errors.title"), getErrorMessage(err));
+        showAlert(t("common:errors.title"), getErrorMessage(err));
       },
     });
 

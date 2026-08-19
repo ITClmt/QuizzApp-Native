@@ -1,3 +1,4 @@
+import { useAlert } from "@/src/contexts/AlertContext";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
 import { cancelQuizSession } from "@/src/services/quiz/quiz.api";
 import type { QuizSession } from "@/src/types";
@@ -5,7 +6,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert } from "react-native";
 
 /**
  * Sortie unique d'un quiz en cours : confirmation puis annulation serveur.
@@ -16,6 +16,7 @@ import { Alert } from "react-native";
  */
 export function useCancelQuizSession(sessionId: string | undefined) {
   const router = useRouter();
+  const { showAlert } = useAlert();
   const { t } = useTranslation(["quiz", "common"]);
   const isConfirmOpenRef = useRef(false);
 
@@ -27,7 +28,7 @@ export function useCancelQuizSession(sessionId: string | undefined) {
     },
 
     onError: (err) => {
-      Alert.alert(
+      showAlert(
         t("common:errors.title"),
         t("session.cancelError", { message: getErrorMessage(err) }),
       );
@@ -45,7 +46,7 @@ export function useCancelQuizSession(sessionId: string | undefined) {
     if (isPending || isConfirmOpenRef.current) return;
     isConfirmOpenRef.current = true;
 
-    Alert.alert(
+    showAlert(
       t("session.cancelConfirmTitle"),
       t("session.cancelConfirmMessage"),
       [
@@ -69,7 +70,7 @@ export function useCancelQuizSession(sessionId: string | undefined) {
       // onPress, et le garde-fou resterait bloqué à "ouvert".
       { cancelable: false },
     );
-  }, [sessionId, isPending, mutate, router, t]);
+  }, [sessionId, isPending, mutate, router, showAlert, t]);
 
   return { confirmCancel, isPending };
 }
