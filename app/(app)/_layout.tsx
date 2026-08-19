@@ -106,12 +106,13 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     position: "absolute",
-    left: 20,
-    right: 20,
+    marginHorizontal: 20,
     bottom: 0,
-    height: 80,
+    height: 60,
     backgroundColor: Colors.surface,
     borderTopWidth: 0,
+    borderRadius: Radius.xl,
+    marginBottom: 20,
     ...Shadows.nav,
   },
   tabBarItem: {
