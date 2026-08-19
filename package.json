@@ -8,6 +8,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "deploy:web": "expo export --platform web && npx eas-cli@latest deploy --prod",
     "lint": "expo lint",
     "i18n:check": "node ./scripts/check-i18n-parity.js"
   },
