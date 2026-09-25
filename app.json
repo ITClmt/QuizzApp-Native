@@ -7,7 +7,6 @@
     "icon": "./assets/images/QuizzAppLogo2.png",
     "scheme": "quizzapp",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": false
     },
@@ -18,7 +17,6 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": true,
       "package": "com.itclmt.QuizzApp"
     },
@@ -44,7 +42,11 @@
           "faceIDPermission": "Allow QuizzApp to access your Face ID biometric data."
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-font",
+      "expo-image",
+      "expo-web-browser",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,

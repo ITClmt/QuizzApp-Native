@@ -6,13 +6,12 @@ import { useProfile } from "@/src/hooks/useProfile";
 import { getQuizHistory } from "@/src/services/quiz/quiz.api";
 import { getUserScores } from "@/src/services/score/score.api";
 import type { HistoryListItem as HistoryListItemType } from "@/src/types";
-import { useFocusEffect } from "@react-navigation/native";
 import {
   useInfiniteQuery,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";

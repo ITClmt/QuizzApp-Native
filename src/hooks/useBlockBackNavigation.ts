@@ -17,7 +17,9 @@ export function useBlockBackNavigation(onBackAttempt?: () => void) {
   // Le listener est enregistré une seule fois : on passe par une ref pour que
   // le handler reste à jour sans désabonner/réabonner à chaque rendu.
   const onBackAttemptRef = useRef(onBackAttempt);
-  onBackAttemptRef.current = onBackAttempt;
+  useEffect(() => {
+    onBackAttemptRef.current = onBackAttempt;
+  });
 
   useEffect(() => {
     const parent = navigation.getParent();

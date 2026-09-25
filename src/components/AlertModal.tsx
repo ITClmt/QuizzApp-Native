@@ -129,7 +129,7 @@ export function AlertModal({
 const styles = StyleSheet.create({
   // Le voile : colle aux 4 bords du parent, c'est-à-dire au cadre d'AppShell.
   overlay: {
-    ...StyleSheet.absoluteFillObject, // position absolue + top/left/right/bottom à 0
+    ...StyleSheet.absoluteFill, // position absolue + top/left/right/bottom à 0
     alignItems: "center", // centre la carte horizontalement
     justifyContent: "center", // et verticalement
     padding: Spacing.xl, // marge minimale sur les petits écrans

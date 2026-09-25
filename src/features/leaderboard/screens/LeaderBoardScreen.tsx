@@ -11,7 +11,7 @@ import {
   getMyGlobalRank,
   getMyRank,
 } from "@/src/services/leaderboard/leaderboard.api";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";

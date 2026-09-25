@@ -1,6 +1,6 @@
 import { getMyProfileRequest } from "@/src/services/users/users.api";
 import { useAuth } from "@/src/contexts/AuthContext";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 
