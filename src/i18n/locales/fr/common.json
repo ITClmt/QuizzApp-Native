@@ -30,5 +30,7 @@
     "register": "Inscription",
     "quiz": "Quiz",
     "results": "Résultats"
-  }
+  },
+  "showPassword": "Afficher le mot de passe",
+  "hidePassword": "Masquer le mot de passe"
 }

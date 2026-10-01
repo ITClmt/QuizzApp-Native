@@ -36,6 +36,7 @@ export default function RegisterScreen() {
   const {
     control,
     handleSubmit,
+    setFocus,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -55,6 +56,12 @@ export default function RegisterScreen() {
     }
   }
 
+  // Entrée sur le dernier champ envoie le formulaire, comme un vrai <form>.
+  // Garde-fou : un second Entrée pendant l'envoi relancerait la requête.
+  const submit = () => {
+    if (!isSubmitting) handleSubmit(onSubmit)();
+  };
+
   return (
     <GradientBackground>
     <SafeAreaView style={styles.container}>
@@ -70,8 +77,12 @@ export default function RegisterScreen() {
           <Controller
             control={control}
             name="username"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { ref, onChange, onBlur, value } }) => (
               <Input
+                ref={ref}
+                returnKeyType="next"
+                submitBehavior="submit"
+                onSubmitEditing={() => setFocus("email")}
                 label={t("register.usernameLabel")}
                 placeholder={t("register.usernamePlaceholder")}
                 autoCapitalize="words"
@@ -86,8 +97,12 @@ export default function RegisterScreen() {
           <Controller
             control={control}
             name="email"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { ref, onChange, onBlur, value } }) => (
               <Input
+                ref={ref}
+                returnKeyType="next"
+                submitBehavior="submit"
+                onSubmitEditing={() => setFocus("password")}
                 label={t("register.emailLabel")}
                 placeholder="hello@example.com"
                 keyboardType="email-address"
@@ -104,10 +119,14 @@ export default function RegisterScreen() {
           <Controller
             control={control}
             name="password"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { ref, onChange, onBlur, value } }) => (
               <Input
+                ref={ref}
+                returnKeyType="next"
+                submitBehavior="submit"
+                onSubmitEditing={() => setFocus("confirmPassword")}
                 label={t("register.passwordLabel")}
-                placeholder="••••••••"
+                placeholder={t("register.passwordPlaceholder")}
                 secureTextEntry
                 autoComplete="new-password"
                 value={value}
@@ -121,10 +140,13 @@ export default function RegisterScreen() {
           <Controller
             control={control}
             name="confirmPassword"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { ref, onChange, onBlur, value } }) => (
               <Input
+                ref={ref}
+                returnKeyType="go"
+                onSubmitEditing={submit}
                 label={t("register.confirmPasswordLabel")}
-                placeholder="••••••••"
+                placeholder={t("register.confirmPasswordPlaceholder")}
                 secureTextEntry
                 autoComplete="new-password"
                 value={value}
@@ -138,7 +160,7 @@ export default function RegisterScreen() {
           <Button
             title={isSubmitting ? t("register.signingUp") : t("register.signUp")}
             style={styles.registerButton}
-            onPress={handleSubmit(onSubmit)}
+            onPress={submit}
             disabled={isSubmitting}
           />
         </View>

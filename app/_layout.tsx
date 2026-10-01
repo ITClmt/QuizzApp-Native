@@ -3,6 +3,7 @@ import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { Providers } from "@/src/components/Providers";
 import { useDocumentTitle } from "@/src/hooks/useDocumentTitle";
 import { initI18n } from "@/src/i18n";
+import { hideWebSplash } from "@/src/lib/webSplash";
 import {
   Baloo2_500Medium,
   Baloo2_600SemiBold,
@@ -48,6 +49,7 @@ export default function RootLayout() {
   useEffect(() => {
     if ((loaded || error) && i18nReady) {
       SplashScreen.hideAsync();
+      hideWebSplash();
     }
   }, [loaded, error, i18nReady]);
 

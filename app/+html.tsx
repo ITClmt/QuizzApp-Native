@@ -24,6 +24,8 @@ const APP_BACKGROUND = "#EAF7FD";
 const THEME_COLOR = "#BFE6FA";
 /** Encre de l'appli (#1F3A56) adoucie : la barre grise native jurait dans le cadre. */
 const SCROLLBAR_THUMB = "rgba(31, 58, 86, 0.25)";
+/** Même dégradé que GradientBackground : l'écran de démarrage s'y fond. */
+const SKY_GRADIENT = ["#BFE6FA", "#EAF7FD", "#F7FCFF"];
 /** Violet primaire : la couleur des états actifs de l'appli. */
 const FOCUS_RING = "#7B5FBE";
 /**
@@ -70,6 +72,44 @@ textarea:focus-visible {
   outline: 2px solid ${FOCUS_RING} !important;
   outline-offset: 2px;
 }
+
+/* Edge ajoute son propre œil aux champs mot de passe : il ferait doublon avec
+   celui du composant Input. */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* Écran de démarrage : visible dès le HTML, avant que le JavaScript, les
+   polices et les traductions soient chargés (sinon : page vide). Retiré par
+   hideWebSplash() une fois l'appli prête. */
+#boot-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(${SKY_GRADIENT.join(", ")});
+  transition: opacity 200ms ease;
+}
+#boot-splash.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#boot-splash img {
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(31, 58, 86, 0.12);
+  animation: boot-pulse 1.4s ease-in-out infinite;
+}
+@keyframes boot-pulse {
+  50% { transform: scale(0.94); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #boot-splash img { animation: none; }
+}
 `;
 
 export default function Root({ children }: PropsWithChildren) {
@@ -111,7 +151,12 @@ export default function Root({ children }: PropsWithChildren) {
         <ScrollViewStyleReset />
         <style dangerouslySetInnerHTML={{ __html: rootStyles }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <div id="boot-splash" aria-hidden="true">
+          <img src="/icons/icon-192.png" alt="" width={96} height={96} />
+        </div>
+      </body>
     </html>
   );
 }

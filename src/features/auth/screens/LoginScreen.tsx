@@ -35,6 +35,7 @@ export default function LoginScreen() {
   const {
     control,
     handleSubmit,
+    setFocus,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -54,6 +55,12 @@ export default function LoginScreen() {
     }
   }
 
+  // Entrée sur le dernier champ envoie le formulaire, comme un vrai <form>.
+  // Garde-fou : un second Entrée pendant l'envoi relancerait la requête.
+  const submit = () => {
+    if (!isSubmitting) handleSubmit(onSubmit)();
+  };
+
   return (
     <GradientBackground>
     <SafeAreaView style={styles.container}>
@@ -69,8 +76,12 @@ export default function LoginScreen() {
           <Controller
             control={control}
             name="email"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { ref, onChange, onBlur, value } }) => (
               <Input
+                ref={ref}
+                returnKeyType="next"
+                submitBehavior="submit"
+                onSubmitEditing={() => setFocus("password")}
                 label={t("login.emailLabel")}
                 placeholder="hello@example.com"
                 keyboardType="email-address"
@@ -87,10 +98,13 @@ export default function LoginScreen() {
           <Controller
             control={control}
             name="password"
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { ref, onChange, onBlur, value } }) => (
               <Input
+                ref={ref}
+                returnKeyType="go"
+                onSubmitEditing={submit}
                 label={t("login.passwordLabel")}
-                placeholder="••••••••"
+                placeholder={t("login.passwordPlaceholder")}
                 secureTextEntry
                 autoComplete="password"
                 value={value}
@@ -104,7 +118,7 @@ export default function LoginScreen() {
           <Button
             title={isSubmitting ? t("login.signingIn") : t("login.signIn")}
             style={styles.loginButton}
-            onPress={handleSubmit(onSubmit)}
+            onPress={submit}
             disabled={isSubmitting}
           />
         </View>
