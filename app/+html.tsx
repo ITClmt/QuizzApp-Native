@@ -24,6 +24,15 @@ const APP_BACKGROUND = "#EAF7FD";
 const THEME_COLOR = "#BFE6FA";
 /** Encre de l'appli (#1F3A56) adoucie : la barre grise native jurait dans le cadre. */
 const SCROLLBAR_THUMB = "rgba(31, 58, 86, 0.25)";
+/**
+ * Fond "nuit" autour du cadre téléphone sur grand écran. Le seuil doit suivre
+ * PHONE_WIDTH d'AppShell (440) : au-delà, l'appli est encadrée.
+ */
+const FRAMED_MIN_WIDTH = 441;
+const NIGHT_CENTER = "#16273F";
+const NIGHT_EDGE = "#080F1C";
+/** Bleu ciel de l'appli (#BFE6FA), très dilué : le halo autour du cadre. */
+const HALO = "rgba(191, 230, 250, 0.18)";
 /** Même dégradé que GradientBackground : l'écran de démarrage s'y fond. */
 const SKY_GRADIENT = ["#BFE6FA", "#EAF7FD", "#F7FCFF"];
 /** Violet primaire : la couleur des états actifs de l'appli. */
@@ -43,6 +52,18 @@ html, body, #root {
 body {
   background-color: ${APP_BACKGROUND};
   overscroll-behavior: none;
+}
+
+/* Grand écran : l'appli tient dans un cadre téléphone (AppShell), posé sur
+   une nuit en vignette. Le halo, dimensionné sur le cadre et non sur la
+   fenêtre, donne l'impression que le ciel de l'appli éclaire autour de lui. */
+@media (min-width: ${FRAMED_MIN_WIDTH}px) {
+  body {
+    background-color: ${NIGHT_EDGE};
+    background-image:
+      radial-gradient(ellipse 520px 760px at center, ${HALO}, transparent 70%),
+      radial-gradient(ellipse at center, ${NIGHT_CENTER} 0%, ${NIGHT_EDGE} 80%);
+  }
 }
 * {
   scrollbar-width: thin;
@@ -127,6 +148,13 @@ export default function Root({ children }: PropsWithChildren) {
         <title>{APP_NAME}</title>
         <meta name="description" content={APP_DESCRIPTION} />
         <meta name="theme-color" content={THEME_COLOR} />
+        {/* Grand écran (PWA installée sur ordinateur) : la barre de titre de
+            la fenêtre se raccorde au fond nuit plutôt qu'au ciel. */}
+        <meta
+          name="theme-color"
+          media={`(min-width: ${FRAMED_MIN_WIDTH}px)`}
+          content={NIGHT_EDGE}
+        />
 
         {/* PWA */}
         <link rel="manifest" href="/manifest.json" />

@@ -1,4 +1,4 @@
-import { Colors, Radius, Spacing } from "@/constants/theme";
+import { Radius, Spacing } from "@/constants/theme";
 import { Platform, StyleSheet, useWindowDimensions, View } from "react-native";
 
 const PHONE_WIDTH = 440;
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   rootFramed: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.inverseSurface,
   },
   rootPadded: {
     paddingVertical: Spacing.xl,
@@ -53,6 +52,8 @@ const styles = StyleSheet.create({
   frameSized: {
     maxWidth: PHONE_WIDTH,
     maxHeight: PHONE_MAX_HEIGHT,
+    // Large et diffuse : décolle le cadre du fond au lieu de le poser à plat.
+    boxShadow: "0 24px 80px rgba(0, 0, 0, 0.5)",
   },
   frameRounded: {
     borderRadius: Radius["2xl"],
