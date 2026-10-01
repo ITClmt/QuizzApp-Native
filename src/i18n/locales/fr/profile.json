@@ -17,5 +17,7 @@
     "loadError": "Impossible de charger les avatars.",
     "updateErrorTitle": "Changement impossible",
     "updateError": "Impossible de changer d'avatar pour le moment."
-  }
+  },
+  "friendsButton": "Amis",
+  "friendsButtonWithRequests": "Amis, {{count}} demande(s) en attente"
 }

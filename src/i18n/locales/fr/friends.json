@@ -1,0 +1,32 @@
+{
+  "title": "Amis",
+  "empty": "Tu n'as pas encore d'amis. Cherche un pseudo pour en ajouter !",
+  "loadError": "Impossible de charger tes amis.",
+  "actionError": "Action impossible pour le moment.",
+  "sections": {
+    "received": "Demandes reçues · {{count}}",
+    "friends": "Mes amis · {{count}}",
+    "sent": "Demandes envoyées · {{count}}"
+  },
+  "search": {
+    "placeholder": "Chercher un pseudo",
+    "clear": "Effacer la recherche",
+    "tooShort": "Tape au moins 2 caractères",
+    "noResults": "Aucun joueur trouvé",
+    "error": "La recherche a échoué.",
+    "sent": "Envoyée",
+    "alreadyFriend": "Ami"
+  },
+  "actions": {
+    "add": "Ajouter {{username}} en ami",
+    "accept": "Accepter la demande de {{username}}",
+    "decline": "Refuser la demande de {{username}}",
+    "cancel": "Annuler la demande envoyée à {{username}}",
+    "remove": "Retirer {{username}} de tes amis"
+  },
+  "remove": {
+    "title": "Retirer cet ami ?",
+    "message": "{{username}} ne fera plus partie de tes amis.",
+    "confirm": "Retirer"
+  }
+}

@@ -128,6 +128,7 @@ export default function ProfileScreen() {
             <ProfileHeader
               avatarSlug={profile?.avatarSlug ?? user?.avatarSlug}
               username={user?.username}
+              pendingFriendRequests={profile?.pendingFriendRequests ?? 0}
               totalScore={data?.totalScore ?? 0}
               activeTab={activeTab}
               onChangeTab={setActiveTab}

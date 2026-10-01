@@ -98,4 +98,42 @@ export interface UserProfile {
   xpForNextLevel: number;
   createdAt: string;
   updatedAt: string;
+  /** Demandes d'ami reçues en attente — pastille du bouton Amis */
+  pendingFriendRequests: number;
+}
+
+// --- Amis ---
+
+/** Profil public d'un autre joueur : jamais d'email ni d'XP brute */
+export interface FriendUser {
+  id: string;
+  username: string;
+  avatarSlug: string;
+  level: number;
+}
+
+export interface Friend {
+  friendshipId: string;
+  since: string;
+  user: FriendUser;
+}
+
+export interface FriendRequest {
+  id: string;
+  createdAt: string;
+  user: FriendUser;
+}
+
+export interface FriendRequests {
+  received: FriendRequest[];
+  sent: FriendRequest[];
+}
+
+export type FriendRelation = "none" | "friends" | "sent" | "received";
+
+export interface FriendSearchResult {
+  user: FriendUser;
+  relation: FriendRelation;
+  /** Présent quand relation vaut "sent" ou "received" */
+  requestId?: string;
 }

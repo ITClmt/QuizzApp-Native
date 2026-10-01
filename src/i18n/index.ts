@@ -6,6 +6,7 @@ import { Storage } from "@/src/lib/storage";
 import authEn from "./locales/en/auth.json";
 import commonEn from "./locales/en/common.json";
 import errorsEn from "./locales/en/errors.json";
+import friendsEn from "./locales/en/friends.json";
 import homeEn from "./locales/en/home.json";
 import leaderboardEn from "./locales/en/leaderboard.json";
 import profileEn from "./locales/en/profile.json";
@@ -14,6 +15,7 @@ import settingsEn from "./locales/en/settings.json";
 import authFr from "./locales/fr/auth.json";
 import commonFr from "./locales/fr/common.json";
 import errorsFr from "./locales/fr/errors.json";
+import friendsFr from "./locales/fr/friends.json";
 import homeFr from "./locales/fr/home.json";
 import leaderboardFr from "./locales/fr/leaderboard.json";
 import profileFr from "./locales/fr/profile.json";
@@ -35,6 +37,7 @@ export const resources = {
     profile: profileFr,
     settings: settingsFr,
     errors: errorsFr,
+    friends: friendsFr,
   },
   en: {
     common: commonEn,
@@ -45,6 +48,7 @@ export const resources = {
     profile: profileEn,
     settings: settingsEn,
     errors: errorsEn,
+    friends: friendsEn,
   },
 };
 

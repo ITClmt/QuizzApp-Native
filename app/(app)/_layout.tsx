@@ -89,8 +89,7 @@ export default function AppLayout() {
           ),
         }}
       />
-      <Tabs.Screen name="avatars" options={{ title: "Avatars", href: null }} />
-      <Tabs.Screen
+      <Tabs.Screen name="avatars" options={{ title: "Avatars", href: null }} />      <Tabs.Screen
         name="history/[id]"
         options={{ title: "History", href: null }}
       />

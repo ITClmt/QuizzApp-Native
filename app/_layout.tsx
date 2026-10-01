@@ -58,7 +58,13 @@ export default function RootLayout() {
               backgroundColor: Colors.background,
             },
           }}
-        />
+        >
+          {/* Swipe retour depuis n'importe où sur l'écran (iOS), pas seulement le bord */}
+          <Stack.Screen
+            name="friends"
+            options={{ gestureEnabled: true, fullScreenGestureEnabled: true }}
+          />
+        </Stack>
       </Providers>
     </ErrorBoundary>
   );

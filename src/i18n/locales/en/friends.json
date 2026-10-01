@@ -1,0 +1,32 @@
+{
+  "title": "Friends",
+  "empty": "No friends yet. Search for a username to add some!",
+  "loadError": "Couldn't load your friends.",
+  "actionError": "This action isn't available right now.",
+  "sections": {
+    "received": "Requests received · {{count}}",
+    "friends": "My friends · {{count}}",
+    "sent": "Requests sent · {{count}}"
+  },
+  "search": {
+    "placeholder": "Search a username",
+    "clear": "Clear search",
+    "tooShort": "Type at least 2 characters",
+    "noResults": "No player found",
+    "error": "Search failed.",
+    "sent": "Sent",
+    "alreadyFriend": "Friend"
+  },
+  "actions": {
+    "add": "Add {{username}} as a friend",
+    "accept": "Accept {{username}}'s request",
+    "decline": "Decline {{username}}'s request",
+    "cancel": "Cancel the request sent to {{username}}",
+    "remove": "Remove {{username}} from your friends"
+  },
+  "remove": {
+    "title": "Remove this friend?",
+    "message": "{{username}} will no longer be your friend.",
+    "confirm": "Remove"
+  }
+}

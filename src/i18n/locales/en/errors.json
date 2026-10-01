@@ -13,5 +13,12 @@
   "SESSION_NOT_OWNED": "This game doesn't belong to you",
   "SESSION_ALREADY_FINISHED": "This game has already finished",
   "SESSION_EXPIRED": "This game has expired",
-  "INVALID_ANSWER_QUESTION": "Invalid question"
+  "INVALID_ANSWER_QUESTION": "Invalid question",
+  "CANNOT_FRIEND_SELF": "You can't add yourself",
+  "FRIEND_REQUEST_EXISTS": "Request already sent to this player",
+  "ALREADY_FRIENDS": "You're already friends",
+  "FRIEND_REQUEST_NOT_FOUND": "This request no longer exists",
+  "NOT_FRIENDS": "This player isn't one of your friends",
+  "TOO_MANY_PENDING_REQUESTS": "Too many pending requests, wait for some answers",
+  "FRIEND_LIMIT_REACHED": "You've reached the friend limit"
 }

@@ -29,6 +29,7 @@ const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
 interface ProfileHeaderProps {
   avatarSlug?: string;
   username?: string;
+  pendingFriendRequests: number;
   totalScore: number;
   activeTab: ProfileTab;
   onChangeTab: (tab: ProfileTab) => void;
@@ -41,6 +42,7 @@ interface ProfileHeaderProps {
 export function ProfileHeader({
   avatarSlug,
   username,
+  pendingFriendRequests,
   totalScore,
   activeTab,
   onChangeTab,
@@ -72,6 +74,29 @@ export function ProfileHeader({
         <Text style={styles.username} numberOfLines={1}>
           {username}
         </Text>
+        <Pressable
+          style={({ pressed }) => [
+            styles.friendsButton,
+            pressed && styles.friendsButtonPressed,
+          ]}
+          onPress={() => router.push("/friends")}
+          accessibilityRole="button"
+          accessibilityLabel={
+            pendingFriendRequests > 0
+              ? t("friendsButtonWithRequests", { count: pendingFriendRequests })
+              : t("friendsButton")
+          }
+        >
+          <MaterialIcons name="group" size={18} color={Colors.primary} />
+          <Text style={styles.friendsButtonText}>{t("friendsButton")}</Text>
+          {pendingFriendRequests > 0 && (
+            <View style={styles.friendsBadge}>
+              <Text style={styles.friendsBadgeText}>
+                {pendingFriendRequests > 9 ? "9+" : pendingFriendRequests}
+              </Text>
+            </View>
+          )}
+        </Pressable>
       </View>
 
       <View style={styles.totalScoreCard}>
@@ -144,6 +169,38 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.headline,
     fontSize: FontSize.headlineMd,
     color: Colors.onSurface,
+  },
+  friendsButton: {
+    marginTop: Spacing.md,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.base,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.primaryContainer,
+  },
+  friendsButtonPressed: {
+    opacity: 0.7,
+  },
+  friendsButtonText: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.bodySm,
+    color: Colors.primary,
+  },
+  friendsBadge: {
+    minWidth: 20,
+    height: 20,
+    paddingHorizontal: 5,
+    borderRadius: Radius.full,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.error,
+  },
+  friendsBadgeText: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelMd,
+    color: Colors.onError,
   },
   levelCardWrapper: {
     marginBottom: Spacing.xl,

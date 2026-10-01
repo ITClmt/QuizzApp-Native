@@ -13,5 +13,12 @@
   "SESSION_NOT_OWNED": "Cette partie ne t'appartient pas",
   "SESSION_ALREADY_FINISHED": "Cette partie est déjà terminée",
   "SESSION_EXPIRED": "Cette partie a expiré",
-  "INVALID_ANSWER_QUESTION": "Question invalide"
+  "INVALID_ANSWER_QUESTION": "Question invalide",
+  "CANNOT_FRIEND_SELF": "Tu ne peux pas t'ajouter toi-même",
+  "FRIEND_REQUEST_EXISTS": "Demande déjà envoyée à ce joueur",
+  "ALREADY_FRIENDS": "Vous êtes déjà amis",
+  "FRIEND_REQUEST_NOT_FOUND": "Cette demande n'existe plus",
+  "NOT_FRIENDS": "Ce joueur ne fait pas partie de tes amis",
+  "TOO_MANY_PENDING_REQUESTS": "Trop de demandes en attente, attends quelques réponses",
+  "FRIEND_LIMIT_REACHED": "Tu as atteint la limite d'amis"
 }
