@@ -14,7 +14,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
   Image,
   Pressable,
   StyleSheet,
@@ -23,6 +22,7 @@ import {
 } from "react-native";
 import { DifficultyScoreCard } from "./DifficultyScoreCard";
 import { FirstGameCta } from "./FirstGameCta";
+import { ScoresSkeleton } from "./ProfileSkeletons";
 import { ProfileTabSwitcher, type ProfileTab } from "./ProfileTabSwitcher";
 
 const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
@@ -117,9 +117,7 @@ export function ProfileHeader({
 
       {activeTab === "scores" &&
         (isScoresLoading ? (
-          <View style={styles.centered}>
-            <ActivityIndicator size="large" color={Colors.primary} />
-          </View>
+          <ScoresSkeleton />
         ) : isScoresError ? (
           <ErrorNotice message={t("loadError")} onRetry={onRetryScores} />
         ) : totalScore === 0 ? (
@@ -241,9 +239,5 @@ const styles = StyleSheet.create({
   },
   scoreList: {
     gap: Spacing.md,
-  },
-  centered: {
-    paddingVertical: Spacing["3xl"],
-    alignItems: "center",
   },
 });

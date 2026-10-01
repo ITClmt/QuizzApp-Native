@@ -32,5 +32,6 @@
     "results": "Results"
   },
   "showPassword": "Show password",
-  "hidePassword": "Hide password"
+  "hidePassword": "Hide password",
+  "loading": "Loading"
 }

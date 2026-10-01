@@ -18,6 +18,7 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FirstGameCta } from "../components/FirstGameCta";
 import { HistoryListItem } from "../components/HistoryListItem";
+import { HistorySkeleton } from "../components/ProfileSkeletons";
 import { ProfileHeader } from "../components/ProfileHeader";
 import type { ProfileTab } from "../components/ProfileTabSwitcher";
 
@@ -142,9 +143,7 @@ export default function ProfileScreen() {
           ListEmptyComponent={
             activeTab === "history" ? (
               isHistoryLoading ? (
-                <View style={styles.centered}>
-                  <ActivityIndicator size="large" color={Colors.primary} />
-                </View>
+                <HistorySkeleton />
               ) : isHistoryError ? (
                 <ErrorNotice
                   message={t("quiz:history.loadError")}

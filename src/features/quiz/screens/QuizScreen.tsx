@@ -11,6 +11,10 @@ import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAlert } from "@/src/contexts/AlertContext";
 import { getCategoryLabelByOtdName } from "@/src/constants/categories";
+import {
+  AnswerFeedback,
+  type AnswerFeedbackState,
+} from "@/src/features/quiz/components/AnswerFeedback";
 import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
 import { QuestionProgress } from "@/src/features/quiz/components/QuestionProgress";
@@ -127,11 +131,11 @@ export default function QuizScreen() {
             userAnswers: JSON.stringify(userAnswers),
           },
         });
-      },
-      onError: (err) => {
-        showAlert(t("common:errors.title"), getErrorMessage(err));
-      },
-    });
+    },
+    onError: (err) => {
+      showAlert(t("common:errors.title"), getErrorMessage(err));
+    },
+  });
 
   const { confirmCancel, isPending: isCancelling } = useCancelQuizSession(
     data?.sessionId,
@@ -234,6 +238,13 @@ export default function QuizScreen() {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const isUrgent = timeLeft <= LOW_TIME_THRESHOLD_SECONDS;
 
+  const getFeedbackState = (index: number): AnswerFeedbackState => {
+    if (!showAnswer) return null;
+    if (index === currentQuestion.correctIndex) return "correct";
+    if (index === selectedAnswerIndex) return "wrong";
+    return null;
+  };
+
   const getButtonStyle = (index: number) => {
     if (!showAnswer) return null;
     if (index === currentQuestion.correctIndex) return styles.correctButton;
@@ -316,28 +327,29 @@ export default function QuizScreen() {
         {/* Answers */}
         <View style={styles.answersContainer}>
           {currentQuestion.answers.map((answer, index) => (
-            <Pressable
-              key={index}
-              style={({ pressed }) => [
-                styles.answerButton,
-                getButtonStyle(index),
-                pressed && styles.pressed,
-              ]}
-              onPress={() => handleAnswer(index)}
-              disabled={showAnswer || isFinishing}
-              accessibilityRole="button"
-              accessibilityState={{ disabled: showAnswer || isFinishing }}
-            >
-              {showKeyHints && (
-                <View style={styles.keyHint}>
-                  <Text style={styles.keyHintText}>{index + 1}</Text>
-                </View>
-              )}
-              <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
-                {answer}
-              </Text>
-              {renderStatusIcon(index)}
-            </Pressable>
+            <AnswerFeedback key={index} state={getFeedbackState(index)}>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.answerButton,
+                  getButtonStyle(index),
+                  pressed && styles.pressed,
+                ]}
+                onPress={() => handleAnswer(index)}
+                disabled={showAnswer || isFinishing}
+                accessibilityRole="button"
+                accessibilityState={{ disabled: showAnswer || isFinishing }}
+              >
+                {showKeyHints && (
+                  <View style={styles.keyHint}>
+                    <Text style={styles.keyHintText}>{index + 1}</Text>
+                  </View>
+                )}
+                <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
+                  {answer}
+                </Text>
+                {renderStatusIcon(index)}
+              </Pressable>
+            </AnswerFeedback>
           ))}
 
           {showAnswer && (

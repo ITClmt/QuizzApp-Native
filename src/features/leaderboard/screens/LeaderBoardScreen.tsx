@@ -16,7 +16,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
@@ -25,6 +24,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DifficultyFilter } from "../components/DifficultyFilter";
 import { LeaderboardRow } from "../components/LeaderboardRow";
+import { LeaderboardSkeleton } from "../components/LeaderboardSkeleton";
 import { MyRankBanner } from "../components/MyRankBanner";
 import { PodiumSection } from "../components/PodiumSection";
 
@@ -104,9 +104,7 @@ export default function LeaderBoardScreen() {
   const renderHeader = () => (
     <>
       {isLoading ? (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={Colors.primary} />
-        </View>
+        <LeaderboardSkeleton />
       ) : isError ? (
         <ErrorNotice message={t("loadError")} onRetry={handleRefresh} />
       ) : data?.length === 0 ? (

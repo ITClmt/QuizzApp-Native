@@ -6,8 +6,13 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { useCountUp } from "@/src/hooks/useCountUp";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
+
+/** Volontairement bref : un effet, pas une cinématique avant de pouvoir lire. */
+const COUNT_DURATION_MS = 600;
 
 interface ScoreSummaryProps {
   score: number;
@@ -30,6 +35,7 @@ function getScoreColor(percentage: number): string {
 
 export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
   const { t } = useTranslation("quiz");
+  const displayedScore = useCountUp(score, COUNT_DURATION_MS);
 
   if (total === 0) {
     return (
@@ -49,18 +55,29 @@ export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
   return (
     <View style={styles.scoreCard}>
       <Text style={styles.finishedLabel}>{t("results.quizCompleted")}</Text>
-      <View style={[styles.scoreBadge, { borderColor: scoreColor }]}>
-        <Text style={[styles.scoreNumber, { color: scoreColor }]}>{score}</Text>
+      <View
+        style={[styles.scoreBadge, { borderColor: scoreColor }]}
+        accessible
+        accessibilityLabel={`${score} / ${total}`}
+      >
+        <Text style={[styles.scoreNumber, { color: scoreColor }]}>
+          {displayedScore}
+        </Text>
         <Text style={[styles.scoreTotal, { color: scoreColor }]}>
           / {total}
         </Text>
       </View>
-      <Text style={[styles.scoreLabel, { color: scoreColor }]}>
-        {t(getScoreLabelKey(percentage))}
-      </Text>
-      <Text style={styles.percentageText}>
-        {t("results.percentCorrect", { percentage })}
-      </Text>
+      <Animated.View
+        entering={FadeIn.delay(COUNT_DURATION_MS).duration(200)}
+        style={styles.verdict}
+      >
+        <Text style={[styles.scoreLabel, { color: scoreColor }]}>
+          {t(getScoreLabelKey(percentage))}
+        </Text>
+        <Text style={styles.percentageText}>
+          {t("results.percentCorrect", { percentage })}
+        </Text>
+      </Animated.View>
     </View>
   );
 }
@@ -93,6 +110,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.headlineExtrabold,
     fontSize: FontSize.displayLg,
     lineHeight: 56,
+    // Chiffres à chasse fixe : le badge ne "tremble" pas pendant le décompte.
+    fontVariant: ["tabular-nums"],
+  },
+  verdict: {
+    alignItems: "center",
   },
   scoreTotal: {
     fontFamily: FontFamily.headlineSemibold,
