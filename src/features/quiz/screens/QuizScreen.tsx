@@ -19,6 +19,7 @@ import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
 import { QuestionProgress } from "@/src/features/quiz/components/QuestionProgress";
 import { useCancelQuizSession } from "@/src/features/quiz/hooks/useCancelQuizSession";
+import { storeQuizResult } from "@/src/features/quiz/hooks/useQuizResult";
 import { useQuizKeyboardShortcuts } from "@/src/features/quiz/hooks/useQuizKeyboardShortcuts";
 import { useBlockBackNavigation } from "@/src/hooks/useBlockBackNavigation";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
@@ -123,13 +124,14 @@ export default function QuizScreen() {
         }),
       onSuccess: (result) => {
         queryClient.invalidateQueries({ queryKey: ["profile"] });
+        storeQuizResult(queryClient, data!.sessionId, {
+          result,
+          questions,
+          userAnswers,
+        });
         router.replace({
           pathname: "/(quiz)/results",
-          params: {
-            result: JSON.stringify(result),
-            questions: JSON.stringify(questions),
-            userAnswers: JSON.stringify(userAnswers),
-          },
+          params: { sessionId: data!.sessionId },
         });
     },
     onError: (err) => {

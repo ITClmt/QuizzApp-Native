@@ -7,39 +7,29 @@ import ScoreSummary from "@/src/features/quiz/components/ScoreSummary";
 import UnlockedAvatars from "@/src/features/quiz/components/UnlockedAvatars";
 import UnlockedCategories from "@/src/features/quiz/components/UnlockedCategories";
 import XpSummary from "@/src/features/quiz/components/XpSummary";
-import type { QuizQuestion, QuizResult } from "@/src/types";
+import { useQuizResult } from "@/src/features/quiz/hooks/useQuizResult";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ResultsScreen() {
   const router = useRouter();
-  const {
-    result: resultParam,
-    questions: questionsParam,
-    userAnswers: userAnswersParam,
-  } = useLocalSearchParams<{
-    result: string;
-    questions: string;
-    userAnswers: string;
-  }>();
+  const { sessionId } = useLocalSearchParams<{ sessionId?: string }>();
+  const data = useQuizResult(sessionId);
 
-  if (!resultParam || !questionsParam || !userAnswersParam) {
-    return <Redirect href="/(app)" />;
+  if (!data) {
+    // Page rechargée ou lien rouvert : le cache est vide, mais la partie est
+    // enregistrée. Son détail dans l'historique reste la meilleure vue.
+    return sessionId ? (
+      <Redirect
+        href={{ pathname: "/(app)/history/[id]", params: { id: sessionId } }}
+      />
+    ) : (
+      <Redirect href="/(app)" />
+    );
   }
 
-  // Params sérialisés : un JSON tronqué ou malformé remonterait à l'ErrorBoundary
-  // alors que l'écran sait déjà rentrer proprement à l'accueil.
-  let result: QuizResult;
-  let questions: QuizQuestion[];
-  let userAnswers: number[];
-  try {
-    result = JSON.parse(resultParam) as QuizResult;
-    questions = JSON.parse(questionsParam) as QuizQuestion[];
-    userAnswers = JSON.parse(userAnswersParam) as number[];
-  } catch {
-    return <Redirect href="/(app)" />;
-  }
+  const { result, questions, userAnswers } = data;
 
   const questionMap = new Map(questions.map((q) => [q.id, q]));
   const answerRows = result.answers.map((answer, index) => {
