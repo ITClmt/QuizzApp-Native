@@ -1,22 +1,13 @@
-import {
-  Colors,
-  FontFamily,
-  FontSize,
-  Radius,
-  Shadows,
-  Spacing,
-} from "@/constants/theme";
+import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { BACK_BUTTON_SIZE, BackButton } from "@/src/components/BackButton";
 import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAlert } from "@/src/contexts/AlertContext";
 import type { Friend, FriendRequest, FriendSearchResult } from "@/src/types";
-import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  Pressable,
   SectionList,
   StyleSheet,
   Text,
@@ -62,12 +53,6 @@ export default function FriendsScreen() {
     useFriendMutations();
 
   const isSearchMode = query.trim().length > 0;
-
-  // Ouvert directement par URL (web, rechargement), il n'y a rien à dépiler
-  const goBack = () => {
-    if (router.canGoBack()) router.back();
-    else router.navigate("/(app)/profile");
-  };
 
   const confirmRemove = (friend: Friend) => {
     showAlert(
@@ -214,19 +199,7 @@ export default function FriendsScreen() {
     <GradientBackground>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.topBar}>
-          <Pressable
-            onPress={goBack}
-            style={styles.backButton}
-            hitSlop={8} // 40 visuels + 8 de marge : plancher tactile atteint
-            accessibilityRole="button"
-            accessibilityLabel={t("common:back")}
-          >
-            <MaterialIcons
-              name="chevron-left"
-              size={26}
-              color={Colors.onSurface}
-            />
-          </Pressable>
+          <BackButton fallbackHref="/(app)/profile" />
           <Text style={styles.title}>{t("title")}</Text>
           {/* Contrepoids du bouton, pour garder le titre centré */}
           <View style={styles.backButtonSpacer} />
@@ -270,17 +243,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.xl,
     paddingTop: Spacing.sm,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: Radius.full,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.surface,
-    ...Shadows.card,
-  },
   backButtonSpacer: {
-    width: 40,
+    width: BACK_BUTTON_SIZE,
   },
   content: {
     padding: Spacing.xl,

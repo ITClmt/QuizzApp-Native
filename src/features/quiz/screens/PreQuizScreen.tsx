@@ -6,6 +6,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { BACK_BUTTON_SIZE, BackButton } from "@/src/components/BackButton";
 import { Button } from "@/src/components/Button";
 import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
@@ -84,7 +85,14 @@ export default function PreQuizScreen() {
     <GradientBackground>
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>{t("preQuiz.selectDifficulty")}</Text>
+          <View style={styles.titleRow}>
+            <BackButton fallbackHref="/(app)" />
+            <Text style={[styles.title, styles.titleInRow]}>
+              {t("preQuiz.selectDifficulty")}
+            </Text>
+            {/* Contrepoids du bouton, pour garder le titre centré */}
+            <View style={styles.titleSpacer} />
+          </View>
 
           <View style={styles.difficultiesContainer}>
             {DIFFICULTIES.map((d) => {
@@ -237,6 +245,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: Spacing.xl,
+  },
+  titleSpacer: {
+    width: BACK_BUTTON_SIZE,
+  },
+  titleInRow: {
+    flex: 1,
+    marginBottom: 0,
   },
   title: {
     fontFamily: FontFamily.headlineExtrabold,
