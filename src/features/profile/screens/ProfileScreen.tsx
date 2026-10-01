@@ -1,4 +1,4 @@
-import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { Colors, Spacing } from "@/constants/theme";
 import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAuth } from "@/src/contexts/AuthContext";
@@ -14,8 +14,9 @@ import {
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FirstGameCta } from "../components/FirstGameCta";
 import { HistoryListItem } from "../components/HistoryListItem";
 import { ProfileHeader } from "../components/ProfileHeader";
 import type { ProfileTab } from "../components/ProfileTabSwitcher";
@@ -150,9 +151,7 @@ export default function ProfileScreen() {
                   onRetry={refetchHistory}
                 />
               ) : (
-                <View style={styles.centered}>
-                  <Text style={styles.emptyText}>{t("quiz:history.empty")}</Text>
-                </View>
+                <FirstGameCta />
               )
             ) : null
           }
@@ -179,11 +178,6 @@ const styles = StyleSheet.create({
   centered: {
     paddingVertical: Spacing["3xl"],
     alignItems: "center",
-  },
-  emptyText: {
-    fontFamily: FontFamily.body,
-    fontSize: FontSize.bodyMd,
-    color: Colors.onSurfaceVariant,
   },
   footerLoader: {
     paddingVertical: Spacing.lg,

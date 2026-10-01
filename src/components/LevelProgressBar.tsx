@@ -11,7 +11,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
-export function LevelProgressBar() {
+/** Sans fond ni ombre, pour s'intégrer dans une carte existante. */
+interface LevelProgressBarProps {
+  embedded?: boolean;
+}
+
+export function LevelProgressBar({ embedded = false }: LevelProgressBarProps) {
   const profile = useProfile();
   const { t } = useTranslation("common");
 
@@ -22,7 +27,7 @@ export function LevelProgressBar() {
   const progress = Math.min(1, xpIntoLevel / Math.max(1, xpForThisLevel));
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.container, !embedded && styles.card]}>
       <View style={styles.header}>
         <Text style={styles.label}>{t("level", { level: profile.level })}</Text>
         <Text style={styles.xpText}>
@@ -44,12 +49,14 @@ export function LevelProgressBar() {
 }
 
 const styles = StyleSheet.create({
-  card: {
+  container: {
     width: "100%",
+    gap: Spacing.sm,
+  },
+  card: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
     padding: Spacing.lg,
-    gap: Spacing.sm,
     ...Shadows.card,
   },
   header: {

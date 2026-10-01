@@ -56,7 +56,6 @@
     "home": "Home"
   },
   "history": {
-    "empty": "No games played yet.",
     "loadError": "Failed to load history.",
     "expiredBadge": "Expired",
     "anyDifficulty": "Any difficulty",

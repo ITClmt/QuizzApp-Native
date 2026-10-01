@@ -19,5 +19,10 @@
     "updateError": "Unable to change your avatar right now."
   },
   "friendsButton": "Friends",
-  "friendsButtonWithRequests": "Friends, {{count}} pending request(s)"
+  "friendsButtonWithRequests": "Friends, {{count}} pending request(s)",
+  "firstGame": {
+    "title": "Your profile is still empty",
+    "subtitle": "Start a game to score your first points.",
+    "cta": "Start a game"
+  }
 }

@@ -50,7 +50,11 @@ export default function LeaderBoardScreen() {
           id: e.id,
           value: e.xp,
           difficulty: "easy" as const,
-          userData: { id: e.id, username: e.username, avatarSlug: e.avatarSlug },
+          userData: {
+            id: e.id,
+            username: e.username,
+            avatarSlug: e.avatarSlug,
+          },
           createdAt: "",
         }));
       }
@@ -99,14 +103,6 @@ export default function LeaderBoardScreen() {
 
   const renderHeader = () => (
     <>
-      <View style={styles.header}>
-        <Text style={styles.title}>{t("title")}</Text>
-        <DifficultyFilter
-          difficulty={difficulty}
-          setDifficulty={setDifficulty}
-        />
-      </View>
-
       {isLoading ? (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={Colors.primary} />
@@ -126,6 +122,16 @@ export default function LeaderBoardScreen() {
   return (
     <GradientBackground>
       <SafeAreaView edges={["left", "right"]} style={styles.safeArea}>
+        {/* Hors de la liste : le filtre reste accessible quand on a défilé
+            jusqu'au bas du classement. */}
+        <View style={styles.header}>
+          <Text style={styles.title}>{t("title")}</Text>
+          <DifficultyFilter
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
+          />
+        </View>
+
         <FlatList
           data={rest}
           keyExtractor={(item) => item.id}

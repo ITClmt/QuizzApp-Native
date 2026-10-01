@@ -22,6 +22,7 @@ import {
   View,
 } from "react-native";
 import { DifficultyScoreCard } from "./DifficultyScoreCard";
+import { FirstGameCta } from "./FirstGameCta";
 import { ProfileTabSwitcher, type ProfileTab } from "./ProfileTabSwitcher";
 
 const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
@@ -99,13 +100,15 @@ export function ProfileHeader({
         </Pressable>
       </View>
 
-      <View style={styles.totalScoreCard}>
-        <Text style={styles.totalScoreLabel}>{t("totalScore")}</Text>
-        <Text style={styles.totalScoreValue}>{totalScore}</Text>
-      </View>
-
-      <View style={styles.levelCardWrapper}>
-        <LevelProgressBar />
+      {/* Score et niveau réunis : deux cartes séparées repoussaient les
+          onglets Scores/Historique sous la ligne de flottaison. */}
+      <View style={styles.statsCard}>
+        <View style={styles.totalScoreRow}>
+          <Text style={styles.totalScoreLabel}>{t("totalScore")}</Text>
+          <Text style={styles.totalScoreValue}>{totalScore}</Text>
+        </View>
+        <View style={styles.statsDivider} />
+        <LevelProgressBar embedded />
       </View>
 
       <View style={styles.tabSwitcherWrapper}>
@@ -119,6 +122,8 @@ export function ProfileHeader({
           </View>
         ) : isScoresError ? (
           <ErrorNotice message={t("loadError")} onRetry={onRetryScores} />
+        ) : totalScore === 0 ? (
+          <FirstGameCta />
         ) : (
           <View style={styles.scoreList}>
             {DIFFICULTIES.map((difficulty) => (
@@ -202,16 +207,22 @@ const styles = StyleSheet.create({
     fontSize: FontSize.labelMd,
     color: Colors.onError,
   },
-  levelCardWrapper: {
-    marginBottom: Spacing.xl,
-  },
-  totalScoreCard: {
-    alignItems: "center",
+  statsCard: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
-    paddingVertical: Spacing.lg,
+    padding: Spacing.lg,
     marginBottom: Spacing.xl,
     ...Shadows.card,
+  },
+  totalScoreRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  statsDivider: {
+    height: 1,
+    backgroundColor: Colors.outlineVariant,
+    marginVertical: Spacing.md,
   },
   totalScoreLabel: {
     fontFamily: FontFamily.bodyBold,
@@ -221,9 +232,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   totalScoreValue: {
-    marginTop: Spacing.xs,
     fontFamily: FontFamily.headlineExtrabold,
-    fontSize: FontSize.displayMd,
+    fontSize: FontSize.headlineLg,
     color: Colors.primary,
   },
   tabSwitcherWrapper: {

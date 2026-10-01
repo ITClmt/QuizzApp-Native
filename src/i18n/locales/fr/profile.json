@@ -19,5 +19,10 @@
     "updateError": "Impossible de changer d'avatar pour le moment."
   },
   "friendsButton": "Amis",
-  "friendsButtonWithRequests": "Amis, {{count}} demande(s) en attente"
+  "friendsButtonWithRequests": "Amis, {{count}} demande(s) en attente",
+  "firstGame": {
+    "title": "Ton profil est encore vide",
+    "subtitle": "Lance une partie pour marquer tes premiers points.",
+    "cta": "Lancer une partie"
+  }
 }
