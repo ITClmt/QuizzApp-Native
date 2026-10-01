@@ -58,7 +58,7 @@ export default function SettingsScreen() {
 
   return (
     <GradientBackground>
-      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+      <SafeAreaView edges={["left", "right"]} style={styles.safeArea}>
         <View style={styles.card}>
           <View style={styles.infoRow}>
             <Text style={styles.label}>{t("username")}</Text>

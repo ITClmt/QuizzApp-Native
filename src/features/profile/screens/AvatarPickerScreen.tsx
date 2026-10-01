@@ -148,7 +148,7 @@ export default function AvatarPickerScreen() {
 
   return (
     <GradientBackground>
-      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+      <SafeAreaView edges={["left", "right"]} style={styles.safeArea}>
         <ScrollView
           style={styles.scroll}
           showsVerticalScrollIndicator={false}
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: Spacing.xl,
     paddingTop: Spacing.md,
-    paddingBottom: Spacing["5xl"] + Spacing.lg,
+    paddingBottom: Spacing.xl,
   },
   title: {
     fontFamily: FontFamily.headlineExtrabold,

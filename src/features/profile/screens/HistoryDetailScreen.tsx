@@ -50,7 +50,7 @@ export default function HistoryDetailScreen() {
 
   return (
     <GradientBackground>
-      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+      <SafeAreaView edges={["left", "right"]} style={styles.safeArea}>
         <View style={styles.headerRow}>
           <Pressable
             onPress={() => router.navigate("/(app)/profile")}

@@ -2,10 +2,15 @@ import { getAvatarImage } from "@/constants/avatars";
 import { Colors, FontFamily, FontSize, Radius, Shadows, Spacing } from "@/constants/theme";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useProfile } from "@/src/hooks/useProfile";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const NAVBAR_BG = Colors.skyGradient[0];
+/** Même teinte à alpha 0 : un "transparent" nu tire vers le gris sur iOS. */
+const NAVBAR_BG_TRANSPARENT = `${NAVBAR_BG}00`;
 
 export function Navbar() {
   const { user } = useAuth();
@@ -40,6 +45,15 @@ export function Navbar() {
           />
         </Pressable>
       </View>
+
+      {/* Le contenu qui défile se fond dans la barre au lieu d'être tranché
+          net à sa bordure. Débordement voulu : le header passe au-dessus de
+          l'écran (zIndex de React Navigation). */}
+      <LinearGradient
+        colors={[NAVBAR_BG, NAVBAR_BG_TRANSPARENT]}
+        style={styles.fade}
+        pointerEvents="none"
+      />
     </View>
   );
 }
@@ -51,7 +65,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: Colors.skyGradient[0],
+    backgroundColor: NAVBAR_BG,
+  },
+  fade: {
+    position: "absolute",
+    top: "100%",
+    left: 0,
+    right: 0,
+    height: Spacing.base,
   },
   brandRow: {
     flexDirection: "row",

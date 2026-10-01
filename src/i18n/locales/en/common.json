@@ -17,5 +17,18 @@
     "title": "Error",
     "networkTitle": "Network Error",
     "networkMessage": "Unable to reach the server"
+  },
+  "pageTitles": {
+    "home": "Home",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "avatars": "Avatars",
+    "history": "Game",
+    "friends": "Friends",
+    "login": "Log in",
+    "register": "Sign up",
+    "quiz": "Quiz",
+    "results": "Results"
   }
 }

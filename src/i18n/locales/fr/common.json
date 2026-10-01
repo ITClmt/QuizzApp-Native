@@ -17,5 +17,18 @@
     "title": "Erreur",
     "networkTitle": "Erreur réseau",
     "networkMessage": "Impossible de contacter le serveur"
+  },
+  "pageTitles": {
+    "home": "Accueil",
+    "leaderboard": "Classement",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "avatars": "Avatars",
+    "history": "Partie",
+    "friends": "Amis",
+    "login": "Connexion",
+    "register": "Inscription",
+    "quiz": "Quiz",
+    "results": "Résultats"
   }
 }

@@ -99,7 +99,7 @@ export default function ProfileScreen() {
 
   return (
     <GradientBackground>
-      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+      <SafeAreaView edges={["left", "right"]} style={styles.safeArea}>
         <FlatList
           data={listData}
           keyExtractor={(item) => item.id}
@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: Spacing.xl,
-    paddingBottom: Spacing["4xl"] + Spacing.xl,
   },
   centered: {
     paddingVertical: Spacing["3xl"],

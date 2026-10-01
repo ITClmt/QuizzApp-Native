@@ -12,6 +12,8 @@ import type { PropsWithChildren } from "react";
  * - le rebond / "pull to refresh" pouvait décoller toute l'interface.
  */
 const APP_BACKGROUND = "#EAF7FD";
+/** Encre de l'appli (#1F3A56) adoucie : la barre grise native jurait dans le cadre. */
+const SCROLLBAR_THUMB = "rgba(31, 58, 86, 0.25)";
 
 const rootStyles = `
 html, body, #root {
@@ -21,6 +23,10 @@ html, body, #root {
 body {
   background-color: ${APP_BACKGROUND};
   overscroll-behavior: none;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: ${SCROLLBAR_THUMB} transparent;
 }
 `;
 

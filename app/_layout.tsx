@@ -1,6 +1,7 @@
 import { Colors } from "@/constants/theme";
 import { ErrorBoundary } from "@/src/components/ErrorBoundary";
 import { Providers } from "@/src/components/Providers";
+import { useDocumentTitle } from "@/src/hooks/useDocumentTitle";
 import { initI18n } from "@/src/i18n";
 import {
   Baloo2_500Medium,
@@ -20,6 +21,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 
 SplashScreen.preventAutoHideAsync();
+
+/** Doit vivre sous <Providers> : il a besoin de l'i18n. */
+function DocumentTitle() {
+  useDocumentTitle();
+  return null;
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -51,6 +58,7 @@ export default function RootLayout() {
   return (
     <ErrorBoundary>
       <Providers>
+        <DocumentTitle />
         <Stack
           screenOptions={{
             headerShown: false,

@@ -125,10 +125,11 @@ export default function LeaderBoardScreen() {
 
   return (
     <GradientBackground>
-      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+      <SafeAreaView edges={["left", "right"]} style={styles.safeArea}>
         <FlatList
           data={rest}
           keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
           refreshing={isManualRefresh}
           onRefresh={handleRefresh}
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingBottom: Spacing["4xl"] + Spacing.xl,
+    paddingBottom: Spacing.xl,
   },
   header: {
     paddingHorizontal: Spacing.xl,

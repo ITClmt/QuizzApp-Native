@@ -12,7 +12,7 @@ export function HomeScreen() {
   const { t } = useTranslation("home");
   return (
     <GradientBackground>
-      <SafeAreaView edges={["bottom", "left", "right"]} style={styles.safeArea}>
+      <SafeAreaView edges={["left", "right"]} style={styles.safeArea}>
         <View style={styles.container}>
           <Text style={styles.title}>{t("welcome", { username: user?.username })}</Text>
         </View>
@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     padding: Spacing.xl,
-    paddingBottom: Spacing["4xl"] + Spacing.xl,
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
