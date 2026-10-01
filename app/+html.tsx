@@ -24,6 +24,14 @@ const APP_BACKGROUND = "#EAF7FD";
 const THEME_COLOR = "#BFE6FA";
 /** Encre de l'appli (#1F3A56) adoucie : la barre grise native jurait dans le cadre. */
 const SCROLLBAR_THUMB = "rgba(31, 58, 86, 0.25)";
+/** Violet primaire : la couleur des états actifs de l'appli. */
+const FOCUS_RING = "#7B5FBE";
+/**
+ * Pressable actifs (react-native-web) et liens, dont les onglets de la tabbar.
+ * Dans un :is() pour que les pseudo-classes ajoutées derrière (:hover…)
+ * s'appliquent aux deux sélecteurs, pas seulement au dernier de la liste.
+ */
+const INTERACTIVE = `:is([tabindex="0"], a[href])`;
 
 const rootStyles = `
 html, body, #root {
@@ -37,6 +45,30 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: ${SCROLLBAR_THUMB} transparent;
+}
+
+/* Survol : react-native-web met déjà cursor: pointer sur les Pressable, mais
+   aucun retour visuel. Un léger assombrissement marche sur tous les fonds
+   (carte blanche, bouton violet, dégradé) sans styler chaque composant.
+   Réservé aux souris : sur tactile, le :hover resterait collé après un tap.
+   tabindex="-1" = Pressable désactivé, exclu d'office. */
+@media (hover: hover) and (pointer: fine) {
+  ${INTERACTIVE} {
+    transition: filter 120ms ease;
+  }
+  ${INTERACTIVE}:hover {
+    filter: brightness(0.95);
+  }
+}
+
+/* Focus clavier : react-native-web force outline: none, on ne voyait plus du
+   tout où l'on était en naviguant à Tab. :focus-visible ne s'allume qu'au
+   clavier, jamais au clic. */
+${INTERACTIVE}:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid ${FOCUS_RING} !important;
+  outline-offset: 2px;
 }
 `;
 

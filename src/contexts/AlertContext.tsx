@@ -6,7 +6,7 @@ import { Keyboard, type AlertButton, type AlertOptions } from "react-native";
 
 // --- Types ---
 
-/** Ce que le contexte expose aux écrans. Une seule fonction : showAlert. */
+/** Ce que le contexte expose aux écrans. */
 type AlertContextType = {
   /**
    * Même signature que `Alert.alert` de React Native :
@@ -18,6 +18,11 @@ type AlertContextType = {
     buttons?: AlertButton[],
     options?: AlertOptions,
   ) => void;
+  /**
+   * Une alerte est affichée. Sert aux raccourcis clavier des écrans, qui
+   * doivent se taire tant que la modale a la main (ex. Échap la ferme déjà).
+   */
+  isAlertOpen: boolean;
 };
 
 /** L'alerte affichée. `null` = aucune, donc aucune modale rendue. */
@@ -95,7 +100,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 
   return (
     // value = ce que useAlert() renverra dans tous les composants en dessous.
-    <AlertContext.Provider value={{ showAlert }}>
+    <AlertContext.Provider value={{ showAlert, isAlertOpen: current !== null }}>
       {/* Toute l'appli. Elle est rendue avant la modale, donc la modale passe
           par-dessus dans l'ordre de peinture. */}
       {children}

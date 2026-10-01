@@ -15,6 +15,7 @@ import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import CancelSessionButton from "@/src/features/quiz/components/CancelSessionButton";
 import { QuestionProgress } from "@/src/features/quiz/components/QuestionProgress";
 import { useCancelQuizSession } from "@/src/features/quiz/hooks/useCancelQuizSession";
+import { useQuizKeyboardShortcuts } from "@/src/features/quiz/hooks/useQuizKeyboardShortcuts";
 import { useBlockBackNavigation } from "@/src/hooks/useBlockBackNavigation";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
 import {
@@ -136,11 +137,22 @@ export default function QuizScreen() {
     data?.sessionId,
   );
 
-  useBlockBackNavigation(() => {
-    // L'envoi des réponses est déjà parti : annuler maintenant courserait la
-    // requête de fin de session.
+  // L'envoi des réponses est déjà parti : annuler maintenant courserait la
+  // requête de fin de session.
+  const requestCancel = () => {
     if (isFinishing) return;
     confirmCancel();
+  };
+
+  useBlockBackNavigation(requestCancel);
+
+  const { showKeyHints } = useQuizKeyboardShortcuts({
+    answerCount: questions[currentQuestionIndex]?.answers.length ?? 0,
+    canAnswer: questions.length > 0 && !showAnswer && !isFinishing,
+    canGoNext: showAnswer && !isFinishing,
+    onAnswer: handleAnswer,
+    onNext: handleNextQuestion,
+    onCancel: requestCancel,
   });
 
   useEffect(() => {
@@ -316,6 +328,11 @@ export default function QuizScreen() {
               accessibilityRole="button"
               accessibilityState={{ disabled: showAnswer || isFinishing }}
             >
+              {showKeyHints && (
+                <View style={styles.keyHint}>
+                  <Text style={styles.keyHintText}>{index + 1}</Text>
+                </View>
+              )}
               <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
                 {answer}
               </Text>
@@ -423,6 +440,20 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.8,
+  },
+  keyHint: {
+    width: 24,
+    height: 24,
+    borderRadius: Radius.sm,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: Spacing.md,
+    backgroundColor: Colors.surfaceContainerHigh,
+  },
+  keyHintText: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.labelMd,
+    color: Colors.onSurfaceVariant,
   },
   answerText: {
     flex: 1,
