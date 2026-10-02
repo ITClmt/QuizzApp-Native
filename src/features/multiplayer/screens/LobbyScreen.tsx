@@ -1,4 +1,5 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
+import { Button } from "@/src/components/Button";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAlert } from "@/src/contexts/AlertContext";
 import { useAuth } from "@/src/contexts/AuthContext";
@@ -6,7 +7,7 @@ import { useMultiplayer } from "@/src/contexts/MultiplayerContext";
 import { useBlockBackNavigation } from "@/src/hooks/useBlockBackNavigation";
 import type { LobbyPlayer } from "@/src/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
@@ -45,13 +46,22 @@ export default function LobbyScreen() {
   const { status } = useMultiplayer();
   const { showAlert } = useAlert();
   const { t } = useTranslation(["multiplayer", "common"]);
-  const { lobby, joinError, canceledReason, leave } = useLobby(gameId);
+  const { lobby, joinError, canceledReason, leave, start } = useLobby(gameId);
+  const [isStarting, setIsStarting] = useState(false);
 
   const isHost = !!lobby && lobby.hostId === user?.sub;
   // dismissTo plutôt que replace : le salon est ouvert par-dessus l'accueil, un
   // replace empilerait un second accueil à chaque aller-retour. Ouvert sans
   // accueil dessous (lien direct, web rechargé), il le remplace.
   const goHome = useCallback(() => router.dismissTo("/(app)"), [router]);
+
+  // Partie lancée (ou déjà en cours quand on arrive par « Partie en cours ») :
+  // tout le monde passe à l'écran de partie, qui la rejoint de lui-même.
+  useEffect(() => {
+    if (lobby && lobby.phase !== "LOBBY") {
+      router.replace({ pathname: "/game/[gameId]", params: { gameId } });
+    }
+  }, [lobby, gameId, router]);
 
   // Partie introuvable, invitation expirée, déjà en partie… : retour à l'accueil
   useEffect(() => {
@@ -101,14 +111,24 @@ export default function LobbyScreen() {
   ).length;
   const host = players.find((p) => p.isHost);
 
+  const canStart = isHost && ready >= 2 && status === "connected";
+
+  const handleStart = async () => {
+    setIsStarting(true);
+    const ack = await start();
+    if (!ack.ok) {
+      setIsStarting(false);
+      showAlert(t("common:errors.title"), getSocketErrorMessage(ack.error));
+    }
+  };
+
   const footerMessage = (() => {
     if (status !== "connected") return t("lobby.connecting");
-    if (!lobby) return null;
+    if (!lobby || canStart) return null;
     if (!isHost) {
       return t("lobby.waitingForHost", { username: host?.user.username });
     }
-    // Le bouton Lancer arrive avec l'écran de partie
-    return ready < 2 ? t("lobby.waitingForFriends") : null;
+    return t("lobby.waitingForFriends");
   })();
 
   return (
@@ -141,6 +161,17 @@ export default function LobbyScreen() {
               ))}
             </View>
           </ScrollView>
+        )}
+
+        {canStart && (
+          <View style={styles.footer}>
+            <Button
+              variant="primary"
+              title={isStarting ? t("lobby.starting") : t("lobby.start")}
+              onPress={handleStart}
+              disabled={isStarting}
+            />
+          </View>
         )}
 
         {footerMessage && (

@@ -37,7 +37,15 @@ export function HomeScreen() {
   const openLobby = (gameId: string) =>
     router.push({ pathname: "/lobby/[gameId]", params: { gameId } });
 
-  const activeGameId = activeGame.data?.game?.id;
+  const active = activeGame.data?.game;
+  const openActiveGame = () => {
+    if (!active) return;
+    if (active.status === "PLAYING") {
+      router.push({ pathname: "/game/[gameId]", params: { gameId: active.id } });
+    } else {
+      openLobby(active.id);
+    }
+  };
   const pendingInvitations = invitations.data ?? [];
 
   return (
@@ -54,9 +62,9 @@ export function HomeScreen() {
             <LevelProgressBar />
           </View>
 
-          {activeGameId && (
+          {active && (
             <View style={styles.section}>
-              <ActiveGameCard onPress={() => openLobby(activeGameId)} />
+              <ActiveGameCard onPress={openActiveGame} />
             </View>
           )}
 

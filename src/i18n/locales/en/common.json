@@ -31,7 +31,8 @@
     "quiz": "Quiz",
     "results": "Results",
     "newGame": "New game",
-    "lobby": "Lobby"
+    "lobby": "Lobby",
+    "game": "Game"
   },
   "showPassword": "Show password",
   "hidePassword": "Hide password",

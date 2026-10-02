@@ -21,6 +21,7 @@ const TITLE_KEY_BY_SEGMENT = {
   results: "results",
   create: "newGame",
   lobby: "lobby",
+  game: "game",
 } as const;
 
 /**

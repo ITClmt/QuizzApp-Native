@@ -49,7 +49,9 @@
     "leaveHostTitle": "Annuler la partie ?",
     "leaveHostMessage": "Tu es l'hôte : si tu pars, la partie est annulée pour tout le monde.",
     "leaveHostConfirm": "Annuler",
-    "stay": "Rester"
+    "stay": "Rester",
+    "start": "Lancer la partie",
+    "starting": "Lancement…"
   },
   "canceled": {
     "title": "Partie annulée",
@@ -58,5 +60,21 @@
     "all_disconnected": "Tout le monde a été déconnecté.",
     "all_left": "Tout le monde a quitté la partie.",
     "server_error": "Un problème est survenu de notre côté."
+  },
+  "game": {
+    "loading": "Connexion à la partie…",
+    "leave": "Abandonner la partie",
+    "leaveTitle": "Abandonner la partie ?",
+    "leaveMessage": "Tu ne gagneras pas d'XP et tu ne pourras pas revenir dans cette partie.",
+    "leaveConfirm": "Abandonner",
+    "keepPlaying": "Continuer",
+    "waitingOthers": "En attente des autres…",
+    "tooLate": "Trop tard pour celle-ci !",
+    "nextQuestion": "Question suivante…",
+    "lastQuestion": "Place aux résultats…",
+    "playerWaiting": "{{username}} réfléchit",
+    "playerAnswered": "{{username}} a répondu",
+    "playerOffline": "{{username}} est hors ligne",
+    "playerLeft": "{{username}} a abandonné"
   }
 }

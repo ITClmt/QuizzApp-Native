@@ -49,7 +49,9 @@
     "leaveHostTitle": "Cancel the game?",
     "leaveHostMessage": "You're the host: leaving cancels the game for everyone.",
     "leaveHostConfirm": "Cancel it",
-    "stay": "Stay"
+    "stay": "Stay",
+    "start": "Start the game",
+    "starting": "Starting…"
   },
   "canceled": {
     "title": "Game canceled",
@@ -58,5 +60,21 @@
     "all_disconnected": "Everyone got disconnected.",
     "all_left": "Everyone left the game.",
     "server_error": "Something went wrong on our side."
+  },
+  "game": {
+    "loading": "Joining the game…",
+    "leave": "Give up the game",
+    "leaveTitle": "Give up the game?",
+    "leaveMessage": "You won't earn any XP and can't come back to this game.",
+    "leaveConfirm": "Give up",
+    "keepPlaying": "Keep playing",
+    "waitingOthers": "Waiting for the others…",
+    "tooLate": "Too late for this one!",
+    "nextQuestion": "Next question…",
+    "lastQuestion": "Here come the results…",
+    "playerWaiting": "{{username}} is thinking",
+    "playerAnswered": "{{username}} has answered",
+    "playerOffline": "{{username}} is offline",
+    "playerLeft": "{{username}} gave up"
   }
 }

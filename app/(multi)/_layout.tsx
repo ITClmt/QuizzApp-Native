@@ -13,6 +13,8 @@ export default function MultiLayout() {
       <Stack.Screen name="create" />
       {/* Le retour système passe par la confirmation de sortie du salon */}
       <Stack.Screen name="lobby/[gameId]" options={{ gestureEnabled: false }} />
+      {/* Idem en partie : quitter vaut abandon, on confirme d'abord */}
+      <Stack.Screen name="game/[gameId]" options={{ gestureEnabled: false }} />
     </Stack>
   );
 }

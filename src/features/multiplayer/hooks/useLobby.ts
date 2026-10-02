@@ -71,5 +71,11 @@ export function useLobby(gameId: string) {
     });
   }, [emit, gameId, queryClient]);
 
-  return { lobby, joinError, canceledReason, leave };
+  /** Hôte uniquement. Le passage à l'écran de partie suit le lobby:update. */
+  const start = useCallback(
+    () => emit("game:start", { gameId }),
+    [emit, gameId],
+  );
+
+  return { lobby, joinError, canceledReason, leave, start };
 }

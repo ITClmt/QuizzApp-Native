@@ -191,3 +191,74 @@ export interface Lobby {
 export type SocketAck<T = null> =
   | { ok: true; data: T }
   | { ok: false; error: string };
+
+/** Question reçue en cours de partie : dans ma langue, jamais la bonne réponse */
+export interface LiveQuestion {
+  gameId: string;
+  index: number;
+  total: number;
+  question: string;
+  answers: string[];
+  category: string;
+  difficulty: string;
+  /** Durée restante plutôt qu'une heure : l'horloge du téléphone n'est pas fiable */
+  remainingMs: number;
+}
+
+export interface RevealResult {
+  userId: string;
+  /** null = pas de réponse dans le temps */
+  answerIndex: number | null;
+  isCorrect: boolean;
+  responseMs: number | null;
+  score: number;
+}
+
+export interface GameReveal {
+  gameId: string;
+  index: number;
+  correctIndex: number;
+  results: RevealResult[];
+}
+
+/** Où en est la partie, renvoyé à chaque game:join une fois la partie lancée */
+export interface LiveGameState {
+  phase: GamePhase;
+  questionIndex: number;
+  total: number;
+  question: LiveQuestion | null;
+  myAnswerIndex: number | null;
+  answeredUserIds: string[];
+  reveal: GameReveal | null;
+  remainingMs: number;
+  scores: { userId: string; score: number }[];
+}
+
+export interface JoinedGame extends Lobby {
+  /** null tant que la partie est dans le salon */
+  state: LiveGameState | null;
+}
+
+export interface RankedPlayer {
+  user: FriendUser;
+  score: number;
+  abandoned: boolean;
+  /** null pour un abandon */
+  rank: number | null;
+  isWinner: boolean;
+}
+
+export interface GameProgression {
+  xpEarned: number;
+  previousLevel: number;
+  level: number;
+  leveledUp: boolean;
+  unlockedCategoryIds: string[];
+  unlockedAvatarSlugs: string[];
+}
+
+export interface GameEnd {
+  gameId: string;
+  ranking: RankedPlayer[];
+  progression: GameProgression;
+}
