@@ -34,7 +34,14 @@ export function CircularTimer({
   size = 150,
 }: CircularTimerProps) {
   const { t } = useTranslation("quiz");
-  const strokeWidth = 12;
+  // Trait et chiffre suivent la taille (référence : 150 px, le timer du solo).
+  // Avec des valeurs fixes, un petit anneau n'a plus la place de les contenir.
+  const scale = size / 150;
+  const strokeWidth = Math.round(12 * scale);
+  const numberSize = Math.round(FontSize.displayMd * scale);
+  // En dessous, le libellé « secondes » déborde sur l'anneau (FR plus long que
+  // EN) : le chiffre seul dans l'anneau se comprend très bien.
+  const showUnit = size >= 120;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.max(0, Math.min(1, secondsLeft / Math.max(1, totalSeconds)));
@@ -97,10 +104,18 @@ export function CircularTimer({
         />
       </Svg>
       <View style={styles.center} pointerEvents="none">
-        <Text style={[styles.number, urgent && { color: Colors.error }]}>
+        <Text
+          style={[
+            styles.number,
+            { fontSize: numberSize },
+            urgent && { color: Colors.error },
+          ]}
+        >
           {formatTime(secondsLeft)}
         </Text>
-        <Text style={styles.unit}>{t("session.secondsUnit")}</Text>
+        {showUnit && (
+          <Text style={styles.unit}>{t("session.secondsUnit")}</Text>
+        )}
       </View>
     </Animated.View>
   );
