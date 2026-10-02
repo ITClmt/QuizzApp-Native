@@ -22,5 +22,15 @@
   "TOO_MANY_PENDING_REQUESTS": "Too many pending requests, wait for some answers",
   "FRIEND_LIMIT_REACHED": "You've reached the friend limit",
   "SOCKET_OFFLINE": "You're not connected to the game server, try again in a moment",
-  "SOCKET_TIMEOUT": "The game server didn't answer, try again"
+  "SOCKET_TIMEOUT": "The game server didn't answer, try again",
+  "GAME_NOT_FOUND": "This game no longer exists",
+  "NOT_A_PLAYER": "You're not part of this game",
+  "ALREADY_IN_GAME": "You're already playing a game",
+  "INVITATION_NOT_FOUND": "This invitation is no longer valid",
+  "NOT_HOST": "Only the host can do that",
+  "NOT_ENOUGH_PLAYERS": "At least 2 players are needed",
+  "GAME_ALREADY_STARTED": "This game has already started",
+  "ANSWER_REJECTED": "Too late for this question",
+  "INVALID_PAYLOAD": "Invalid request",
+  "INTERNAL_ERROR": "Something went wrong, try again"
 }

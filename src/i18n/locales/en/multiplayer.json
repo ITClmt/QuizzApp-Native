@@ -1,0 +1,62 @@
+{
+  "mixed": "Mixed",
+  "playersCount_one": "{{count}} player",
+  "playersCount_other": "{{count}} players",
+  "home": {
+    "playWithFriends": "Play with friends",
+    "playWithFriendsSubtitle": "2 to 4 players, live",
+    "invitationsTitle": "Invitations",
+    "invitedBy": "{{username}} invites you",
+    "join": "Join {{username}}'s game",
+    "decline": "Decline {{username}}'s invitation",
+    "activeGame": "Game in progress",
+    "activeGameSubtitle": "Tap to get back to your friends",
+    "loadError": "Couldn't load your invitations."
+  },
+  "banner": {
+    "message": "{{username}} invites you to play",
+    "open": "See",
+    "openLabel": "See {{username}}'s invitation",
+    "dismiss": "Hide this invitation"
+  },
+  "create": {
+    "title": "New game",
+    "friendsLabel": "Invite 1 to 3 friends",
+    "selectedCount": "{{count}} / 3",
+    "difficultyLabel": "Difficulty",
+    "submit": "Create the game",
+    "noFriends": "Add friends first to play together.",
+    "goToFriends": "Find friends",
+    "loadError": "Couldn't load your friends.",
+    "invite": "Invite {{username}}",
+    "createError": "Couldn't create the game."
+  },
+  "lobby": {
+    "title": "Lobby",
+    "leave": "Leave the lobby",
+    "host": "Host",
+    "offline": "Offline",
+    "status": {
+      "INVITED": "Invited",
+      "JOINED": "Ready",
+      "DECLINED": "Declined",
+      "LEFT": "Left"
+    },
+    "readyCount": "{{ready}} / {{total}} ready",
+    "waitingForFriends": "Waiting for at least one friend…",
+    "waitingForHost": "Waiting for {{username}} to start",
+    "connecting": "Connecting…",
+    "leaveHostTitle": "Cancel the game?",
+    "leaveHostMessage": "You're the host: leaving cancels the game for everyone.",
+    "leaveHostConfirm": "Cancel it",
+    "stay": "Stay"
+  },
+  "canceled": {
+    "title": "Game canceled",
+    "host_left": "The host left the game.",
+    "lobby_timeout": "Nobody started the game within 10 minutes.",
+    "all_disconnected": "Everyone got disconnected.",
+    "all_left": "Everyone left the game.",
+    "server_error": "Something went wrong on our side."
+  }
+}

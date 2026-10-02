@@ -1,0 +1,62 @@
+{
+  "mixed": "Mixte",
+  "playersCount_one": "{{count}} joueur",
+  "playersCount_other": "{{count}} joueurs",
+  "home": {
+    "playWithFriends": "Jouer entre amis",
+    "playWithFriendsSubtitle": "De 2 à 4 joueurs, en direct",
+    "invitationsTitle": "Invitations",
+    "invitedBy": "{{username}} t'invite",
+    "join": "Rejoindre la partie de {{username}}",
+    "decline": "Refuser l'invitation de {{username}}",
+    "activeGame": "Partie en cours",
+    "activeGameSubtitle": "Touche pour retrouver tes amis",
+    "loadError": "Impossible de charger tes invitations."
+  },
+  "banner": {
+    "message": "{{username}} t'invite à jouer",
+    "open": "Voir",
+    "openLabel": "Voir l'invitation de {{username}}",
+    "dismiss": "Masquer cette invitation"
+  },
+  "create": {
+    "title": "Nouvelle partie",
+    "friendsLabel": "Invite 1 à 3 amis",
+    "selectedCount": "{{count}} / 3",
+    "difficultyLabel": "Difficulté",
+    "submit": "Créer la partie",
+    "noFriends": "Ajoute d'abord des amis pour jouer ensemble.",
+    "goToFriends": "Trouver des amis",
+    "loadError": "Impossible de charger tes amis.",
+    "invite": "Inviter {{username}}",
+    "createError": "Impossible de créer la partie."
+  },
+  "lobby": {
+    "title": "Salon",
+    "leave": "Quitter le salon",
+    "host": "Hôte",
+    "offline": "Hors ligne",
+    "status": {
+      "INVITED": "Invité",
+      "JOINED": "Prêt",
+      "DECLINED": "A refusé",
+      "LEFT": "Parti"
+    },
+    "readyCount": "{{ready}} / {{total}} prêts",
+    "waitingForFriends": "En attente d'au moins un ami…",
+    "waitingForHost": "En attente du lancement par {{username}}",
+    "connecting": "Connexion…",
+    "leaveHostTitle": "Annuler la partie ?",
+    "leaveHostMessage": "Tu es l'hôte : si tu pars, la partie est annulée pour tout le monde.",
+    "leaveHostConfirm": "Annuler",
+    "stay": "Rester"
+  },
+  "canceled": {
+    "title": "Partie annulée",
+    "host_left": "L'hôte a quitté la partie.",
+    "lobby_timeout": "Personne n'a lancé la partie en 10 minutes.",
+    "all_disconnected": "Tout le monde a été déconnecté.",
+    "all_left": "Tout le monde a quitté la partie.",
+    "server_error": "Un problème est survenu de notre côté."
+  }
+}

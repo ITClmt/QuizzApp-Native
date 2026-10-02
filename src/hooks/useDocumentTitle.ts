@@ -19,6 +19,8 @@ const TITLE_KEY_BY_SEGMENT = {
   preQuiz: "quiz",
   quiz: "quiz",
   results: "results",
+  create: "newGame",
+  lobby: "lobby",
 } as const;
 
 /**

@@ -4,6 +4,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AlertProvider } from "../contexts/AlertContext";
 import { AuthProvider } from "../contexts/AuthContext";
 import { MultiplayerProvider } from "../contexts/MultiplayerContext";
+import { InvitationBanner } from "../features/multiplayer/components/InvitationBanner";
 import { i18n } from "../i18n";
 import { queryClient } from "../lib/queryClient";
 import { AppShell } from "./AppShell";
@@ -19,6 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               <AppShell>
                 <AlertProvider>
                   {children}
+                  <InvitationBanner />
                   <OfflineBanner />
                 </AlertProvider>
               </AppShell>

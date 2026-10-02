@@ -29,7 +29,9 @@
     "login": "Connexion",
     "register": "Inscription",
     "quiz": "Quiz",
-    "results": "Résultats"
+    "results": "Résultats",
+    "newGame": "Nouvelle partie",
+    "lobby": "Salon"
   },
   "showPassword": "Afficher le mot de passe",
   "hidePassword": "Masquer le mot de passe",

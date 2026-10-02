@@ -9,6 +9,7 @@ import errorsEn from "./locales/en/errors.json";
 import friendsEn from "./locales/en/friends.json";
 import homeEn from "./locales/en/home.json";
 import leaderboardEn from "./locales/en/leaderboard.json";
+import multiplayerEn from "./locales/en/multiplayer.json";
 import profileEn from "./locales/en/profile.json";
 import quizEn from "./locales/en/quiz.json";
 import settingsEn from "./locales/en/settings.json";
@@ -18,6 +19,7 @@ import errorsFr from "./locales/fr/errors.json";
 import friendsFr from "./locales/fr/friends.json";
 import homeFr from "./locales/fr/home.json";
 import leaderboardFr from "./locales/fr/leaderboard.json";
+import multiplayerFr from "./locales/fr/multiplayer.json";
 import profileFr from "./locales/fr/profile.json";
 import quizFr from "./locales/fr/quiz.json";
 import settingsFr from "./locales/fr/settings.json";
@@ -38,6 +40,7 @@ export const resources = {
     settings: settingsFr,
     errors: errorsFr,
     friends: friendsFr,
+    multiplayer: multiplayerFr,
   },
   en: {
     common: commonEn,
@@ -49,6 +52,7 @@ export const resources = {
     settings: settingsEn,
     errors: errorsEn,
     friends: friendsEn,
+    multiplayer: multiplayerEn,
   },
 };
 

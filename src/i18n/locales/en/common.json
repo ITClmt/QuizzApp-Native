@@ -29,7 +29,9 @@
     "login": "Log in",
     "register": "Sign up",
     "quiz": "Quiz",
-    "results": "Results"
+    "results": "Results",
+    "newGame": "New game",
+    "lobby": "Lobby"
   },
   "showPassword": "Show password",
   "hidePassword": "Hide password",

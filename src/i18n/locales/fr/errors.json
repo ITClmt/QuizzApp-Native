@@ -22,5 +22,15 @@
   "TOO_MANY_PENDING_REQUESTS": "Trop de demandes en attente, attends quelques réponses",
   "FRIEND_LIMIT_REACHED": "Tu as atteint la limite d'amis",
   "SOCKET_OFFLINE": "Pas de connexion au serveur de jeu, réessaie dans un instant",
-  "SOCKET_TIMEOUT": "Le serveur de jeu n'a pas répondu, réessaie"
+  "SOCKET_TIMEOUT": "Le serveur de jeu n'a pas répondu, réessaie",
+  "GAME_NOT_FOUND": "Cette partie n'existe plus",
+  "NOT_A_PLAYER": "Tu ne fais pas partie de cette partie",
+  "ALREADY_IN_GAME": "Tu es déjà en pleine partie",
+  "INVITATION_NOT_FOUND": "Cette invitation n'est plus valable",
+  "NOT_HOST": "Seul l'hôte peut faire ça",
+  "NOT_ENOUGH_PLAYERS": "Il faut au moins 2 joueurs",
+  "GAME_ALREADY_STARTED": "Cette partie a déjà commencé",
+  "ANSWER_REJECTED": "Trop tard pour cette question",
+  "INVALID_PAYLOAD": "Requête invalide",
+  "INTERNAL_ERROR": "Un problème est survenu, réessaie"
 }
