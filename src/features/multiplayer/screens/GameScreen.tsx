@@ -19,8 +19,9 @@ import { CircularTimer } from "@/src/features/quiz/components/CircularTimer";
 import { QuestionProgress } from "@/src/features/quiz/components/QuestionProgress";
 import { useQuizKeyboardShortcuts } from "@/src/features/quiz/hooks/useQuizKeyboardShortcuts";
 import { useBlockBackNavigation } from "@/src/hooks/useBlockBackNavigation";
-import type { GameReveal, LobbyPlayer } from "@/src/types";
+import type { GameEnd, GameReveal, LobbyPlayer } from "@/src/types";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect } from "react";
@@ -37,7 +38,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LEAVE_BUTTON_SIZE, LeaveButton } from "../components/LeaveButton";
 import { PlayersStrip } from "../components/PlayersStrip";
+import { ACTIVE_GAME_KEY } from "../hooks/useActiveGame";
 import { useCountdown } from "../hooks/useCountdown";
+import { storeGameResult } from "../hooks/useGameResult";
 import { useLiveGame } from "../hooks/useLiveGame";
 import { getSocketErrorMessage } from "../utils/socketErrorMessage";
 
@@ -51,6 +54,7 @@ const noop = () => {};
 export default function GameScreen() {
   const { gameId } = useLocalSearchParams<{ gameId: string }>();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { user } = useAuth();
   const { showAlert } = useAlert();
   const { t, i18n } = useTranslation(["multiplayer", "quiz", "common"]);
@@ -82,11 +86,18 @@ export default function GameScreen() {
     canceledReason,
     answer,
     leave,
-  } = useLiveGame(gameId, {
-    onReveal,
-    // Les résultats arrivent avec l'écran suivant (7b)
-    onEnd: goHome,
-  });
+  } = useLiveGame(gameId, { onReveal, onEnd });
+
+  function onEnd(end: GameEnd) {
+    storeGameResult(queryClient, gameId, {
+      end,
+      difficulty: lobby?.difficulty ?? null,
+    });
+    // L'XP a bougé (barre de niveau) et la partie n'est plus active
+    queryClient.invalidateQueries({ queryKey: ["profile"] });
+    queryClient.invalidateQueries({ queryKey: ACTIVE_GAME_KEY });
+    router.replace({ pathname: "/results/[gameId]", params: { gameId } });
+  }
 
   const secondsLeft = useCountdown(deadline, QUESTION_SECONDS);
 

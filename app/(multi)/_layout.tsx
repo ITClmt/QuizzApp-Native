@@ -15,6 +15,8 @@ export default function MultiLayout() {
       <Stack.Screen name="lobby/[gameId]" options={{ gestureEnabled: false }} />
       {/* Idem en partie : quitter vaut abandon, on confirme d'abord */}
       <Stack.Screen name="game/[gameId]" options={{ gestureEnabled: false }} />
+      {/* Pas de retour vers une partie terminée */}
+      <Stack.Screen name="results/[gameId]" options={{ gestureEnabled: false }} />
     </Stack>
   );
 }

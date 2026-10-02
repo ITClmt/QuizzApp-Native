@@ -76,5 +76,18 @@
     "playerAnswered": "{{username}} has answered",
     "playerOffline": "{{username}} is offline",
     "playerLeft": "{{username}} gave up"
+  },
+  "results": {
+    "gameOver": "Game over",
+    "victory": "Victory!",
+    "sharedVictory": "Shared victory!",
+    "winners_one": "{{names}} wins the game",
+    "winners_other": "{{names}} win the game",
+    "you": "{{username}} (you)",
+    "abandoned": "Gave up",
+    "correctAnswers_one": "{{count}} correct answer",
+    "correctAnswers_other": "{{count}} correct answers",
+    "winnerLabel": "Winner",
+    "rematch": "Rematch"
   }
 }

@@ -76,5 +76,18 @@
     "playerAnswered": "{{username}} a répondu",
     "playerOffline": "{{username}} est hors ligne",
     "playerLeft": "{{username}} a abandonné"
+  },
+  "results": {
+    "gameOver": "Partie terminée",
+    "victory": "Victoire !",
+    "sharedVictory": "Victoire partagée !",
+    "winners_one": "{{names}} remporte la partie",
+    "winners_other": "{{names}} remportent la partie",
+    "you": "{{username}} (toi)",
+    "abandoned": "A abandonné",
+    "correctAnswers_one": "{{count}} bonne réponse",
+    "correctAnswers_other": "{{count}} bonnes réponses",
+    "winnerLabel": "Gagnant",
+    "rematch": "Revanche"
   }
 }
