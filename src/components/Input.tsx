@@ -24,7 +24,7 @@ interface InputProps extends TextInputProps {
   ref?: Ref<TextInput>;
 }
 
-const TOGGLE_SIZE = 44;
+const TOGGLE_SIZE = 48;
 
 export function Input({
   label,

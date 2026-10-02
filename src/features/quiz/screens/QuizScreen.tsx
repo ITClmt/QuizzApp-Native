@@ -133,11 +133,11 @@ export default function QuizScreen() {
           pathname: "/(quiz)/results",
           params: { sessionId: data!.sessionId },
         });
-    },
-    onError: (err) => {
-      showAlert(t("common:errors.title"), getErrorMessage(err));
-    },
-  });
+      },
+      onError: (err) => {
+        showAlert(t("common:errors.title"), getErrorMessage(err));
+      },
+    });
 
   const { confirmCancel, isPending: isCancelling } = useCancelQuizSession(
     data?.sessionId,

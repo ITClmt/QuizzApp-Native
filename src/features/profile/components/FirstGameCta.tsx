@@ -7,6 +7,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { Button } from "@/src/components/Button";
+import { useNetworkStatus } from "@/src/hooks/useNetworkStatus";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -18,6 +19,7 @@ import { StyleSheet, Text, View } from "react-native";
  */
 export function FirstGameCta() {
   const { t } = useTranslation("profile");
+  const { isOnline } = useNetworkStatus();
 
   return (
     <View style={styles.card}>
@@ -25,12 +27,15 @@ export function FirstGameCta() {
         <MaterialIcons name="sports-esports" size={28} color={Colors.primary} />
       </View>
       <Text style={styles.title}>{t("firstGame.title")}</Text>
-      <Text style={styles.subtitle}>{t("firstGame.subtitle")}</Text>
+      <Text style={styles.subtitle}>
+        {isOnline ? t("firstGame.subtitle") : t("common:offline")}
+      </Text>
       <Button
         variant="primary"
         title={t("firstGame.cta")}
         onPress={() => router.push("/(quiz)/preQuiz")}
-        style={styles.button}
+        disabled={!isOnline}
+        style={[styles.button, !isOnline && styles.disabled]}
       />
     </View>
   );
@@ -69,5 +74,8 @@ const styles = StyleSheet.create({
   button: {
     marginTop: Spacing.md,
     alignSelf: "stretch",
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });

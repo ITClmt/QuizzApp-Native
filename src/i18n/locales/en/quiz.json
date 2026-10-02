@@ -32,6 +32,7 @@
     "timesUp": "Time's up!",
     "noAnswerInTime": "No question answered in time.",
     "percentCorrect": "{{percentage}}% correct answers",
+    "scoreA11y": "{{score}} out of {{total}}",
     "scoreLabel": {
       "perfect": "Perfect!",
       "excellent": "Excellent!",

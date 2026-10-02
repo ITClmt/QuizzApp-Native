@@ -58,7 +58,7 @@ export default function ScoreSummary({ score, total }: ScoreSummaryProps) {
       <View
         style={[styles.scoreBadge, { borderColor: scoreColor }]}
         accessible
-        accessibilityLabel={`${score} / ${total}`}
+        accessibilityLabel={t("results.scoreA11y", { score, total })}
       >
         <Text style={[styles.scoreNumber, { color: scoreColor }]}>
           {displayedScore}

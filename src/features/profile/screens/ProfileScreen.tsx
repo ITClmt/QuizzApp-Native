@@ -63,6 +63,14 @@ export default function ProfileScreen() {
     enabled: !!user?.sub && activeTab === "history",
   });
 
+  const { data: historyProbe, isLoading: isHistoryProbeLoading } = useQuery({
+    queryKey: ["quiz-history", user?.sub, "probe"],
+    queryFn: () => getQuizHistory({ limit: 1 }),
+    enabled: !!user?.sub && data?.totalScore === 0,
+  });
+  const hasNeverPlayed =
+    data?.totalScore === 0 && historyProbe?.items.length === 0;
+
   // React Navigation garde les écrans d'onglets montés : sans ce hook,
   // revenir sur Profile après un quiz réaffiche les scores mis en cache
   // au premier montage (React Query ne rafraîchit pas au changement d'onglet).
@@ -135,7 +143,8 @@ export default function ProfileScreen() {
               activeTab={activeTab}
               onChangeTab={setActiveTab}
               scoreByDifficulty={scoreByDifficulty}
-              isScoresLoading={isLoading}
+              isScoresLoading={isLoading || isHistoryProbeLoading}
+              hasNeverPlayed={hasNeverPlayed}
               isScoresError={isError}
               onRetryScores={refetchScores}
             />

@@ -36,6 +36,7 @@ interface ProfileHeaderProps {
   onChangeTab: (tab: ProfileTab) => void;
   scoreByDifficulty: Map<Difficulty, number>;
   isScoresLoading: boolean;
+  hasNeverPlayed: boolean;
   isScoresError: boolean;
   onRetryScores: () => void;
 }
@@ -49,6 +50,7 @@ export function ProfileHeader({
   onChangeTab,
   scoreByDifficulty,
   isScoresLoading,
+  hasNeverPlayed,
   isScoresError,
   onRetryScores,
 }: ProfileHeaderProps) {
@@ -120,7 +122,7 @@ export function ProfileHeader({
           <ScoresSkeleton />
         ) : isScoresError ? (
           <ErrorNotice message={t("loadError")} onRetry={onRetryScores} />
-        ) : totalScore === 0 ? (
+        ) : hasNeverPlayed ? (
           <FirstGameCta />
         ) : (
           <View style={styles.scoreList}>

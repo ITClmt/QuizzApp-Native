@@ -147,7 +147,6 @@ export default function Root({ children }: PropsWithChildren) {
         />
         <title>{APP_NAME}</title>
         <meta name="description" content={APP_DESCRIPTION} />
-        <meta name="theme-color" content={THEME_COLOR} />
         {/* Grand écran (PWA installée sur ordinateur) : la barre de titre de
             la fenêtre se raccorde au fond nuit plutôt qu'au ciel. */}
         <meta
@@ -155,6 +154,7 @@ export default function Root({ children }: PropsWithChildren) {
           media={`(min-width: ${FRAMED_MIN_WIDTH}px)`}
           content={NIGHT_EDGE}
         />
+        <meta name="theme-color" content={THEME_COLOR} />
 
         {/* PWA */}
         <link rel="manifest" href="/manifest.json" />
