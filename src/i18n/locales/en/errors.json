@@ -20,5 +20,7 @@
   "FRIEND_REQUEST_NOT_FOUND": "This request no longer exists",
   "NOT_FRIENDS": "This player isn't one of your friends",
   "TOO_MANY_PENDING_REQUESTS": "Too many pending requests, wait for some answers",
-  "FRIEND_LIMIT_REACHED": "You've reached the friend limit"
+  "FRIEND_LIMIT_REACHED": "You've reached the friend limit",
+  "SOCKET_OFFLINE": "You're not connected to the game server, try again in a moment",
+  "SOCKET_TIMEOUT": "The game server didn't answer, try again"
 }

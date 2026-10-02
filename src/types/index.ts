@@ -137,3 +137,57 @@ export interface FriendSearchResult {
   /** Présent quand relation vaut "sent" ou "received" */
   requestId?: string;
 }
+
+// --- Multijoueur ---
+
+export type GameDifficulty = "easy" | "medium" | "hard";
+
+export type GamePlayerStatus = "INVITED" | "JOINED" | "DECLINED" | "LEFT";
+
+export type GamePhase =
+  | "LOBBY"
+  | "STARTING"
+  | "QUESTION"
+  | "REVEAL"
+  | "FINISHED";
+
+export type GameCancelReason =
+  | "host_left"
+  | "lobby_timeout"
+  | "all_disconnected"
+  | "all_left"
+  | "server_error";
+
+/** Même forme en REST (GET /games/invitations) et en direct (invitation:received) */
+export interface GameInvitation {
+  gameId: string;
+  /** null = mixte */
+  difficulty: GameDifficulty | null;
+  createdAt: string;
+  host: FriendUser;
+  playerCount: number;
+}
+
+export interface ActiveGame {
+  game: { id: string; status: "WAITING" | "PLAYING" } | null;
+}
+
+export interface LobbyPlayer {
+  user: FriendUser;
+  isHost: boolean;
+  status: GamePlayerStatus;
+  connected: boolean;
+}
+
+export interface Lobby {
+  gameId: string;
+  hostId: string;
+  difficulty: GameDifficulty | null;
+  phase: GamePhase;
+  players: LobbyPlayer[];
+}
+
+/** Réponse du serveur à chaque évènement envoyé par le client */
+export type SocketAck<T = null> =
+  | { ok: true; data: T }
+  | { ok: false; error: string };

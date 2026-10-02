@@ -20,5 +20,7 @@
   "FRIEND_REQUEST_NOT_FOUND": "Cette demande n'existe plus",
   "NOT_FRIENDS": "Ce joueur ne fait pas partie de tes amis",
   "TOO_MANY_PENDING_REQUESTS": "Trop de demandes en attente, attends quelques réponses",
-  "FRIEND_LIMIT_REACHED": "Tu as atteint la limite d'amis"
+  "FRIEND_LIMIT_REACHED": "Tu as atteint la limite d'amis",
+  "SOCKET_OFFLINE": "Pas de connexion au serveur de jeu, réessaie dans un instant",
+  "SOCKET_TIMEOUT": "Le serveur de jeu n'a pas répondu, réessaie"
 }
