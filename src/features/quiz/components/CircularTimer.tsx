@@ -82,7 +82,10 @@ export function CircularTimer({
 
   return (
     <Animated.View style={[styles.wrapper, { width: size, height: size }, pulseStyle]}>
-      <Svg width={size} height={size}>
+      {/* Rotation sur le Svg entier pour que l'anneau parte de midi : la prop
+          `origin` d'un Circle devient un attribut `transform-origin` invalide
+          sur le web (React le signale en erreur) */}
+      <Svg width={size} height={size} style={styles.startAtTop}>
         <Circle
           cx={size / 2}
           cy={size / 2}
@@ -101,8 +104,6 @@ export function CircularTimer({
           strokeDasharray={`${circumference} ${circumference}`}
           strokeDashoffset={dashoffset}
           strokeLinecap="round"
-          rotation={-90}
-          origin={`${size / 2}, ${size / 2}`}
         />
       </Svg>
       <View style={styles.center} pointerEvents="none">
@@ -128,6 +129,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
+  },
+  startAtTop: {
+    transform: [{ rotate: "-90deg" }],
   },
   center: {
     ...StyleSheet.absoluteFill,
