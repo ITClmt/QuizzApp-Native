@@ -10,7 +10,7 @@ import { Button } from "@/src/components/Button";
 import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
 import { useAlert } from "@/src/contexts/AlertContext";
-import { getCategoryLabelByOtdName } from "@/src/constants/categories";
+import { getCategoryLabelByName } from "@/src/constants/categories";
 import {
   AnswerFeedback,
   type AnswerFeedbackState,
@@ -326,7 +326,7 @@ export default function QuizScreen() {
           {/* Category + question label */}
           <Text style={styles.metaLabel}>
             {t("session.metaLabel", {
-              category: getCategoryLabelByOtdName(
+              category: getCategoryLabelByName(
                 currentQuestion.category,
                 i18n.language,
               ).toUpperCase(),

@@ -8,7 +8,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { GradientBackground } from "@/src/components/GradientBackground";
-import { getCategoryLabelByOtdName } from "@/src/constants/categories";
+import { getCategoryLabelByName } from "@/src/constants/categories";
 import { useAlert } from "@/src/contexts/AlertContext";
 import { useAuth } from "@/src/contexts/AuthContext";
 import {
@@ -239,7 +239,7 @@ export default function GameScreen() {
 
           <Text style={styles.metaLabel}>
             {t("quiz:session.metaLabel", {
-              category: getCategoryLabelByOtdName(
+              category: getCategoryLabelByName(
                 question.category,
                 i18n.language,
               ).toUpperCase(),
