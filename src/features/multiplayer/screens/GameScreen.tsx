@@ -33,6 +33,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -47,6 +48,10 @@ import { getSocketErrorMessage } from "../utils/socketErrorMessage";
 // Mêmes valeurs que le serveur (QUESTION_MS), qui reste seul juge du temps
 const QUESTION_SECONDS = 12;
 const URGENT_SECONDS = 3;
+// Petits écrans Android : le chrono rétrécit pour laisser la place à la question
+const COMPACT_SCREEN_HEIGHT = 720;
+// Au-delà, la question passe dans une taille plus petite
+const LONG_QUESTION_LENGTH = 120;
 
 // Pas de « question suivante » à déclencher : c'est le serveur qui enchaîne
 const noop = () => {};
@@ -58,6 +63,7 @@ export default function GameScreen() {
   const { user } = useAuth();
   const { showAlert } = useAlert();
   const { t, i18n } = useTranslation(["multiplayer", "quiz", "common"]);
+  const { height: screenHeight } = useWindowDimensions();
   const myId = user?.sub;
 
   const goHome = useCallback(() => router.dismissTo("/(app)"), [router]);
@@ -153,7 +159,9 @@ export default function GameScreen() {
   const players = scores
     .map((s) => lobby?.players.find((p) => p.user.id === s.userId))
     .filter((p): p is LobbyPlayer => !!p);
-  const scoreByUser = Object.fromEntries(scores.map((s) => [s.userId, s.score]));
+  const scoreByUser = Object.fromEntries(
+    scores.map((s) => [s.userId, s.score]),
+  );
 
   if (!question || !lobby) {
     return (
@@ -168,6 +176,7 @@ export default function GameScreen() {
 
   const isRevealed = phase === "REVEAL" && reveal?.index === question.index;
   const correctIndex = isRevealed ? reveal.correctIndex : null;
+  const isLongQuestion = question.question.length > LONG_QUESTION_LENGTH;
 
   const getFeedbackState = (index: number): AnswerFeedbackState => {
     if (correctIndex === null) return null;
@@ -212,102 +221,116 @@ export default function GameScreen() {
           reveal={isRevealed ? reveal : null}
         />
 
-        <View style={styles.timerContainer}>
-          <CircularTimer
-            secondsLeft={isRevealed ? 0 : secondsLeft}
-            totalSeconds={QUESTION_SECONDS}
-            urgent={!isRevealed && secondsLeft <= URGENT_SECONDS}
-            size={96}
-          />
-        </View>
-
-        <Text style={styles.metaLabel}>
-          {t("quiz:session.metaLabel", {
-            category: getCategoryLabelByOtdName(
-              question.category,
-              i18n.language,
-            ).toUpperCase(),
-            current: question.index + 1,
-            total: question.total,
-          })}
-        </Text>
-
+        {/* Tout le corps défile : une question longue ne se retrouve jamais
+            coincée dans une petite zone au-dessus des réponses */}
         <ScrollView
-          style={styles.questionContainer}
-          contentContainerStyle={styles.questionContent}
+          style={styles.body}
+          contentContainerStyle={styles.bodyContent}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.questionText}>{question.question}</Text>
-        </ScrollView>
+          <View style={styles.timerContainer}>
+            <CircularTimer
+              secondsLeft={isRevealed ? 0 : secondsLeft}
+              totalSeconds={QUESTION_SECONDS}
+              urgent={!isRevealed && secondsLeft <= URGENT_SECONDS}
+              size={screenHeight < COMPACT_SCREEN_HEIGHT ? 72 : 96}
+            />
+          </View>
 
-        <View style={styles.answersContainer}>
-          {question.answers.map((text, index) => {
-            const feedback = getFeedbackState(index);
-            const isMine = index === myAnswerIndex;
-            const pickers = pickersOf(index);
+          <Text style={styles.metaLabel}>
+            {t("quiz:session.metaLabel", {
+              category: getCategoryLabelByOtdName(
+                question.category,
+                i18n.language,
+              ).toUpperCase(),
+              current: question.index + 1,
+              total: question.total,
+            })}
+          </Text>
 
-            return (
-              <AnswerFeedback key={index} state={feedback}>
-                <Pressable
-                  onPress={() => answer(index)}
-                  disabled={!canAnswer}
-                  accessibilityRole="button"
-                  accessibilityState={{ disabled: !canAnswer, selected: isMine }}
-                  style={({ pressed }) => [
-                    styles.answerButton,
-                    isMine && !feedback && styles.selectedButton,
-                    feedback === "correct" && styles.correctButton,
-                    feedback === "wrong" && styles.wrongButton,
-                    pressed && styles.pressed,
-                  ]}
-                >
-                  {showKeyHints && (
-                    <View style={styles.keyHint}>
-                      <Text style={styles.keyHintText}>{index + 1}</Text>
-                    </View>
-                  )}
-                  <Text
-                    style={[
-                      styles.answerText,
-                      feedback === "correct" && styles.correctAnswerText,
-                      feedback === "wrong" && styles.wrongAnswerText,
+          <View style={styles.questionContainer}>
+            <Text
+              style={[
+                styles.questionText,
+                isLongQuestion && styles.questionTextLong,
+              ]}
+            >
+              {question.question}
+            </Text>
+          </View>
+
+          <View style={styles.answersContainer}>
+            {question.answers.map((text, index) => {
+              const feedback = getFeedbackState(index);
+              const isMine = index === myAnswerIndex;
+              const pickers = pickersOf(index);
+
+              return (
+                <AnswerFeedback key={index} state={feedback}>
+                  <Pressable
+                    onPress={() => answer(index)}
+                    disabled={!canAnswer}
+                    accessibilityRole="button"
+                    accessibilityState={{
+                      disabled: !canAnswer,
+                      selected: isMine,
+                    }}
+                    style={({ pressed }) => [
+                      styles.answerButton,
+                      isMine && !feedback && styles.selectedButton,
+                      feedback === "correct" && styles.correctButton,
+                      feedback === "wrong" && styles.wrongButton,
+                      pressed && styles.pressed,
                     ]}
                   >
-                    {text}
-                  </Text>
-                  {pickers.length > 0 && (
-                    <View style={styles.pickers}>
-                      {pickers.map((picker) => (
-                        <Image
-                          key={picker.id}
-                          source={getAvatarImage(picker.avatarSlug)}
-                          style={styles.pickerAvatar}
-                          accessibilityLabel={picker.username}
-                        />
-                      ))}
-                    </View>
-                  )}
-                  {feedback && (
-                    <View
+                    {showKeyHints && (
+                      <View style={styles.keyHint}>
+                        <Text style={styles.keyHintText}>{index + 1}</Text>
+                      </View>
+                    )}
+                    <Text
                       style={[
-                        styles.statusIcon,
-                        feedback === "correct"
-                          ? styles.statusIconCorrect
-                          : styles.statusIconWrong,
+                        styles.answerText,
+                        feedback === "correct" && styles.correctAnswerText,
+                        feedback === "wrong" && styles.wrongAnswerText,
                       ]}
                     >
-                      <MaterialIcons
-                        name={feedback === "correct" ? "check" : "close"}
-                        size={16}
-                        color={Colors.white}
-                      />
-                    </View>
-                  )}
-                </Pressable>
-              </AnswerFeedback>
-            );
-          })}
-        </View>
+                      {text}
+                    </Text>
+                    {pickers.length > 0 && (
+                      <View style={styles.pickers}>
+                        {pickers.map((picker) => (
+                          <Image
+                            key={picker.id}
+                            source={getAvatarImage(picker.avatarSlug)}
+                            style={styles.pickerAvatar}
+                            accessibilityLabel={picker.username}
+                          />
+                        ))}
+                      </View>
+                    )}
+                    {feedback && (
+                      <View
+                        style={[
+                          styles.statusIcon,
+                          feedback === "correct"
+                            ? styles.statusIconCorrect
+                            : styles.statusIconWrong,
+                        ]}
+                      >
+                        <MaterialIcons
+                          name={feedback === "correct" ? "check" : "close"}
+                          size={16}
+                          color={Colors.white}
+                        />
+                      </View>
+                    )}
+                  </Pressable>
+                </AnswerFeedback>
+              );
+            })}
+          </View>
+        </ScrollView>
 
         {/* Hauteur réservée : le texte qui apparaît ne doit pas décaler les réponses */}
         <View style={styles.statusLine}>
@@ -354,10 +377,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginBottom: Spacing.sm,
   },
-  questionContainer: {
+  body: {
     flex: 1,
   },
-  questionContent: {
+  bodyContent: {
+    flexGrow: 1,
+  },
+  questionContainer: {
     flexGrow: 1,
     justifyContent: "center",
     paddingBottom: Spacing.base,
@@ -368,6 +394,10 @@ const styles = StyleSheet.create({
     color: Colors.onSurface,
     textAlign: "center",
     lineHeight: 28,
+  },
+  questionTextLong: {
+    fontSize: FontSize.titleLg,
+    lineHeight: 24,
   },
   answersContainer: {
     gap: Spacing.sm,

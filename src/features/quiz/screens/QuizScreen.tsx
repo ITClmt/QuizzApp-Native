@@ -40,12 +40,17 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const QUIZ_DURATION_SECONDS = 1.5 * 60;
 const LOW_TIME_THRESHOLD_SECONDS = 30;
+// Petits écrans Android : le chrono rétrécit pour laisser la place à la question
+const COMPACT_SCREEN_HEIGHT = 720;
+// Au-delà, la question passe dans une taille plus petite
+const LONG_QUESTION_LENGTH = 120;
 
 export default function QuizScreen() {
   const { difficulty, category } = useLocalSearchParams<{
@@ -56,6 +61,7 @@ export default function QuizScreen() {
   const queryClient = useQueryClient();
   const { showAlert } = useAlert();
   const { t, i18n } = useTranslation(["quiz", "common"]);
+  const { height: screenHeight } = useWindowDimensions();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -111,33 +117,36 @@ export default function QuizScreen() {
     },
   });
 
-  const { mutate: finishSession, isPending: isFinishing } =
-    useMutation<QuizResult, ApiError, boolean>({
-      mutationFn: (timedOut) =>
-        finishQuizSession({
-          sessionId: data!.sessionId,
-          answers: userAnswers.map((answerIndex, i) => ({
-            questionId: questions[i].id,
-            answerIndex,
-          })),
-          timedOut,
-        }),
-      onSuccess: (result) => {
-        queryClient.invalidateQueries({ queryKey: ["profile"] });
-        storeQuizResult(queryClient, data!.sessionId, {
-          result,
-          questions,
-          userAnswers,
-        });
-        router.replace({
-          pathname: "/(quiz)/results",
-          params: { sessionId: data!.sessionId },
-        });
-      },
-      onError: (err) => {
-        showAlert(t("common:errors.title"), getErrorMessage(err));
-      },
-    });
+  const { mutate: finishSession, isPending: isFinishing } = useMutation<
+    QuizResult,
+    ApiError,
+    boolean
+  >({
+    mutationFn: (timedOut) =>
+      finishQuizSession({
+        sessionId: data!.sessionId,
+        answers: userAnswers.map((answerIndex, i) => ({
+          questionId: questions[i].id,
+          answerIndex,
+        })),
+        timedOut,
+      }),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      storeQuizResult(queryClient, data!.sessionId, {
+        result,
+        questions,
+        userAnswers,
+      });
+      router.replace({
+        pathname: "/(quiz)/results",
+        params: { sessionId: data!.sessionId },
+      });
+    },
+    onError: (err) => {
+      showAlert(t("common:errors.title"), getErrorMessage(err));
+    },
+  });
 
   const { confirmCancel, isPending: isCancelling } = useCancelQuizSession(
     data?.sessionId,
@@ -239,6 +248,7 @@ export default function QuizScreen() {
   const selectedAnswerIndex = userAnswers[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const isUrgent = timeLeft <= LOW_TIME_THRESHOLD_SECONDS;
+  const isLongQuestion = currentQuestion.question.length > LONG_QUESTION_LENGTH;
 
   const getFeedbackState = (index: number): AnswerFeedbackState => {
     if (!showAnswer) return null;
@@ -296,88 +306,100 @@ export default function QuizScreen() {
           <View style={styles.headerSpacer} />
         </View>
 
-        {/* Timer */}
-        <View style={styles.timerContainer}>
-          <CircularTimer
-            secondsLeft={timeLeft}
-            totalSeconds={QUIZ_DURATION_SECONDS}
-            urgent={isUrgent}
-          />
-        </View>
-
-        {/* Category + question label */}
-        <Text style={styles.metaLabel}>
-          {t("session.metaLabel", {
-            category: getCategoryLabelByOtdName(
-              currentQuestion.category,
-              i18n.language,
-            ).toUpperCase(),
-            current: currentQuestionIndex + 1,
-            total: questions.length,
-          })}
-        </Text>
-
-        {/* Question */}
+        {/* Tout le corps défile : une question longue ne se retrouve jamais
+            coincée dans une petite zone au-dessus des réponses */}
         <ScrollView
-          style={styles.questionContainer}
-          contentContainerStyle={styles.questionContent}
+          style={styles.body}
+          contentContainerStyle={styles.bodyContent}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.questionText}>{currentQuestion.question}</Text>
-        </ScrollView>
+          {/* Timer */}
+          <View style={styles.timerContainer}>
+            <CircularTimer
+              secondsLeft={timeLeft}
+              totalSeconds={QUIZ_DURATION_SECONDS}
+              urgent={isUrgent}
+              size={screenHeight < COMPACT_SCREEN_HEIGHT ? 110 : 150}
+            />
+          </View>
 
-        {/* Answers */}
-        <View style={styles.answersContainer}>
-          {currentQuestion.answers.map((answer, index) => (
-            <AnswerFeedback key={index} state={getFeedbackState(index)}>
+          {/* Category + question label */}
+          <Text style={styles.metaLabel}>
+            {t("session.metaLabel", {
+              category: getCategoryLabelByOtdName(
+                currentQuestion.category,
+                i18n.language,
+              ).toUpperCase(),
+              current: currentQuestionIndex + 1,
+              total: questions.length,
+            })}
+          </Text>
+
+          {/* Question */}
+          <View style={styles.questionContainer}>
+            <Text
+              style={[
+                styles.questionText,
+                isLongQuestion && styles.questionTextLong,
+              ]}
+            >
+              {currentQuestion.question}
+            </Text>
+          </View>
+
+          {/* Answers */}
+          <View style={styles.answersContainer}>
+            {currentQuestion.answers.map((answer, index) => (
+              <AnswerFeedback key={index} state={getFeedbackState(index)}>
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.answerButton,
+                    getButtonStyle(index),
+                    pressed && styles.pressed,
+                  ]}
+                  onPress={() => handleAnswer(index)}
+                  disabled={showAnswer || isFinishing}
+                  accessibilityRole="button"
+                  accessibilityState={{ disabled: showAnswer || isFinishing }}
+                >
+                  {showKeyHints && (
+                    <View style={styles.keyHint}>
+                      <Text style={styles.keyHintText}>{index + 1}</Text>
+                    </View>
+                  )}
+                  <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
+                    {answer}
+                  </Text>
+                  {renderStatusIcon(index)}
+                </Pressable>
+              </AnswerFeedback>
+            ))}
+
+            {showAnswer && (
               <Pressable
                 style={({ pressed }) => [
-                  styles.answerButton,
-                  getButtonStyle(index),
+                  styles.nextButton,
+                  isFinishing && styles.nextButtonDisabled,
                   pressed && styles.pressed,
                 ]}
-                onPress={() => handleAnswer(index)}
-                disabled={showAnswer || isFinishing}
+                onPress={handleNextQuestion}
+                disabled={isFinishing}
                 accessibilityRole="button"
-                accessibilityState={{ disabled: showAnswer || isFinishing }}
+                accessibilityState={{ disabled: isFinishing }}
               >
-                {showKeyHints && (
-                  <View style={styles.keyHint}>
-                    <Text style={styles.keyHintText}>{index + 1}</Text>
-                  </View>
+                {isFinishing ? (
+                  <ActivityIndicator color={Colors.onPrimary} />
+                ) : (
+                  <Text style={styles.nextButtonText}>
+                    {isLastQuestion
+                      ? t("session.viewResults")
+                      : t("session.nextQuestion")}
+                  </Text>
                 )}
-                <Text style={[styles.answerText, getAnswerTextStyle(index)]}>
-                  {answer}
-                </Text>
-                {renderStatusIcon(index)}
               </Pressable>
-            </AnswerFeedback>
-          ))}
-
-          {showAnswer && (
-            <Pressable
-              style={({ pressed }) => [
-                styles.nextButton,
-                isFinishing && styles.nextButtonDisabled,
-                pressed && styles.pressed,
-              ]}
-              onPress={handleNextQuestion}
-              disabled={isFinishing}
-              accessibilityRole="button"
-              accessibilityState={{ disabled: isFinishing }}
-            >
-              {isFinishing ? (
-                <ActivityIndicator color={Colors.onPrimary} />
-              ) : (
-                <Text style={styles.nextButtonText}>
-                  {isLastQuestion
-                    ? t("session.viewResults")
-                    : t("session.nextQuestion")}
-                </Text>
-              )}
-            </Pressable>
-          )}
-        </View>
+            )}
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </GradientBackground>
   );
@@ -422,10 +444,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginBottom: Spacing.md,
   },
-  questionContainer: {
+  body: {
     flex: 1,
   },
-  questionContent: {
+  bodyContent: {
+    flexGrow: 1,
+  },
+  questionContainer: {
     flexGrow: 1,
     justifyContent: "center",
     paddingBottom: Spacing.lg,
@@ -436,6 +461,10 @@ const styles = StyleSheet.create({
     color: Colors.onSurface,
     textAlign: "center",
     lineHeight: 28,
+  },
+  questionTextLong: {
+    fontSize: FontSize.titleLg,
+    lineHeight: 24,
   },
   answersContainer: {
     gap: Spacing.sm,
