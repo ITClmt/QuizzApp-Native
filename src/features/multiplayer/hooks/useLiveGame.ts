@@ -3,7 +3,6 @@ import {
   useSocketEvent,
 } from "@/src/contexts/MultiplayerContext";
 import type {
-  GameCancelReason,
   GameEnd,
   GamePhase,
   GameReveal,
@@ -11,7 +10,8 @@ import type {
   Lobby,
   LiveQuestion,
 } from "@/src/types";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useReducer } from "react";
+import { useJoinGame } from "./useJoinGame";
 
 // --- État ---
 
@@ -119,9 +119,7 @@ function reducer(state: State, action: Action): State {
 /**
  * Une partie en cours, tenue à jour en direct. Le serveur est le seul maître :
  * l'écran ne fait qu'afficher ce qu'il reçoit et envoyer les réponses.
- *
- * Comme le salon, on (re)rejoint à chaque connexion du socket : le `state`
- * renvoyé sert autant au premier affichage qu'à une reprise après coupure.
+ * Quitter (`leave`) en cours de partie vaut abandon.
  */
 export function useLiveGame(
   gameId: string,
@@ -130,26 +128,12 @@ export function useLiveGame(
     onEnd: (end: GameEnd) => void;
   },
 ) {
-  const { status, emit } = useMultiplayer();
+  const { emit } = useMultiplayer();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [joinError, setJoinError] = useState<string | null>(null);
-  const [canceledReason, setCanceledReason] =
-    useState<GameCancelReason | null>(null);
-
-  useEffect(() => {
-    if (status !== "connected") return;
-    let active = true;
-
-    emit<JoinedGame>("game:join", { gameId }).then((ack) => {
-      if (!active) return;
-      if (ack.ok) dispatch({ type: "joined", game: ack.data });
-      else setJoinError(ack.error);
-    });
-
-    return () => {
-      active = false;
-    };
-  }, [status, gameId, emit]);
+  const { joinError, canceledReason, leave } = useJoinGame<JoinedGame>(
+    gameId,
+    (game) => dispatch({ type: "joined", game }),
+  );
 
   useSocketEvent<Lobby>("lobby:update", (lobby) => {
     if (lobby.gameId === gameId) dispatch({ type: "lobby", lobby });
@@ -178,13 +162,6 @@ export function useLiveGame(
     if (end.gameId === gameId) handlers.onEnd(end);
   });
 
-  useSocketEvent<{ gameId: string; reason: GameCancelReason }>(
-    "game:canceled",
-    (event) => {
-      if (event.gameId === gameId) setCanceledReason(event.reason);
-    },
-  );
-
   const answer = useCallback(
     (answerIndex: number) => {
       if (state.phase !== "QUESTION" || state.myAnswerIndex !== null) return;
@@ -199,11 +176,6 @@ export function useLiveGame(
     },
     [state.phase, state.myAnswerIndex, state.question?.index, emit, gameId],
   );
-
-  /** Abandon : l'écran navigue tout de suite, sans attendre le serveur */
-  const leave = useCallback(() => {
-    emit("game:leave", { gameId });
-  }, [emit, gameId]);
 
   return { ...state, joinError, canceledReason, answer, leave };
 }

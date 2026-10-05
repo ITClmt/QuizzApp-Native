@@ -20,6 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { DifficultyChip } from "../components/DifficultyChip";
 import { LEAVE_BUTTON_SIZE, LeaveButton } from "../components/LeaveButton";
 import { LobbyPlayerRow } from "../components/LobbyPlayerRow";
+import { useGameExitAlerts } from "../hooks/useGameExitAlerts";
 import { useLobby } from "../hooks/useLobby";
 import { getSocketErrorMessage } from "../utils/socketErrorMessage";
 
@@ -63,26 +64,7 @@ export default function LobbyScreen() {
     }
   }, [lobby, gameId, router]);
 
-  // Partie introuvable, invitation expirée, déjà en partie… : retour à l'accueil
-  useEffect(() => {
-    if (!joinError) return;
-    showAlert(
-      t("common:errors.title"),
-      getSocketErrorMessage(joinError),
-      [{ text: t("common:ok"), onPress: goHome }],
-      { cancelable: false },
-    );
-  }, [joinError, showAlert, goHome, t]);
-
-  useEffect(() => {
-    if (!canceledReason) return;
-    showAlert(
-      t("canceled.title"),
-      t(`canceled.${canceledReason}`),
-      [{ text: t("common:ok"), onPress: goHome }],
-      { cancelable: false },
-    );
-  }, [canceledReason, showAlert, goHome, t]);
+  useGameExitAlerts({ joinError, canceledReason, onExit: goHome });
 
   // L'hôte qui part annule la partie pour tout le monde : on lui demande.
   // Un invité peut revenir tant que la partie n'est pas lancée : il part direct.
@@ -111,7 +93,8 @@ export default function LobbyScreen() {
   ).length;
   const host = players.find((p) => p.isHost);
 
-  const canStart = isHost && ready >= 2 && status === "connected";
+  const canStart =
+    isHost && !!lobby && ready >= lobby.minPlayers && status === "connected";
 
   const handleStart = async () => {
     setIsStarting(true);

@@ -18,10 +18,11 @@ import { useGameInvitations } from "../hooks/useGameInvitations";
 
 /**
  * Écrans où la bannière se tait : l'accueil affiche déjà les invitations en
- * cartes, le salon et la création sont déjà du multijoueur, et en plein quiz
- * solo le chrono tourne — une bannière y coûterait des points.
+ * cartes, le salon et la création sont déjà du multijoueur, et en pleine
+ * partie (solo ou multi) le chrono tourne — une bannière y coûterait des points.
  */
 const HIDDEN_ON = ["/", "/login", "/register", "/create", "/quiz"];
+const HIDDEN_UNDER = ["/lobby", "/game"];
 
 /**
  * Invitation reçue pendant qu'on est ailleurs dans l'app. Montée une seule fois
@@ -42,7 +43,7 @@ export function InvitationBanner() {
     !user ||
     !invitation ||
     HIDDEN_ON.includes(pathname) ||
-    pathname.startsWith("/lobby");
+    HIDDEN_UNDER.some((prefix) => pathname.startsWith(prefix));
   if (hidden) return null;
 
   const { host, gameId } = invitation;

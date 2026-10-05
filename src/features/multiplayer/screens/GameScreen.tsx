@@ -24,7 +24,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
@@ -41,12 +41,10 @@ import { LEAVE_BUTTON_SIZE, LeaveButton } from "../components/LeaveButton";
 import { PlayersStrip } from "../components/PlayersStrip";
 import { ACTIVE_GAME_KEY } from "../hooks/useActiveGame";
 import { useCountdown } from "../hooks/useCountdown";
+import { useGameExitAlerts } from "../hooks/useGameExitAlerts";
 import { storeGameResult } from "../hooks/useGameResult";
 import { useLiveGame } from "../hooks/useLiveGame";
-import { getSocketErrorMessage } from "../utils/socketErrorMessage";
 
-// Mêmes valeurs que le serveur (QUESTION_MS), qui reste seul juge du temps
-const QUESTION_SECONDS = 12;
 const URGENT_SECONDS = 3;
 // Petits écrans Android : le chrono rétrécit pour laisser la place à la question
 const COMPACT_SCREEN_HEIGHT = 720;
@@ -105,27 +103,11 @@ export default function GameScreen() {
     router.replace({ pathname: "/results/[gameId]", params: { gameId } });
   }
 
-  const secondsLeft = useCountdown(deadline, QUESTION_SECONDS);
+  // Durée fixée par le serveur, qui reste seul juge du temps
+  const questionSeconds = question ? Math.round(question.durationMs / 1000) : 0;
+  const secondsLeft = useCountdown(deadline, questionSeconds);
 
-  useEffect(() => {
-    if (!joinError) return;
-    showAlert(
-      t("common:errors.title"),
-      getSocketErrorMessage(joinError),
-      [{ text: t("common:ok"), onPress: goHome }],
-      { cancelable: false },
-    );
-  }, [joinError, showAlert, goHome, t]);
-
-  useEffect(() => {
-    if (!canceledReason) return;
-    showAlert(
-      t("canceled.title"),
-      t(`canceled.${canceledReason}`),
-      [{ text: t("common:ok"), onPress: goHome }],
-      { cancelable: false },
-    );
-  }, [canceledReason, showAlert, goHome, t]);
+  useGameExitAlerts({ joinError, canceledReason, onExit: goHome });
 
   // Quitter en cours de partie = abandon : 0 XP, et pas de retour possible
   const confirmLeave = useCallback(() => {
@@ -231,7 +213,7 @@ export default function GameScreen() {
           <View style={styles.timerContainer}>
             <CircularTimer
               secondsLeft={isRevealed ? 0 : secondsLeft}
-              totalSeconds={QUESTION_SECONDS}
+              totalSeconds={questionSeconds}
               urgent={!isRevealed && secondsLeft <= URGENT_SECONDS}
               size={screenHeight < COMPACT_SCREEN_HEIGHT ? 72 : 96}
             />

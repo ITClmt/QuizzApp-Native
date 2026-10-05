@@ -184,6 +184,8 @@ export interface Lobby {
   hostId: string;
   difficulty: GameDifficulty | null;
   phase: GamePhase;
+  /** Joueurs présents nécessaires pour lancer (règle du serveur) */
+  minPlayers: number;
   players: LobbyPlayer[];
 }
 
@@ -203,6 +205,8 @@ export interface LiveQuestion {
   difficulty: string;
   /** Durée restante plutôt qu'une heure : l'horloge du téléphone n'est pas fiable */
   remainingMs: number;
+  /** Durée totale de la question, fixée par le serveur */
+  durationMs: number;
 }
 
 export interface RevealResult {
