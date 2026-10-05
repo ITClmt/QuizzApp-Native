@@ -52,11 +52,8 @@ const styles = StyleSheet.create({
     width: "100%",
     minHeight: 180,
     borderRadius: Radius.lg,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.2,
-    shadowRadius: 24,
-    elevation: 8,
+    // Teinte = Colors.primary (#7B5FBE) en rgba
+    boxShadow: "0px 12px 24px rgba(123, 95, 190, 0.2)",
     marginBottom: Spacing.xl,
   },
   pressed: {

@@ -118,7 +118,7 @@ export function CircularTimer({
           strokeLinecap="round"
         />
       </Svg>
-      <View style={styles.center} pointerEvents="none">
+      <View style={styles.center}>
         <Text
           style={[
             styles.number,
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
   },
   center: {
     ...StyleSheet.absoluteFill,
+    pointerEvents: "none",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -52,7 +52,6 @@ export function Navbar() {
       <LinearGradient
         colors={[NAVBAR_BG, NAVBAR_BG_TRANSPARENT]}
         style={styles.fade}
-        pointerEvents="none"
       />
     </View>
   );
@@ -69,6 +68,7 @@ const styles = StyleSheet.create({
   },
   fade: {
     position: "absolute",
+    pointerEvents: "none",
     top: "100%",
     left: 0,
     right: 0,

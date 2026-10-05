@@ -150,29 +150,19 @@ export const Radius = {
 } as const;
 
 // ─── Shadows ────────────────────────────────────────────────
+// `boxShadow` plutôt que shadow* / elevation (dépréciés) : même rendu sur web,
+// iOS et Android. Teinte = Colors.onSurface (#1F3A56) en rgba.
 export const Shadows = {
   /** Subtle card shadow — "Soft Lift" */
   card: {
-    shadowColor: Colors.onSurface,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 16,
-    elevation: 2,
+    boxShadow: "0px 4px 16px rgba(31, 58, 86, 0.06)",
   },
   /** Elevated floating elements */
   elevated: {
-    shadowColor: Colors.onSurface,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 24,
-    elevation: 4,
+    boxShadow: "0px 8px 24px rgba(31, 58, 86, 0.08)",
   },
   /** Bottom nav / fixed elements */
   nav: {
-    shadowColor: Colors.onSurface,
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 20,
-    elevation: 8,
+    boxShadow: "0px -4px 20px rgba(31, 58, 86, 0.08)",
   },
 } as const;

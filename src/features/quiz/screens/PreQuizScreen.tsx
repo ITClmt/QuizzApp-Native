@@ -334,8 +334,7 @@ const styles = StyleSheet.create({
   },
   categoryCardLocked: {
     backgroundColor: Colors.surfaceVariant,
-    shadowOpacity: 0,
-    elevation: 0,
+    boxShadow: "none",
   },
   categoryName: {
     fontFamily: FontFamily.bodyBold,

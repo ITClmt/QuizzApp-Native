@@ -276,8 +276,7 @@ const styles = StyleSheet.create({
   },
   cardLocked: {
     backgroundColor: Colors.surfaceVariant,
-    shadowOpacity: 0,
-    elevation: 0,
+    boxShadow: "none",
   },
   avatar: {
     width: 64,

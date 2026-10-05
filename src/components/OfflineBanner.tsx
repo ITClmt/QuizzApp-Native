@@ -15,9 +15,6 @@ export function OfflineBanner() {
   return (
     <View
       style={[styles.banner, { paddingBottom: bottom + Spacing.sm }]}
-      // Purement informatif : il ne doit jamais intercepter un appui destiné
-      // à la barre de navigation qu'il recouvre.
-      pointerEvents="none"
     >
       <View style={styles.content}>
         <MaterialIcons name="wifi-off" size={18} color={Colors.onError} />
@@ -30,6 +27,9 @@ export function OfflineBanner() {
 const styles = StyleSheet.create({
   banner: {
     position: "absolute",
+    // Purement informatif : il ne doit jamais intercepter un appui destiné
+    // à la barre de navigation qu'il recouvre.
+    pointerEvents: "none",
     bottom: 0,
     left: 0,
     right: 0,
