@@ -45,7 +45,7 @@ import { useLiveGame } from "../hooks/useLiveGame";
 import { getSocketErrorMessage } from "../utils/socketErrorMessage";
 
 // Mêmes valeurs que le serveur (QUESTION_MS), qui reste seul juge du temps
-const QUESTION_SECONDS = 10;
+const QUESTION_SECONDS = 12;
 const URGENT_SECONDS = 3;
 
 // Pas de « question suivante » à déclencher : c'est le serveur qui enchaîne
