@@ -54,26 +54,28 @@ export function CircularTimer({
     // Mouvement réduit : on coupe la pulsation, jamais le signal. L'urgence
     // reste lisible par le passage au rouge de l'anneau et du décompte.
     if (reduceMotion) {
-      pulse.value = 1;
+      pulse.set(1);
       return;
     }
 
     if (urgent) {
-      pulse.value = withRepeat(
-        withSequence(
-          withTiming(1.06, { duration: 400 }),
-          withTiming(1, { duration: 400 }),
+      pulse.set(
+        withRepeat(
+          withSequence(
+            withTiming(1.06, { duration: 400 }),
+            withTiming(1, { duration: 400 }),
+          ),
+          -1,
+          true,
         ),
-        -1,
-        true,
       );
     } else {
-      pulse.value = withTiming(1, { duration: 200 });
+      pulse.set(withTiming(1, { duration: 200 }));
     }
   }, [urgent, pulse, reduceMotion]);
 
   const pulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
+    transform: [{ scale: pulse.get() }],
   }));
 
   const ringColor = urgent ? Colors.error : Colors.accentOrange;

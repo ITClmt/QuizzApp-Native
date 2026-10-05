@@ -32,10 +32,10 @@ export function Skeleton({
 
   useEffect(() => {
     if (reduceMotion) return;
-    opacity.value = withRepeat(withTiming(0.5, { duration: 700 }), -1, true);
+    opacity.set(withRepeat(withTiming(0.5, { duration: 700 }), -1, true));
   }, [opacity, reduceMotion]);
 
-  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.get() }));
 
   return (
     <Animated.View

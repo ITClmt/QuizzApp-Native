@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -8,6 +9,9 @@ import Animated, {
 } from "react-native-reanimated";
 
 export type AnswerFeedbackState = "correct" | "wrong" | null;
+
+/** Démarre vite : le retour arrive au moment où l'œil est sur la réponse. */
+const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);
 
 interface AnswerFeedbackProps {
   state: AnswerFeedbackState;
@@ -31,23 +35,27 @@ export function AnswerFeedback({ state, children }: AnswerFeedbackProps) {
 
     if (state === "correct") {
       // Aller-retour net (~200 ms) : un ressort oscillait trop longtemps.
-      scale.value = withSequence(
-        withTiming(1.04, { duration: 90 }),
-        withTiming(1, { duration: 110 }),
+      scale.set(
+        withSequence(
+          withTiming(1.04, { duration: 90, easing: EASE_OUT }),
+          withTiming(1, { duration: 110, easing: EASE_OUT }),
+        ),
       );
     } else if (state === "wrong") {
-      translateX.value = withSequence(
-        withTiming(-8, { duration: 50 }),
-        withTiming(8, { duration: 50 }),
-        withTiming(-6, { duration: 50 }),
-        withTiming(6, { duration: 50 }),
-        withTiming(0, { duration: 50 }),
+      translateX.set(
+        withSequence(
+          withTiming(-8, { duration: 50, easing: EASE_OUT }),
+          withTiming(8, { duration: 50, easing: EASE_OUT }),
+          withTiming(-6, { duration: 50, easing: EASE_OUT }),
+          withTiming(6, { duration: 50, easing: EASE_OUT }),
+          withTiming(0, { duration: 50, easing: EASE_OUT }),
+        ),
       );
     }
   }, [state, reduceMotion, scale, translateX]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }, { scale: scale.value }],
+    transform: [{ translateX: translateX.get() }, { scale: scale.get() }],
   }));
 
   return <Animated.View style={animatedStyle}>{children}</Animated.View>;
