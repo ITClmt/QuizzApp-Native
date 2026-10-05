@@ -444,11 +444,16 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginBottom: Spacing.md,
   },
+  // Le ScrollView coupe ce qui le dépasse : on l'étend jusqu'aux bords de
+  // l'écran et on remet la marge dans son contenu, pour que le rebond et la
+  // secousse des réponses aient la place de s'animer sans être rognés.
   body: {
     flex: 1,
+    marginHorizontal: -Spacing.xl,
   },
   bodyContent: {
     flexGrow: 1,
+    paddingHorizontal: Spacing.xl,
   },
   questionContainer: {
     flexGrow: 1,
