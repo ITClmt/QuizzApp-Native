@@ -19,6 +19,9 @@ interface CircularTimerProps {
   size?: number;
 }
 
+// Grossissement de la pulsation d'urgence
+const PULSE_SCALE = 1.06;
+
 function formatTime(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -62,7 +65,7 @@ export function CircularTimer({
       pulse.set(
         withRepeat(
           withSequence(
-            withTiming(1.06, { duration: 400 }),
+            withTiming(PULSE_SCALE, { duration: 400 }),
             withTiming(1, { duration: 400 }),
           ),
           -1,
@@ -79,9 +82,18 @@ export function CircularTimer({
   }));
 
   const ringColor = urgent ? Colors.error : Colors.accentOrange;
+  // Place réservée autour de l'anneau pour la pulsation : sans elle, il déborde
+  // de quelques pixels et un parent qui coupe (ScrollView) le rogne en haut.
+  const pulseRoom = Math.ceil((size * (PULSE_SCALE - 1)) / 2);
 
   return (
-    <Animated.View style={[styles.wrapper, { width: size, height: size }, pulseStyle]}>
+    <Animated.View
+      style={[
+        styles.wrapper,
+        { width: size, height: size, margin: pulseRoom },
+        pulseStyle,
+      ]}
+    >
       {/* Rotation sur le Svg entier pour que l'anneau parte de midi : la prop
           `origin` d'un Circle devient un attribut `transform-origin` invalide
           sur le web (React le signale en erreur) */}
