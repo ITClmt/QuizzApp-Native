@@ -16,6 +16,8 @@ const TITLE_KEY_BY_SEGMENT = {
   friends: "friends",
   login: "login",
   register: "register",
+  "forgot-password": "forgotPassword",
+  "reset-password": "resetPassword",
   preQuiz: "quiz",
   quiz: "quiz",
   results: "results",

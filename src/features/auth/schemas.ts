@@ -1,7 +1,8 @@
 import type { TFunction } from "i18next";
 import { z } from "zod";
 
-// Doit rester alignée avec la regex de QuizzApp-Back/src/users/dto/create-user.dto.ts
+// Doit rester alignée avec PASSWORD_REGEX de
+// QuizzApp-Back/src/common/validators/is-strong-password.decorator.ts
 // pour éviter qu'un mot de passe passe le front puis se fasse rejeter par l'API
 // (chaque 400 grignote le rate-limit de /auth/register).
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S+$/;
@@ -16,6 +17,15 @@ export function makeLoginSchema(t: TFunction<"auth">) {
   });
 }
 
+// Règles partagées par l'inscription et la réinitialisation
+function makePasswordField(t: TFunction<"auth">) {
+  return z
+    .string()
+    .min(8, t("validation.passwordMin"))
+    .max(128, t("validation.passwordMax"))
+    .regex(PASSWORD_REGEX, t("validation.passwordComplexity"));
+}
+
 export function makeRegisterSchema(t: TFunction<"auth">) {
   return z
     .object({
@@ -24,11 +34,26 @@ export function makeRegisterSchema(t: TFunction<"auth">) {
         .min(3, t("validation.usernameMin"))
         .max(20, t("validation.usernameMax")),
       email: z.email(t("validation.invalidEmail")),
-      password: z
-        .string()
-        .min(8, t("validation.passwordMin"))
-        .max(128, t("validation.passwordMax"))
-        .regex(PASSWORD_REGEX, t("validation.passwordComplexity")),
+      password: makePasswordField(t),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("validation.passwordsMismatch"),
+      path: ["confirmPassword"],
+    });
+}
+
+export function makeForgotPasswordSchema(t: TFunction<"auth">) {
+  return z.object({
+    email: z.email(t("validation.invalidEmail")),
+  });
+}
+
+export function makeResetPasswordSchema(t: TFunction<"auth">) {
+  return z
+    .object({
+      code: z.string().regex(/^\d{6}$/, t("validation.codeFormat")),
+      password: makePasswordField(t),
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
@@ -39,3 +64,9 @@ export function makeRegisterSchema(t: TFunction<"auth">) {
 
 export type LoginFormValues = z.infer<ReturnType<typeof makeLoginSchema>>;
 export type RegisterFormValues = z.infer<ReturnType<typeof makeRegisterSchema>>;
+export type ForgotPasswordFormValues = z.infer<
+  ReturnType<typeof makeForgotPasswordSchema>
+>;
+export type ResetPasswordFormValues = z.infer<
+  ReturnType<typeof makeResetPasswordSchema>
+>;

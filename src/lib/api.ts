@@ -16,6 +16,8 @@ export class ApiError extends Error {
 }
 
 export function getErrorMessage(error: ApiError): string {
+  // Le throttler Nest ne renvoie pas de `code`, seulement un message anglais brut
+  if (error.status === 429) return i18n.t("errors:TOO_MANY_REQUESTS");
   if (error.code && i18n.exists(`errors:${error.code}`)) {
     return i18n.t(`errors:${error.code}`);
   }

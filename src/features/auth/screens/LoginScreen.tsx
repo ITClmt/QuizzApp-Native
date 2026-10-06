@@ -5,8 +5,8 @@ import { useAlert } from "@/src/contexts/AlertContext";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "expo-router";
-import { useMemo } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,16 +31,26 @@ export default function LoginScreen() {
   const { showAlert } = useAlert();
   const { t } = useTranslation(["auth", "common"]);
   const loginSchema = useMemo(() => makeLoginSchema(t), [t]);
+  // Renseigné au retour de la réinitialisation du mot de passe
+  const { email: emailParam } = useLocalSearchParams<{ email?: string }>();
 
   const {
     control,
     handleSubmit,
     setFocus,
+    setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: emailParam ?? "", password: "" },
   });
+
+  // L'écran existe déjà quand on y revient (dismissTo) : les defaultValues
+  // ne sont pas relues, on pousse l'e-mail à la main
+  useEffect(() => {
+    if (emailParam) setValue("email", emailParam);
+  }, [emailParam, setValue]);
 
   async function onSubmit(data: LoginFormValues) {
     try {
@@ -115,6 +125,21 @@ export default function LoginScreen() {
             )}
           />
 
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/(auth)/forgot-password",
+                params: { email: getValues("email").trim().toLowerCase() },
+              })
+            }
+            style={styles.forgotPasswordPressable}
+            accessibilityRole="link"
+          >
+            <Text style={styles.forgotPasswordLink}>
+              {t("login.forgotPassword")}
+            </Text>
+          </Pressable>
+
           <Button
             title={isSubmitting ? t("login.signingIn") : t("login.signIn")}
             style={styles.loginButton}
@@ -163,6 +188,17 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     marginTop: Spacing.md,
+  },
+  // Marge négative : rapproche le lien du champ mot de passe malgré le gap
+  forgotPasswordPressable: {
+    alignSelf: "flex-end",
+    marginTop: -Spacing.md,
+    paddingVertical: Spacing.xs,
+  },
+  forgotPasswordLink: {
+    fontFamily: FontFamily.label,
+    fontSize: FontSize.labelLg,
+    color: Colors.primary,
   },
   footerContainer: {
     flexDirection: "row",

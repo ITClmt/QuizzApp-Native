@@ -28,6 +28,8 @@
     "friends": "Amis",
     "login": "Connexion",
     "register": "Inscription",
+    "forgotPassword": "Mot de passe oublié",
+    "resetPassword": "Nouveau mot de passe",
     "quiz": "Quiz",
     "results": "Résultats",
     "newGame": "Nouvelle partie",
