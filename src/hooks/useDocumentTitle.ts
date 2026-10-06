@@ -11,6 +11,8 @@ const TITLE_KEY_BY_SEGMENT = {
   leaderboard: "leaderboard",
   profile: "profile",
   settings: "settings",
+  "change-password": "changePassword",
+  "delete-account": "deleteAccount",
   avatars: "avatars",
   history: "history",
   friends: "friends",

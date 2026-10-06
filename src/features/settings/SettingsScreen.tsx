@@ -15,6 +15,7 @@ import {
   type AppLanguage,
 } from "@/src/i18n";
 import { updateUserRequest } from "@/src/services/users/users.api";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -97,10 +98,32 @@ export default function SettingsScreen() {
                 accessibilityLabel={t("language")}
               />
             </View>
+            <View style={styles.divider} />
+            <Pressable
+              onPress={() => router.push("/change-password")}
+              style={styles.linkRow}
+              accessibilityRole="button"
+            >
+              <Text style={styles.label}>{t("changePassword")}</Text>
+              <MaterialIcons
+                name="chevron-right"
+                size={24}
+                color={Colors.onSurfaceVariant}
+              />
+            </Pressable>
           </View>
 
           <Pressable onPress={handleSignOut} style={styles.logoutButton}>
             <Text style={styles.logoutButtonText}>{t("logout")}</Text>
+          </Pressable>
+
+          {/* Volontairement discret et à l'écart : on ne doit pas tomber dessus par hasard */}
+          <Pressable
+            onPress={() => router.push("/delete-account")}
+            style={styles.deleteAccountLink}
+            accessibilityRole="link"
+          >
+            <Text style={styles.deleteAccountText}>{t("deleteAccount")}</Text>
           </Pressable>
         </ScrollView>
       </SafeAreaView>
@@ -142,6 +165,23 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bodySemibold,
     fontSize: FontSize.bodyLg,
     color: Colors.onSurface,
+  },
+  linkRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+  },
+  deleteAccountLink: {
+    alignSelf: "center",
+    marginTop: Spacing["2xl"],
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.sm,
+  },
+  deleteAccountText: {
+    fontFamily: FontFamily.label,
+    fontSize: FontSize.labelLg,
+    color: Colors.error,
   },
   logoutButton: {
     backgroundColor: Colors.surface,

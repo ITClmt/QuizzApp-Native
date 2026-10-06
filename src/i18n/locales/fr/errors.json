@@ -4,6 +4,8 @@
   "AUTH_REFRESH_TOKEN_REVOKED": "Session expirée, reconnecte-toi",
   "AUTH_UNAUTHORIZED": "Tu dois être connecté pour faire ça",
   "AUTH_RESET_CODE_INVALID": "Code invalide ou expiré",
+  "AUTH_WRONG_PASSWORD": "Mot de passe incorrect",
+  "PASSWORD_UNCHANGED": "Le nouveau mot de passe doit être différent de l'actuel",
   "TOO_MANY_REQUESTS": "Trop de tentatives, réessaie dans quelques minutes",
   "EMAIL_ALREADY_USED": "Cet e-mail est déjà utilisé",
   "USER_NOT_FOUND": "Utilisateur introuvable",

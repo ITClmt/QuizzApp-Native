@@ -63,6 +63,25 @@ export function makeResetPasswordSchema(t: TFunction<"auth">) {
     });
 }
 
+export function makeChangePasswordSchema(t: TFunction<"auth">) {
+  return z
+    .object({
+      currentPassword: z.string().min(1, t("validation.passwordRequired")),
+      password: makePasswordField(t),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("validation.passwordsMismatch"),
+      path: ["confirmPassword"],
+    });
+}
+
+export function makeDeleteAccountSchema(t: TFunction<"auth">) {
+  return z.object({
+    password: z.string().min(1, t("validation.passwordRequired")),
+  });
+}
+
 export type LoginFormValues = z.infer<ReturnType<typeof makeLoginSchema>>;
 export type RegisterFormValues = z.infer<ReturnType<typeof makeRegisterSchema>>;
 export type ForgotPasswordFormValues = z.infer<
@@ -70,4 +89,10 @@ export type ForgotPasswordFormValues = z.infer<
 >;
 export type ResetPasswordFormValues = z.infer<
   ReturnType<typeof makeResetPasswordSchema>
+>;
+export type ChangePasswordFormValues = z.infer<
+  ReturnType<typeof makeChangePasswordSchema>
+>;
+export type DeleteAccountFormValues = z.infer<
+  ReturnType<typeof makeDeleteAccountSchema>
 >;

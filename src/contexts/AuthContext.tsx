@@ -10,6 +10,10 @@ import {
   refreshTokensRequest,
   registerRequest,
 } from "../services/auth/auth.api";
+import {
+  changePasswordRequest,
+  deleteAccountRequest,
+} from "../services/users/users.api";
 import type { User } from "@/src/types";
 
 function syncAppLanguage(user: User) {
@@ -31,6 +35,8 @@ type AuthContextType = {
     lang?: string,
   ) => Promise<void>;
   signOut: () => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  deleteAccount: (password: string) => Promise<void>;
 };
 
 // --- Helpers ---
@@ -126,6 +132,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(decoded);
   }
 
+  async function clearSession() {
+    await Storage.deleteItemAsync("access_token");
+    await Storage.deleteItemAsync("refresh_token");
+    queryClient.clear();
+    setUser(null);
+  }
+
   async function signOut() {
     try {
       await logoutRequest();
@@ -133,14 +146,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Backend logout failure (token already expired, etc.) is non-fatal
     }
 
-    await Storage.deleteItemAsync("access_token");
-    await Storage.deleteItemAsync("refresh_token");
-    queryClient.clear();
-    setUser(null);
+    await clearSession();
+  }
+
+  // Le serveur coupe toutes les sessions et renvoie une paire neuve pour
+  // celui-ci : on la garde, l'utilisateur reste connecté
+  async function changePassword(currentPassword: string, newPassword: string) {
+    const tokens = await changePasswordRequest(currentPassword, newPassword);
+    const decoded = await saveTokensAndDecodeUser(
+      tokens.access_token,
+      tokens.refresh_token,
+    );
+    setUser(decoded);
+  }
+
+  // Pas de logoutRequest : le refresh token a disparu avec le compte
+  async function deleteAccount(password: string) {
+    await deleteAccountRequest(password);
+    await clearSession();
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{
+        user,
+        isLoading,
+        signIn,
+        signUp,
+        signOut,
+        changePassword,
+        deleteAccount,
+      }}>
       {children}
     </AuthContext.Provider>
   );

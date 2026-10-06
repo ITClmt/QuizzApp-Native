@@ -7,5 +7,40 @@
   "languageEn": "English",
   "languageConfirmTitle": "Changer de langue ?",
   "languageConfirmMessage": "L'application passera en {{language}}.",
-  "logout": "Déconnexion"
+  "logout": "Déconnexion",
+  "changePassword": "Changer le mot de passe",
+  "deleteAccount": "Supprimer mon compte",
+  "changePasswordScreen": {
+    "title": "Mot de passe",
+    "otherDevices": "Tes autres appareils seront déconnectés.",
+    "currentPasswordLabel": "Mot de passe actuel",
+    "currentPasswordPlaceholder": "Ton mot de passe actuel",
+    "newPasswordLabel": "Nouveau mot de passe",
+    "newPasswordPlaceholder": "8 caractères minimum",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "confirmPasswordPlaceholder": "Retape ton nouveau mot de passe",
+    "submitting": "Enregistrement...",
+    "submit": "Changer le mot de passe",
+    "successTitle": "Mot de passe modifié",
+    "successMessage": "Tes autres appareils ont été déconnectés."
+  },
+  "deleteAccountScreen": {
+    "title": "Supprimer mon compte",
+    "warning": "Cette action est définitive. Tu perdras :",
+    "lossLevel": "ton niveau et ton XP",
+    "lossAvatars": "tes avatars débloqués",
+    "lossScores": "tes scores et ta place au classement",
+    "lossHistory": "ton historique de parties",
+    "lossFriends": "ta liste d'amis",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Confirme avec ton mot de passe",
+    "submitting": "Suppression...",
+    "submit": "Supprimer mon compte",
+    "confirmTitle": "Supprimer ton compte ?",
+    "confirmMessage": "Toutes tes données seront effacées. Impossible de revenir en arrière.",
+    "confirmButton": "Supprimer",
+    "inGame": "Quitte ta partie en cours avant de supprimer ton compte.",
+    "doneTitle": "Compte supprimé",
+    "doneMessage": "Ton compte a été supprimé."
+  }
 }

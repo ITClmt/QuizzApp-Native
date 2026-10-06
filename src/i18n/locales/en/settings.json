@@ -7,5 +7,40 @@
   "languageEn": "English",
   "languageConfirmTitle": "Change language?",
   "languageConfirmMessage": "The app will switch to {{language}}.",
-  "logout": "Logout"
+  "logout": "Logout",
+  "changePassword": "Change password",
+  "deleteAccount": "Delete my account",
+  "changePasswordScreen": {
+    "title": "Password",
+    "otherDevices": "Your other devices will be signed out.",
+    "currentPasswordLabel": "Current password",
+    "currentPasswordPlaceholder": "Your current password",
+    "newPasswordLabel": "New password",
+    "newPasswordPlaceholder": "At least 8 characters",
+    "confirmPasswordLabel": "Confirm password",
+    "confirmPasswordPlaceholder": "Type your new password again",
+    "submitting": "Saving...",
+    "submit": "Change password",
+    "successTitle": "Password changed",
+    "successMessage": "Your other devices have been signed out."
+  },
+  "deleteAccountScreen": {
+    "title": "Delete my account",
+    "warning": "This cannot be undone. You will lose:",
+    "lossLevel": "your level and XP",
+    "lossAvatars": "your unlocked avatars",
+    "lossScores": "your scores and leaderboard rank",
+    "lossHistory": "your game history",
+    "lossFriends": "your friends list",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Confirm with your password",
+    "submitting": "Deleting...",
+    "submit": "Delete my account",
+    "confirmTitle": "Delete your account?",
+    "confirmMessage": "All your data will be erased. This cannot be undone.",
+    "confirmButton": "Delete",
+    "inGame": "Leave your current game before deleting your account.",
+    "doneTitle": "Account deleted",
+    "doneMessage": "Your account has been deleted."
+  }
 }

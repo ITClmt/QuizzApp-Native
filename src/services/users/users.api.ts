@@ -18,3 +18,24 @@ export function updateUserRequest(
 export function getAvatarsRequest() {
   return apiFetchAuthenticated<AvatarCatalogEntry[]>("/users/avatars");
 }
+
+/** Renvoie une nouvelle paire de tokens : les autres appareils sont déconnectés */
+export function changePasswordRequest(
+  currentPassword: string,
+  newPassword: string,
+) {
+  return apiFetchAuthenticated<{ access_token: string; refresh_token: string }>(
+    "/users/me/password",
+    {
+      method: "PATCH",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    },
+  );
+}
+
+export function deleteAccountRequest(password: string) {
+  return apiFetchAuthenticated<void>("/users/me", {
+    method: "DELETE",
+    body: JSON.stringify({ password }),
+  });
+}

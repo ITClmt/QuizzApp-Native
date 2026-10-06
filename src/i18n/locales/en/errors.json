@@ -4,6 +4,8 @@
   "AUTH_REFRESH_TOKEN_REVOKED": "Your session has expired, please sign in again",
   "AUTH_UNAUTHORIZED": "You need to be signed in to do that",
   "AUTH_RESET_CODE_INVALID": "Invalid or expired code",
+  "AUTH_WRONG_PASSWORD": "Incorrect password",
+  "PASSWORD_UNCHANGED": "Your new password must be different from the current one",
   "TOO_MANY_REQUESTS": "Too many attempts, try again in a few minutes",
   "EMAIL_ALREADY_USED": "This email is already in use",
   "USER_NOT_FOUND": "User not found",
