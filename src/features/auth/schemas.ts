@@ -8,8 +8,9 @@ import { z } from "zod";
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S+$/;
 
 // Les messages dépendent de la langue active : on construit le schéma via
-// une factory appelée depuis le composant (useMemo sur i18n.language) plutôt
-// que de figer des messages statiques au chargement du module.
+// une factory appelée à chaque rendu du composant plutôt que de figer des
+// messages statiques au chargement du module. Pas de useMemo : le React
+// Compiler mémoïse déjà l'appel tant que `t` ne change pas.
 export function makeLoginSchema(t: TFunction<"auth">) {
   return z.object({
     email: z.string().email(t("validation.invalidEmail")),

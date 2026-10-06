@@ -6,7 +6,6 @@ import { useAlert } from "@/src/contexts/AlertContext";
 import { ApiError, apiFetch, getErrorMessage } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router, useLocalSearchParams } from "expo-router";
-import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,7 +30,7 @@ import {
 export default function ForgotPasswordScreen() {
   const { showAlert } = useAlert();
   const { t } = useTranslation(["auth", "common"]);
-  const schema = useMemo(() => makeForgotPasswordSchema(t), [t]);
+  const schema = makeForgotPasswordSchema(t);
   // Prérempli avec ce qui était déjà tapé sur l'écran de connexion
   const { email: initialEmail } = useLocalSearchParams<{ email?: string }>();
 

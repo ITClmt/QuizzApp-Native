@@ -7,7 +7,6 @@ import { i18n } from "@/src/i18n";
 import { ApiError, getErrorMessage } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,7 +30,7 @@ export default function RegisterScreen() {
   const { signUp } = useAuth();
   const { showAlert } = useAlert();
   const { t } = useTranslation(["auth", "common"]);
-  const registerSchema = useMemo(() => makeRegisterSchema(t), [t]);
+  const registerSchema = makeRegisterSchema(t);
 
   const {
     control,

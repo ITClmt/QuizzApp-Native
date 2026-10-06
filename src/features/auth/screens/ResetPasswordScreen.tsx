@@ -6,7 +6,7 @@ import { useAlert } from "@/src/contexts/AlertContext";
 import { ApiError, apiFetch, getErrorMessage } from "@/src/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -36,7 +36,7 @@ const RESEND_COOLDOWN_SECONDS = 60;
 export default function ResetPasswordScreen() {
   const { showAlert } = useAlert();
   const { t } = useTranslation(["auth", "common"]);
-  const schema = useMemo(() => makeResetPasswordSchema(t), [t]);
+  const schema = makeResetPasswordSchema(t);
   const { email } = useLocalSearchParams<{ email?: string }>();
 
   // Un code vient de partir en arrivant sur l'écran
