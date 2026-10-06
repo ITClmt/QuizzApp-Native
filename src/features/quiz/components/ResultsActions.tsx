@@ -6,6 +6,7 @@ import {
   Shadows,
   Spacing,
 } from "@/constants/theme";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -18,6 +19,9 @@ interface ResultsActionsProps {
   replayDisabled?: boolean;
 }
 
+/** Évite qu'un tap destiné à la dernière question atterrisse sur un bouton de résultats */
+const INPUT_LOCK_MS = 1000;
+
 export default function ResultsActions({
   onReplay,
   onHome,
@@ -25,22 +29,37 @@ export default function ResultsActions({
   replayDisabled = false,
 }: ResultsActionsProps) {
   const { t } = useTranslation("quiz");
+  const [locked, setLocked] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLocked(false), INPUT_LOCK_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const isReplayDisabled = replayDisabled || locked;
+
   return (
     <View style={styles.actions}>
       {onReplay && (
         <Pressable
-          style={[styles.replayButton, replayDisabled && styles.disabled]}
+          style={[styles.replayButton, isReplayDisabled && styles.disabled]}
           onPress={onReplay}
-          disabled={replayDisabled}
+          disabled={isReplayDisabled}
           accessibilityRole="button"
-          accessibilityState={{ disabled: replayDisabled }}
+          accessibilityState={{ disabled: isReplayDisabled }}
         >
           <Text style={styles.replayButtonText}>
             {replayLabel ?? t("results.playAgain")}
           </Text>
         </Pressable>
       )}
-      <Pressable style={styles.homeButton} onPress={onHome}>
+      <Pressable
+        style={[styles.homeButton, locked && styles.disabled]}
+        onPress={onHome}
+        disabled={locked}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: locked }}
+      >
         <Text style={styles.homeButtonText}>{t("results.home")}</Text>
       </Pressable>
     </View>
