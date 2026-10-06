@@ -108,6 +108,13 @@ export function MultiplayerProvider({ children }: { children: React.ReactNode })
       ]);
     });
 
+    // L'hôte a changé la difficulté : seulement si l'invitation est déjà affichée
+    s.on("invitation:updated", (invitation: GameInvitation) => {
+      queryClient.setQueryData<GameInvitation[]>(GAME_INVITATIONS_KEY, (list) =>
+        list?.map((i) => (i.gameId === invitation.gameId ? invitation : i)),
+      );
+    });
+
     s.on("invitation:canceled", ({ gameId }: { gameId: string }) => {
       queryClient.setQueryData<GameInvitation[]>(GAME_INVITATIONS_KEY, (list) =>
         list?.filter((i) => i.gameId !== gameId),

@@ -5,7 +5,8 @@ import { StyleSheet, View } from "react-native";
 
 /**
  * Un joueur du salon. Grisé s'il n'est pas (ou plus) là : invité qui n'a pas
- * encore rejoint, parti, ou déconnecté — l'étiquette dit lequel.
+ * encore rejoint, parti, ou déconnecté — l'étiquette dit lequel. Pour ceux qui
+ * sont là, elle dit s'ils sont prêts.
  */
 export function LobbyPlayerRow({ player }: { player: LobbyPlayer }) {
   const { t } = useTranslation("multiplayer");
@@ -13,8 +14,9 @@ export function LobbyPlayerRow({ player }: { player: LobbyPlayer }) {
 
   let label: string;
   if (player.isHost) label = t("lobby.host");
-  else if (player.status === "JOINED" && !player.connected) {
-    label = t("lobby.offline");
+  else if (player.status === "JOINED") {
+    if (!player.connected) label = t("lobby.offline");
+    else label = player.ready ? t("lobby.ready") : t("lobby.notReady");
   } else label = t(`lobby.status.${player.status}`);
 
   return (

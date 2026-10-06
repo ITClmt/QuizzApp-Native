@@ -176,6 +176,8 @@ export interface LobbyPlayer {
   user: FriendUser;
   isHost: boolean;
   status: GamePlayerStatus;
+  /** Toujours false pour l'hôte : c'est lui qui lance */
+  ready: boolean;
   connected: boolean;
 }
 

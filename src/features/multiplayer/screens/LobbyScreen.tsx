@@ -1,11 +1,15 @@
 import { Colors, FontFamily, FontSize, Spacing } from "@/constants/theme";
 import { Button } from "@/src/components/Button";
 import { GradientBackground } from "@/src/components/GradientBackground";
+import {
+  SegmentedControl,
+  type SegmentedControlOption,
+} from "@/src/components/SegmentedControl";
 import { useAlert } from "@/src/contexts/AlertContext";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useMultiplayer } from "@/src/contexts/MultiplayerContext";
 import { useBlockBackNavigation } from "@/src/hooks/useBlockBackNavigation";
-import type { LobbyPlayer } from "@/src/types";
+import type { GameDifficulty, LobbyPlayer } from "@/src/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,6 +27,8 @@ import { LobbyPlayerRow } from "../components/LobbyPlayerRow";
 import { useGameExitAlerts } from "../hooks/useGameExitAlerts";
 import { useLobby } from "../hooks/useLobby";
 import { getSocketErrorMessage } from "../utils/socketErrorMessage";
+
+type DifficultyChoice = GameDifficulty | "mixed";
 
 // Hôte d'abord, puis ceux qui sont là, puis les invités, enfin les absents
 const STATUS_ORDER: Record<LobbyPlayer["status"], number> = {
@@ -46,9 +52,18 @@ export default function LobbyScreen() {
   const { user } = useAuth();
   const { status } = useMultiplayer();
   const { showAlert } = useAlert();
-  const { t } = useTranslation(["multiplayer", "common"]);
-  const { lobby, joinError, canceledReason, leave, start } = useLobby(gameId);
+  const { t } = useTranslation(["multiplayer", "quiz", "common"]);
+  const {
+    lobby,
+    joinError,
+    canceledReason,
+    leave,
+    start,
+    setReady,
+    setDifficulty,
+  } = useLobby(gameId);
   const [isStarting, setIsStarting] = useState(false);
+  const [isTogglingReady, setIsTogglingReady] = useState(false);
 
   const isHost = !!lobby && lobby.hostId === user?.sub;
   // dismissTo plutôt que replace : le salon est ouvert par-dessus l'accueil, un
@@ -87,31 +102,70 @@ export default function LobbyScreen() {
   useBlockBackNavigation(confirmLeave);
 
   const players = sortPlayers(lobby?.players ?? []);
-  const ready = players.filter((p) => p.status === "JOINED").length;
-  const expected = players.filter(
-    (p) => p.status === "JOINED" || p.status === "INVITED",
-  ).length;
+  const me = players.find((p) => p.user.id === user?.sub);
   const host = players.find((p) => p.isHost);
+  // Les invités qui n'ont pas répondu ne comptent pas : on ne les attend pas
+  const joined = players.filter((p) => p.status === "JOINED");
+  // L'hôte est prêt d'office : c'est lui qui lance
+  const readyCount = joined.filter((p) => p.isHost || p.ready).length;
+  // Un déconnecté ne verrait pas le décompte : le serveur l'attend aussi
+  const notReady = joined.filter(
+    (p) => !p.isHost && (!p.ready || !p.connected),
+  );
+  const hasEnoughPlayers = !!lobby && joined.length >= lobby.minPlayers;
+  const isConnected = status === "connected";
 
   const canStart =
-    isHost && !!lobby && ready >= lobby.minPlayers && status === "connected";
+    isHost && hasEnoughPlayers && notReady.length === 0 && isConnected;
+
+  const showError = (code: string) =>
+    showAlert(t("common:errors.title"), getSocketErrorMessage(code));
 
   const handleStart = async () => {
     setIsStarting(true);
     const ack = await start();
     if (!ack.ok) {
       setIsStarting(false);
-      showAlert(t("common:errors.title"), getSocketErrorMessage(ack.error));
+      showError(ack.error);
     }
   };
 
+  const toggleReady = async () => {
+    if (!me) return;
+    setIsTogglingReady(true);
+    const ack = await setReady(!me.ready);
+    setIsTogglingReady(false);
+    if (!ack.ok) showError(ack.error);
+  };
+
+  const difficultyOptions: SegmentedControlOption<DifficultyChoice>[] = [
+    { value: "mixed", label: t("mixed") },
+    { value: "easy", label: t("quiz:difficulty.easy") },
+    { value: "medium", label: t("quiz:difficulty.medium") },
+    { value: "hard", label: t("quiz:difficulty.hard") },
+  ];
+
+  // La valeur affichée suit le lobby:update : le serveur reste seul juge
+  const changeDifficulty = async (choice: DifficultyChoice) => {
+    const ack = await setDifficulty(choice === "mixed" ? null : choice);
+    if (!ack.ok) showError(ack.error);
+  };
+
   const footerMessage = (() => {
-    if (status !== "connected") return t("lobby.connecting");
-    if (!lobby || canStart) return null;
+    if (!isConnected) return t("lobby.connecting");
+    if (!lobby) return null;
     if (!isHost) {
-      return t("lobby.waitingForHost", { username: host?.user.username });
+      return me?.ready
+        ? t("lobby.waitingForHost", { username: host?.user.username })
+        : null;
     }
-    return t("lobby.waitingForFriends");
+    if (!hasEnoughPlayers) return t("lobby.waitingForFriends");
+    if (notReady.length > 0) {
+      return t("lobby.waitingForReady", {
+        names: notReady.map((p) => p.user.username).join(", "),
+      });
+    }
+    return null;
   })();
 
   return (
@@ -132,10 +186,27 @@ export default function LobbyScreen() {
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={false}
           >
-            <View style={styles.metaRow}>
-              <DifficultyChip difficulty={lobby.difficulty} />
+            {isHost && (
+              <View style={styles.difficulty}>
+                <Text style={styles.sectionLabel}>
+                  {t("lobby.difficultyLabel")}
+                </Text>
+                <SegmentedControl
+                  options={difficultyOptions}
+                  value={lobby.difficulty ?? "mixed"}
+                  onChange={changeDifficulty}
+                  disabled={!isConnected}
+                  accessibilityLabel={t("lobby.difficultyLabel")}
+                />
+              </View>
+            )}
+            <View style={[styles.metaRow, isHost && styles.metaRowHost]}>
+              {!isHost && <DifficultyChip difficulty={lobby.difficulty} />}
               <Text style={styles.readyCount}>
-                {t("lobby.readyCount", { ready, total: expected })}
+                {t("lobby.readyCount", {
+                  ready: readyCount,
+                  total: joined.length,
+                })}
               </Text>
             </View>
             <View style={styles.players}>
@@ -146,22 +217,28 @@ export default function LobbyScreen() {
           </ScrollView>
         )}
 
-        {canStart && (
-          <View style={styles.footer}>
+        <View style={styles.footer}>
+          {footerMessage && (
+            <Text style={styles.footerText}>{footerMessage}</Text>
+          )}
+          {lobby && isHost && (
             <Button
               variant="primary"
               title={isStarting ? t("lobby.starting") : t("lobby.start")}
               onPress={handleStart}
-              disabled={isStarting}
+              disabled={!canStart || isStarting}
+              style={!canStart && styles.buttonDisabled}
             />
-          </View>
-        )}
-
-        {footerMessage && (
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>{footerMessage}</Text>
-          </View>
-        )}
+          )}
+          {lobby && me && !isHost && me.status === "JOINED" && (
+            <Button
+              variant={me.ready ? "outlined" : "primary"}
+              title={me.ready ? t("lobby.unsetReady") : t("lobby.setReady")}
+              onPress={toggleReady}
+              disabled={isTogglingReady || !isConnected}
+            />
+          )}
+        </View>
       </SafeAreaView>
     </GradientBackground>
   );
@@ -196,10 +273,21 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     gap: Spacing.base,
   },
+  difficulty: {
+    gap: Spacing.md,
+  },
+  sectionLabel: {
+    fontFamily: FontFamily.bodyBold,
+    fontSize: FontSize.titleSm,
+    color: Colors.onSurfaceVariant,
+  },
   metaRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  metaRowHost: {
+    justifyContent: "flex-end",
   },
   readyCount: {
     fontFamily: FontFamily.bodyBold,
@@ -210,8 +298,12 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   footer: {
+    gap: Spacing.md,
     paddingHorizontal: Spacing.xl,
     paddingBottom: Spacing.xl,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   footerText: {
     fontFamily: FontFamily.bodySemibold,

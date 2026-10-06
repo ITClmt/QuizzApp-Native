@@ -3,7 +3,7 @@ import {
   useMultiplayer,
   useSocketEvent,
 } from "@/src/contexts/MultiplayerContext";
-import type { GameInvitation, Lobby } from "@/src/types";
+import type { GameDifficulty, GameInvitation, Lobby } from "@/src/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { ACTIVE_GAME_KEY } from "./useActiveGame";
@@ -48,5 +48,26 @@ export function useLobby(gameId: string) {
     [emit, gameId],
   );
 
-  return { lobby, joinError, canceledReason, leave, start };
+  /** Invités uniquement. L'affichage suit le lobby:update. */
+  const setReady = useCallback(
+    (ready: boolean) => emit("game:ready", { gameId, ready }),
+    [emit, gameId],
+  );
+
+  /** Hôte uniquement. null = mixte. */
+  const setDifficulty = useCallback(
+    (difficulty: GameDifficulty | null) =>
+      emit("game:difficulty", { gameId, difficulty }),
+    [emit, gameId],
+  );
+
+  return {
+    lobby,
+    joinError,
+    canceledReason,
+    leave,
+    start,
+    setReady,
+    setDifficulty,
+  };
 }

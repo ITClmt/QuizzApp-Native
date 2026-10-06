@@ -39,6 +39,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LEAVE_BUTTON_SIZE, LeaveButton } from "../components/LeaveButton";
 import { PlayersStrip } from "../components/PlayersStrip";
+import { StartCountdown } from "../components/StartCountdown";
 import { ACTIVE_GAME_KEY } from "../hooks/useActiveGame";
 import { useCountdown } from "../hooks/useCountdown";
 import { useGameExitAlerts } from "../hooks/useGameExitAlerts";
@@ -46,6 +47,8 @@ import { storeGameResult } from "../hooks/useGameResult";
 import { useLiveGame } from "../hooks/useLiveGame";
 
 const URGENT_SECONDS = 3;
+// Plafond d'affichage du décompte de lancement ; sa durée vient du serveur
+const START_COUNTDOWN_SECONDS = 3;
 // Petits écrans Android : le chrono rétrécit pour laisser la place à la question
 const COMPACT_SCREEN_HEIGHT = 720;
 // Au-delà, la question passe dans une taille plus petite
@@ -79,6 +82,7 @@ export default function GameScreen() {
   const {
     lobby,
     phase,
+    startsAt,
     question,
     deadline,
     myAnswerIndex,
@@ -106,6 +110,7 @@ export default function GameScreen() {
   // Durée fixée par le serveur, qui reste seul juge du temps
   const questionSeconds = question ? Math.round(question.durationMs / 1000) : 0;
   const secondsLeft = useCountdown(deadline, questionSeconds);
+  const startSecondsLeft = useCountdown(startsAt, START_COUNTDOWN_SECONDS);
 
   useGameExitAlerts({ joinError, canceledReason, onExit: goHome });
 
@@ -144,6 +149,20 @@ export default function GameScreen() {
   const scoreByUser = Object.fromEntries(
     scores.map((s) => [s.userId, s.score]),
   );
+
+  // Décompte avant la 1re question. Quitter maintenant vaut déjà abandon.
+  if (!question && phase === "STARTING" && lobby) {
+    return (
+      <GradientBackground>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.header}>
+            <LeaveButton onPress={confirmLeave} label={t("game.leave")} />
+          </View>
+          <StartCountdown secondsLeft={startSecondsLeft} />
+        </SafeAreaView>
+      </GradientBackground>
+    );
+  }
 
   if (!question || !lobby) {
     return (

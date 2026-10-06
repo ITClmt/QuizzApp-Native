@@ -19,6 +19,8 @@ type State = {
   /** Joueurs, statuts et présence (lobby:update continue d'arriver en partie) */
   lobby: Lobby | null;
   phase: GamePhase | null;
+  /** Décompte avant la 1re question, en heure locale (phase STARTING) */
+  startsAt: number | null;
   question: LiveQuestion | null;
   /** Fin de la question, en heure locale : maintenant + remainingMs à la réception */
   deadline: number | null;
@@ -43,6 +45,7 @@ type Action =
 const initialState: State = {
   lobby: null,
   phase: null,
+  startsAt: null,
   question: null,
   deadline: null,
   myAnswerIndex: null,
@@ -62,6 +65,8 @@ function reducer(state: State, action: Action): State {
         ...state,
         lobby,
         phase: live.phase,
+        startsAt:
+          live.phase === "STARTING" ? Date.now() + live.remainingMs : null,
         question: live.question,
         // Pendant la révélation, la question est fournie mais le temps restant
         // est celui de la révélation : pas de timer à afficher
@@ -82,6 +87,7 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         phase: "QUESTION",
+        startsAt: null,
         question: action.question,
         deadline: Date.now() + action.question.remainingMs,
         myAnswerIndex: null,

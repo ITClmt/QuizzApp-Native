@@ -3,13 +3,8 @@ import { BACK_BUTTON_SIZE, BackButton } from "@/src/components/BackButton";
 import { Button } from "@/src/components/Button";
 import { ErrorNotice } from "@/src/components/ErrorNotice";
 import { GradientBackground } from "@/src/components/GradientBackground";
-import {
-  SegmentedControl,
-  type SegmentedControlOption,
-} from "@/src/components/SegmentedControl";
 import { useFriends } from "@/src/features/friends/hooks/useFriends";
 import { useNetworkStatus } from "@/src/hooks/useNetworkStatus";
-import type { GameDifficulty } from "@/src/types";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,23 +22,13 @@ import { useCreateGame } from "../hooks/useCreateGame";
 // 2 à 4 joueurs : l'hôte + 1 à 3 amis (mêmes bornes que le back)
 const MAX_INVITED_FRIENDS = 3;
 
-type DifficultyChoice = GameDifficulty | "mixed";
-
 export default function CreateGameScreen() {
   const router = useRouter();
-  const { t } = useTranslation(["multiplayer", "quiz", "common"]);
+  const { t } = useTranslation(["multiplayer", "common"]);
   const { isOnline } = useNetworkStatus();
   const { friends } = useFriends();
   const createGame = useCreateGame();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [difficulty, setDifficulty] = useState<DifficultyChoice>("mixed");
-
-  const difficultyOptions: SegmentedControlOption<DifficultyChoice>[] = [
-    { value: "mixed", label: t("mixed") },
-    { value: "easy", label: t("quiz:difficulty.easy") },
-    { value: "medium", label: t("quiz:difficulty.medium") },
-    { value: "hard", label: t("quiz:difficulty.hard") },
-  ];
 
   const isFull = selectedIds.length >= MAX_INVITED_FRIENDS;
 
@@ -54,10 +39,8 @@ export default function CreateGameScreen() {
   };
 
   const submit = () => {
-    createGame.mutate({
-      friendIds: selectedIds,
-      difficulty: difficulty === "mixed" ? null : difficulty,
-    });
+    // Mixte au départ : l'hôte règle la difficulté dans le salon
+    createGame.mutate({ friendIds: selectedIds, difficulty: null });
   };
 
   const renderEmpty = () => {
@@ -108,22 +91,11 @@ export default function CreateGameScreen() {
           ListHeaderComponent={
             <View style={styles.header}>
               <Text style={styles.sectionLabel}>
-                {t("create.difficultyLabel")}
+                {t("create.friendsLabel")}
               </Text>
-              <SegmentedControl
-                options={difficultyOptions}
-                value={difficulty}
-                onChange={setDifficulty}
-                accessibilityLabel={t("create.difficultyLabel")}
-              />
-              <View style={styles.friendsLabelRow}>
-                <Text style={styles.sectionLabel}>
-                  {t("create.friendsLabel")}
-                </Text>
-                <Text style={styles.count}>
-                  {t("create.selectedCount", { count: selectedIds.length })}
-                </Text>
-              </View>
+              <Text style={styles.count}>
+                {t("create.selectedCount", { count: selectedIds.length })}
+              </Text>
             </View>
           }
           ListEmptyComponent={<View style={styles.centered}>{renderEmpty()}</View>}
@@ -175,19 +147,15 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing["3xl"],
   },
   header: {
-    gap: Spacing.md,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline",
     marginBottom: Spacing.md,
   },
   sectionLabel: {
     fontFamily: FontFamily.bodyBold,
     fontSize: FontSize.titleSm,
     color: Colors.onSurfaceVariant,
-  },
-  friendsLabelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "baseline",
-    marginTop: Spacing.md,
   },
   count: {
     fontFamily: FontFamily.bodyBold,

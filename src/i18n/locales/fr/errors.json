@@ -33,6 +33,7 @@
   "INVITATION_NOT_FOUND": "Cette invitation n'est plus valable",
   "NOT_HOST": "Seul l'hôte peut faire ça",
   "NOT_ENOUGH_PLAYERS": "Il faut au moins 2 joueurs",
+  "PLAYERS_NOT_READY": "Tout le monde n'est pas encore prêt",
   "GAME_ALREADY_STARTED": "Cette partie a déjà commencé",
   "ANSWER_REJECTED": "Trop tard pour cette question",
   "INVALID_PAYLOAD": "Requête invalide",
