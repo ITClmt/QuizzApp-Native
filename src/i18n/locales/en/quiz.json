@@ -11,7 +11,11 @@
     "categoryLocked": "{{category}} — unlocks at level {{level}}",
     "categoriesLoadError": "Failed to load categories.",
     "timerNotice": "You have 1 minute to answer 30 questions.",
-    "startQuiz": "Start Quiz"
+    "startQuiz": "Start Quiz",
+    "gamesRemaining": "{{remaining}}/{{limit}} games left",
+    "nextGameIn": "Next game in {{time}}",
+    "waitHours": "{{hours}}h {{minutes}}",
+    "waitMinutes": "{{minutes}} min"
   },
   "session": {
     "startingSession": "Starting your session...",

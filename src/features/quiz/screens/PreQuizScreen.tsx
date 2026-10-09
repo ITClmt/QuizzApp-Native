@@ -13,12 +13,14 @@ import { GradientBackground } from "@/src/components/GradientBackground";
 import { getCategoryLabelById } from "@/src/constants/categories";
 import {
   type QuizCategory,
+  type QuizQuota,
   getQuizCategories,
+  getQuizQuota,
 } from "@/src/services/quiz/quiz.api";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
@@ -29,6 +31,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+const QUOTA_TICK_MS = 30 * 1000;
 
 const DIFFICULTIES: { value: string; color: string }[] = [
   { value: "easy", color: Colors.success },
@@ -56,6 +60,41 @@ export default function PreQuizScreen() {
     queryFn: getQuizCategories,
     refetchOnWindowFocus: false,
   });
+
+  const { data: quota, refetch: refetchQuota } = useQuery<QuizQuota>({
+    queryKey: ["quiz-quota"],
+    queryFn: getQuizQuota,
+  });
+  const resetAt = quota?.resetAt ? new Date(quota.resetAt).getTime() : null;
+  const [now, setNow] = useState(() => Date.now());
+
+  // Rafraîchit le compte à rebours, puis le quota une fois la place libérée
+  useEffect(() => {
+    if (resetAt === null) return;
+    const interval = setInterval(() => {
+      const current = Date.now();
+      setNow(current);
+      if (current >= resetAt) refetchQuota();
+    }, QUOTA_TICK_MS);
+    return () => clearInterval(interval);
+  }, [resetAt, refetchQuota]);
+
+  const isLimitReached = quota?.remaining === 0;
+
+  const formatWait = () => {
+    const totalMinutes = Math.max(
+      1,
+      Math.ceil(((resetAt ?? now) - now) / 60000),
+    );
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return hours > 0
+      ? t("preQuiz.waitHours", {
+          hours,
+          minutes: String(minutes).padStart(2, "0"),
+        })
+      : t("preQuiz.waitMinutes", { minutes });
+  };
 
   const handleDifficulty = (difficulty: string) => {
     if (selectedDifficulty === difficulty) {
@@ -218,9 +257,31 @@ export default function PreQuizScreen() {
         </View>
 
         <View style={styles.footer}>
+          {quota && (
+            <View style={styles.quotaRow}>
+              <MaterialIcons
+                name="bolt"
+                size={16}
+                color={isLimitReached ? Colors.error : Colors.primary}
+              />
+              <Text
+                style={[styles.quotaText, isLimitReached && styles.quotaTextEmpty]}
+              >
+                {t("preQuiz.gamesRemaining", {
+                  remaining: quota.remaining,
+                  limit: quota.limit,
+                })}
+              </Text>
+            </View>
+          )}
           <Button
             variant="primary"
-            title={t("preQuiz.startQuiz")}
+            title={
+              isLimitReached
+                ? t("preQuiz.nextGameIn", { time: formatWait() })
+                : t("preQuiz.startQuiz")
+            }
+            disabled={isLimitReached}
             onPress={() => {
               const params: Record<string, string> = {};
               if (selectedDifficulty) params.difficulty = selectedDifficulty;
@@ -273,6 +334,21 @@ const styles = StyleSheet.create({
     fontSize: FontSize.bodyMd,
     color: Colors.onSurfaceVariant,
     textAlign: "center",
+  },
+  quotaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.xs,
+    marginBottom: Spacing.sm,
+  },
+  quotaText: {
+    fontFamily: FontFamily.bodySemibold,
+    fontSize: FontSize.bodySm,
+    color: Colors.onSurfaceVariant,
+  },
+  quotaTextEmpty: {
+    color: Colors.error,
   },
   difficultiesContainer: {
     flexDirection: "row",

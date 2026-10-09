@@ -11,7 +11,11 @@
     "categoryLocked": "{{category}} — se débloque au niveau {{level}}",
     "categoriesLoadError": "Impossible de charger les catégories.",
     "timerNotice": "Tu as 1 minute pour répondre à 30 questions.",
-    "startQuiz": "Commencer"
+    "startQuiz": "Commencer",
+    "gamesRemaining": "{{remaining}}/{{limit}} parties restantes",
+    "nextGameIn": "Prochaine partie dans {{time}}",
+    "waitHours": "{{hours}} h {{minutes}}",
+    "waitMinutes": "{{minutes}} min"
   },
   "session": {
     "startingSession": "Démarrage de la session...",

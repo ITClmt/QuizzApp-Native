@@ -17,6 +17,7 @@
   "SESSION_NOT_OWNED": "Cette partie ne t'appartient pas",
   "SESSION_ALREADY_FINISHED": "Cette partie est déjà terminée",
   "SESSION_EXPIRED": "Cette partie a expiré",
+  "GAME_LIMIT_REACHED": "Tu as atteint la limite de parties, reviens un peu plus tard",
   "INVALID_ANSWER_QUESTION": "Question invalide",
   "CANNOT_FRIEND_SELF": "Tu ne peux pas t'ajouter toi-même",
   "FRIEND_REQUEST_EXISTS": "Demande déjà envoyée à ce joueur",

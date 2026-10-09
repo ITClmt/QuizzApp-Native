@@ -111,6 +111,9 @@ export default function QuizScreen() {
     onSuccess: (session) => {
       setQuestions(session.questions);
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["quiz-quota"] });
+    },
     onError: (err) => {
       showAlert(t("common:errors.title"), getErrorMessage(err));
     },

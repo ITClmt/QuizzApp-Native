@@ -22,6 +22,17 @@ export async function getQuizCategories() {
   return apiFetchAuthenticated<QuizCategory[]>(`/quiz/categories`);
 }
 
+export interface QuizQuota {
+  limit: number;
+  remaining: number;
+  /** Quand une partie se libère, `null` tant qu'il en reste */
+  resetAt: string | null;
+}
+
+export async function getQuizQuota() {
+  return apiFetchAuthenticated<QuizQuota>(`/quiz/quota`);
+}
+
 export async function startQuizSession(params: StartQuizParams = {}) {
   const queryParams = new URLSearchParams();
   if (params.difficulty) queryParams.append("difficulty", params.difficulty);

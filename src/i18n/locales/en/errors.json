@@ -17,6 +17,7 @@
   "SESSION_NOT_OWNED": "This game doesn't belong to you",
   "SESSION_ALREADY_FINISHED": "This game has already finished",
   "SESSION_EXPIRED": "This game has expired",
+  "GAME_LIMIT_REACHED": "You've reached the game limit, come back a bit later",
   "INVALID_ANSWER_QUESTION": "Invalid question",
   "CANNOT_FRIEND_SELF": "You can't add yourself",
   "FRIEND_REQUEST_EXISTS": "Request already sent to this player",
