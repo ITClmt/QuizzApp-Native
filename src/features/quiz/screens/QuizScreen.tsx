@@ -45,8 +45,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const QUIZ_DURATION_SECONDS = 1.5 * 60;
-const LOW_TIME_THRESHOLD_SECONDS = 30;
+const LOW_TIME_THRESHOLD_SECONDS = 20;
 // Petits écrans Android : le chrono rétrécit pour laisser la place à la question
 const COMPACT_SCREEN_HEIGHT = 720;
 // Au-delà, la question passe dans une taille plus petite
@@ -66,7 +65,7 @@ export default function QuizScreen() {
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
-  const [timeLeft, setTimeLeft] = useState<number>(QUIZ_DURATION_SECONDS);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
   const hasEndedRef = useRef(false);
   const hasAnsweredRef = useRef(false);
 
@@ -175,11 +174,13 @@ export default function QuizScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Durée envoyée par le back : la changer ne demande pas de nouvelle version de l'app
+  const durationSeconds = data ? Math.round(data.durationMs / 1000) : 0;
+
   useEffect(() => {
     if (!data?.createdAt || hasEndedRef.current) return;
 
-    const deadline =
-      new Date(data.createdAt).getTime() + QUIZ_DURATION_SECONDS * 1000;
+    const deadline = new Date(data.createdAt).getTime() + data.durationMs;
 
     let interval: ReturnType<typeof setInterval> | undefined;
 
@@ -317,7 +318,7 @@ export default function QuizScreen() {
           <View style={styles.timerContainer}>
             <CircularTimer
               secondsLeft={timeLeft}
-              totalSeconds={QUIZ_DURATION_SECONDS}
+              totalSeconds={durationSeconds}
               urgent={isUrgent}
               size={screenHeight < COMPACT_SCREEN_HEIGHT ? 110 : 150}
             />

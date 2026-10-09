@@ -10,7 +10,7 @@
     "unlockAtLevel": "Niv. {{level}}",
     "categoryLocked": "{{category}} — se débloque au niveau {{level}}",
     "categoriesLoadError": "Impossible de charger les catégories.",
-    "timerNotice": "Tu as 1 minute 30 pour répondre à 50 questions.",
+    "timerNotice": "Tu as 1 minute pour répondre à 30 questions.",
     "startQuiz": "Commencer"
   },
   "session": {
