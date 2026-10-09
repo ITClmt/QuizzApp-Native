@@ -24,9 +24,10 @@ export async function getQuizCategories() {
 
 export interface QuizQuota {
   limit: number;
+  windowHours: number;
   remaining: number;
-  /** Quand une partie se libère, `null` tant qu'il en reste */
-  resetAt: string | null;
+  /** Quand la plus ancienne partie jouée revient, `null` si aucune n'a été jouée */
+  nextGameAt: string | null;
 }
 
 export async function getQuizQuota() {

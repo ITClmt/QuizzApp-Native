@@ -65,26 +65,29 @@ export default function PreQuizScreen() {
     queryKey: ["quiz-quota"],
     queryFn: getQuizQuota,
   });
-  const resetAt = quota?.resetAt ? new Date(quota.resetAt).getTime() : null;
+  const nextGameAt = quota?.nextGameAt
+    ? new Date(quota.nextGameAt).getTime()
+    : null;
   const [now, setNow] = useState(() => Date.now());
 
-  // Rafraîchit le compte à rebours, puis le quota une fois la place libérée
+  // Rafraîchit le compte à rebours, puis le quota quand une partie revient
   useEffect(() => {
-    if (resetAt === null) return;
+    if (nextGameAt === null) return;
     const interval = setInterval(() => {
       const current = Date.now();
       setNow(current);
-      if (current >= resetAt) refetchQuota();
+      if (current >= nextGameAt) refetchQuota();
     }, QUOTA_TICK_MS);
     return () => clearInterval(interval);
-  }, [resetAt, refetchQuota]);
+  }, [nextGameAt, refetchQuota]);
 
   const isLimitReached = quota?.remaining === 0;
+  const isQuotaFull = quota !== undefined && quota.remaining === quota.limit;
 
   const formatWait = () => {
     const totalMinutes = Math.max(
       1,
-      Math.ceil(((resetAt ?? now) - now) / 60000),
+      Math.ceil(((nextGameAt ?? now) - now) / 60000),
     );
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
@@ -272,6 +275,14 @@ export default function PreQuizScreen() {
                   limit: quota.limit,
                 })}
               </Text>
+              {/* À 0, le bouton affiche déjà l'attente */}
+              {!isLimitReached && (
+                <Text style={styles.quotaHint}>
+                  {isQuotaFull
+                    ? t("preQuiz.quotaRule", { hours: quota.windowHours })
+                    : t("preQuiz.nextGameRecovered", { time: formatWait() })}
+                </Text>
+              )}
             </View>
           )}
           <Button
@@ -337,6 +348,7 @@ const styles = StyleSheet.create({
   },
   quotaRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
     gap: Spacing.xs,
@@ -346,6 +358,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bodySemibold,
     fontSize: FontSize.bodySm,
     color: Colors.onSurfaceVariant,
+  },
+  quotaHint: {
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: FontSize.bodySm,
+    color: Colors.outline,
   },
   quotaTextEmpty: {
     color: Colors.error,

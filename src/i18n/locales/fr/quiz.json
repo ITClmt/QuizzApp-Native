@@ -14,6 +14,8 @@
     "startQuiz": "Commencer",
     "gamesRemaining": "{{remaining}}/{{limit}} parties restantes",
     "nextGameIn": "Prochaine partie dans {{time}}",
+    "nextGameRecovered": "· +1 dans {{time}}",
+    "quotaRule": "· chaque partie revient après {{hours}} h",
     "waitHours": "{{hours}} h {{minutes}}",
     "waitMinutes": "{{minutes}} min"
   },

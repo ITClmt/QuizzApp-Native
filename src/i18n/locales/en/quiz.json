@@ -14,6 +14,8 @@
     "startQuiz": "Start Quiz",
     "gamesRemaining": "{{remaining}}/{{limit}} games left",
     "nextGameIn": "Next game in {{time}}",
+    "nextGameRecovered": "· +1 in {{time}}",
+    "quotaRule": "· each game comes back after {{hours}}h",
     "waitHours": "{{hours}}h {{minutes}}",
     "waitMinutes": "{{minutes}} min"
   },
